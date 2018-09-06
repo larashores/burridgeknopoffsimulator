@@ -1,6 +1,8 @@
 import numpy as np
 from scipy.integrate import odeint
 
+from viewers.tkviewer1d import view_1d
+
 mass = 1
 gravitational_acceleration = g = 9.81
 spring_constant = k = 1
@@ -62,6 +64,7 @@ def test(solution):
     last_positions = solution[:,n - 2]
     last_velocities = solution[:,n - 1]
 
+    print(solution[0])
     print('Last block positions:')
     print(last_positions)
     print('Last block velocities:')
@@ -71,3 +74,4 @@ def test(solution):
 if __name__ == '__main__':
     solution = solve_1d()
     test(solution)
+    view_1d(solution)
