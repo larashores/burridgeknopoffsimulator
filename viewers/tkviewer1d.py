@@ -39,7 +39,7 @@ class TkViewer1d(ttk.Frame):
         self.canvas.delete(tk.ALL)
         self.draw_blocks(positions)
         if i < len(self.solution) - 1:
-            self.after(int(self.time_interval * 1000), lambda: self.draw_recursive(i + 1))
+            self.after(int(self.time_interval * 200), lambda: self.draw_recursive(i + 1))
 
     def start(self):
         self.time = 0 - self.time_interval

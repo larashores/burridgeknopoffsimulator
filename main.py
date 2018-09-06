@@ -1,20 +1,21 @@
 import numpy as np
-from scipy.integrate import odeint
+from scipy.integrate import odeint, ode
 
 from viewers.tkviewer1d import view_1d
 
+spring_length = 1
 mass = 1
 gravitational_acceleration = g = 9.81
-spring_constant = k = 1
-static_friction = us = .1
-kinetic_friction = uk = .1
+spring_constant = k = 3
+static_friction = us = .05
+kinetic_friction = uk = .05
 
 
 def get_net_force(spring_force):
     cutoff = us * mass * g
     if spring_force >= cutoff:
         return (1 / mass) * (spring_force - uk * mass * g)
-    elif spring_force <= cutoff:
+    elif spring_force <= -cutoff:
         return (1 / mass) * (spring_force + uk * mass * g)
     else:
         return 0
@@ -39,7 +40,7 @@ def differential(values, t):
 
     # Left Boundary Condition
     results[0] = values[1]
-    results[1] = get_net_force(k * (values[2] - values[0]))
+    results[1] = get_net_force(k * (values[2] - values[0] - spring_length))
 
     # Right Boundary Condition
     results[len(values) - 2] = values[len(values) - 1]
@@ -49,22 +50,21 @@ def differential(values, t):
 
 
 def solve_1d():
-    num_blocks = 8
+    num_blocks = 2
     initial_positions = np.zeros(num_blocks * 2)  # One initial position and initial velocity each
     for i in range(num_blocks):
         initial_positions[2*i] = i      # Initial positions 1 unit apart
         initial_positions[2*i + 1] = 0  # Initial velocities zero
-    initial_positions[len(initial_positions) - 1] = .1   # Initial velocity of right block
-    ts = np.linspace(0, 10, 101)
+    initial_positions[len(initial_positions) - 1] = .2   # Initial velocity of right block
+    ts = np.linspace(0, 30, 301)
     return odeint(differential, initial_positions, ts)
 
 
 def test(solution):
     n = solution.shape[1]
-    last_positions = solution[:,n - 2]
-    last_velocities = solution[:,n - 1]
+    last_positions = solution[:,n - 4]
+    last_velocities = solution[:,n - 3]
 
-    print(solution[0])
     print('Last block positions:')
     print(last_positions)
     print('Last block velocities:')
