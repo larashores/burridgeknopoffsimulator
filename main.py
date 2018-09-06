@@ -21,7 +21,7 @@ def get_net_force(spring_force):
         return 0
 
 
-def differential(values, t):
+def differential(t, values):
     """
     The first parameter values is a vector with all the values of the system of equations. Since we are splitting a
     system of 2nd order ODEs to 1st order ODEs, values[2n]=x(n) and values[2n+1] = x'(n)
@@ -36,7 +36,8 @@ def differential(values, t):
         pos_plus = values[2*i + 2]
         spring_force = k * (pos_plus + pos_minus - 2*pos)
         results[2*i] = values[2*i + 1]                      # x'
-        results[2*i + 2] = get_net_force(spring_force)      # x''
+        net = get_net_force(spring_force)
+        results[2*i + 1] = net      # x''
 
     # Left Boundary Condition
     results[0] = values[1]
@@ -50,14 +51,20 @@ def differential(values, t):
 
 
 def solve_1d():
-    num_blocks = 2
+    num_blocks = 8
     initial_positions = np.zeros(num_blocks * 2)  # One initial position and initial velocity each
     for i in range(num_blocks):
         initial_positions[2*i] = i      # Initial positions 1 unit apart
         initial_positions[2*i + 1] = 0  # Initial velocities zero
     initial_positions[len(initial_positions) - 1] = .2   # Initial velocity of right block
     ts = np.linspace(0, 30, 301)
-    return odeint(differential, initial_positions, ts)
+    r = ode(differential)
+    r.set_integrator('dopri5')
+    r.set_initial_value(initial_positions)
+    sol = []
+    while r.successful() and r.t < 30:
+        sol.append(r.integrate(r.t+.1))
+    return np.array(sol)
 
 
 def test(solution):
