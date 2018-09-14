@@ -4,7 +4,7 @@ import tkinter as tk
 
 class TkViewer1d(ttk.Frame):
     LABEL_TEXT = 'Time: {:.1f}'
-    def __init__(self, *args, solution, time_interval=.1, scale=70, block_size=20,**kwargs):
+    def __init__(self, *args, solution, time_interval=.1, scale=30, block_size=10,**kwargs):
         ttk.Frame.__init__(self, *args, **kwargs)
         self.time = 0
         self.time_label = ttk.Label(self, text=self.LABEL_TEXT.format(self.time))
@@ -48,7 +48,7 @@ class TkViewer1d(ttk.Frame):
 
 def view_1d(solution):
     root = tk.Tk()
-    root.geometry('800x600')
+    root.geometry('1600x600')
     viewer = TkViewer1d(root, solution=solution)
     button = ttk.Button(root, text='Start', command=lambda: viewer.start())
     viewer.pack(expand=tk.YES, fill=tk.BOTH)
