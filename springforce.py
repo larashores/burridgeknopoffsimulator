@@ -20,14 +20,3 @@ class OneDimSpringForce:
         results[1] = self.spring_constant * values[2] - values[0] - self.spring_length
 
         return results
-
-    def __str__(self):
-        return str(self._matrix)
-
-    def __repr__(self):
-        return repr(self._matrix)
-
-
-if __name__ == '__main__':
-    force = OneDimSpringForce(10, 1, 1)
-    print(force)

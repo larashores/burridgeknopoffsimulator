@@ -3,7 +3,7 @@ import numpy as np
 from scipy.integrate import odeint, ode
 
 from viewers.tkviewer1d import view_1d
-from friction import linear_kinetic_friction, velocity_dependent_friction, OneDimFrictionalForce
+from friction import OneDimFrictionalForce
 from springforce import OneDimSpringForce
 from velocity import OneDimVelocity
 
@@ -14,16 +14,6 @@ gravitational_acceleration = g = 9.81
 spring_constant = k = 1
 static_friction = us = .03
 kinetic_friction = uk = .025
-
-
-def get_net_force(spring_force):
-    cutoff = us * mass * g
-    if spring_force >= cutoff:
-        return (1 / mass) * (spring_force - uk * mass * g)
-    elif spring_force <= -cutoff:
-        return (1 / mass) * (spring_force + uk * mass * g)
-    else:
-        return 0
 
 
 class Differential:
