@@ -3,7 +3,10 @@ import numpy as np
 from scipy.integrate import odeint, ode
 
 from viewers.tkviewer1d import view_1d
-from friction import linear_kinetic_friction, velocity_dependent_friction
+from friction import linear_kinetic_friction, velocity_dependent_friction, OneDimFrictionalForce
+from springforce import OneDimSpringForce
+from velocity import OneDimVelocity
+
 
 spring_length = 1
 mass = 1
@@ -23,37 +26,29 @@ def get_net_force(spring_force):
         return 0
 
 
-def differential(t, values):
-    """
-    The first parameter values is a vector with all the values of the system of equations. Since we are splitting a
-    system of 2nd order ODEs to 1st order ODEs, values[2n]=x(n) and values[2n+1] = x'(n)
+class Differential:
+    def __init__(self, num_blocks):
+        self.one_dim_spring_force = OneDimSpringForce(num_blocks, k, spring_length)
+        self.one_dim_friction_force = OneDimFrictionalForce(num_blocks, static_friction, kinetic_friction, mass)
+        self.one_dim_velocity = OneDimVelocity(num_blocks)
 
-    Function should return a list of values [
-    """
-    results = np.zeros(len(values))
+    def __call__(self, t, values):
+        """
+        The first parameter values is a vector with all the values of the system of equations. Since we are splitting a
+        system of 2nd order ODEs to 1st order ODEs, values[2n]=x(n) and values[2n+1] = x'(n)
 
-    for i in range(1, (len(values) // 2) - 1):
-        pos_minus = values[2*i - 2]
-        pos, velocity = values[2*i], values[2*i + 1]
-        pos_plus = values[2*i + 2]
-        spring_force = k * (pos_plus + pos_minus - 2*pos)
-        results[2*i] = values[2*i + 1]                      # x'
-        net =  (1 / mass) * (spring_force + velocity_dependent_friction(velocity, us, uk, mass))
-        results[2*i + 1] = net      # x''
-
-    # Left Boundary Condition
-    results[0] = values[1]
-    results[1] = get_net_force(k * (values[2] - values[0] - spring_length))
-
-    # Right Boundary Condition
-    results[len(values) - 2] = values[len(values) - 1]
-    results[len(values) - 1] = 0
-
-    return results
+        Function should return a list of values [
+        """
+        spring_force = self.one_dim_spring_force(values)
+        friction_force = self.one_dim_friction_force(values)
+        new_positions = self.one_dim_velocity(values)
+        net = (1 / mass) * (spring_force + friction_force + new_positions)
+        return net
 
 
 def solve_1d():
     num_blocks = 5
+    differential = Differential(num_blocks)
     initial_positions = np.zeros(num_blocks * 2)  # One initial position and initial velocity each
     for i in range(num_blocks):
         initial_positions[2*i] = i + (random.random() / 2)      # Initial positions 1 unit apart
