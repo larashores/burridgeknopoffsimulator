@@ -11,14 +11,14 @@ from velocity import OneDimVelocity
 spring_length = 1
 mass = 1
 gravitational_acceleration = g = 9.81
-spring_constant = k = 1
-static_friction = us = .03
-kinetic_friction = uk = .025
+spring_constant = k = .3
+static_friction = us = .01
+kinetic_friction = uk = 10
 
 
 class Differential:
     def __init__(self, num_blocks):
-        self.one_dim_spring_force = OneDimSpringForce(num_blocks, k, spring_length)
+        self.one_dim_spring_force = OneDimSpringForce(num_blocks, k, spring_length, mass)
         self.one_dim_friction_force = OneDimFrictionalForce(num_blocks, static_friction, kinetic_friction, mass)
         self.one_dim_velocity = OneDimVelocity(num_blocks)
 
@@ -32,39 +32,29 @@ class Differential:
         spring_force = self.one_dim_spring_force(values)
         friction_force = self.one_dim_friction_force(values)
         new_positions = self.one_dim_velocity(values)
-        net = (1 / mass) * (spring_force + friction_force + new_positions)
+        net = spring_force + friction_force + new_positions
+        np.set_printoptions(precision=4)
         return net
 
+def initial_positions(num_blocks, initial_velocity):
+    positions = np.zeros(num_blocks * 2)                               # One initial position and initial velocity each
+    for i in range(num_blocks):
+        positions[2*i] = spring_length * (i + random.random() / 3)  # Initial positions 1 unit apart
+        positions[2*i + 1] = 0                                         # Initial velocities zero
+    positions[len(positions) - 1] = initial_velocity           # Initial velocity of right block
+    return positions
 
 def solve_1d():
     num_blocks = 5
-    differential = Differential(num_blocks)
-    initial_positions = np.zeros(num_blocks * 2)  # One initial position and initial velocity each
-    for i in range(num_blocks):
-        initial_positions[2*i] = i + (random.random() / 2)      # Initial positions 1 unit apart
-        initial_positions[2*i + 1] = 0  # Initial velocities zero
-    initial_positions[len(initial_positions) - 1] = .2   # Initial velocity of right block
-    r = ode(differential)
+    r = ode(Differential(num_blocks))
     r.set_integrator('dopri5')
-    r.set_initial_value(initial_positions)
+    r.set_initial_value(initial_positions(num_blocks, .2))
     sol = []
     while r.successful() and r.t < 300:
         sol.append(r.integrate(r.t+.1))
     return np.array(sol)
 
 
-def test(solution):
-    n = solution.shape[1]
-    last_positions = solution[:,n - 4]
-    last_velocities = solution[:,n - 3]
-
-    print('Last block positions:')
-    print(last_positions)
-    print('Last block velocities:')
-    print(last_velocities)
-
-
 if __name__ == '__main__':
     solution = solve_1d()
-    # test(solution)
     view_1d(solution)
