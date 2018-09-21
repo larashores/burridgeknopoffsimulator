@@ -2,6 +2,7 @@ import random
 import numpy as np
 from scipy.integrate import odeint, ode
 
+from viewers.potentialenergy import view_energy
 from viewers.tkviewer1d import view_1d
 from friction import OneDimFrictionalForce
 from springforce import OneDimSpringForce
@@ -9,12 +10,20 @@ from velocity import OneDimVelocity
 
 
 spring_length = 1
-mass = 1
+mass = .5
 gravitational_acceleration = g = 9.81
-spring_constant = k = .3
-static_friction = us = .01
+spring_constant = k = .5
+static_friction = us = .1
 kinetic_friction = uk = 10
 
+
+def potential_energy(values):
+    total_energy = 0
+    for i in range(0, len(values)//2 - 1):
+        length = values[2*i + 2] - values[2*i]
+        energy = .5 * k * (length - spring_length)**2
+        total_energy += energy
+    return total_energy
 
 class Differential:
     def __init__(self, num_blocks):
@@ -32,29 +41,35 @@ class Differential:
         spring_force = self.one_dim_spring_force(values)
         friction_force = self.one_dim_friction_force(values)
         new_positions = self.one_dim_velocity(values)
-        net = spring_force + friction_force + new_positions
+        net = spring_force  + new_positions + friction_force
         np.set_printoptions(precision=4)
         return net
 
 def initial_positions(num_blocks, initial_velocity):
     positions = np.zeros(num_blocks * 2)                               # One initial position and initial velocity each
     for i in range(num_blocks):
-        positions[2*i] = spring_length * (i + random.random() / 3)  # Initial positions 1 unit apart
+        positions[2*i] = spring_length * (i + random.random() / 2)  # Initial positions 1 unit apart
         positions[2*i + 1] = 0                                         # Initial velocities zero
     positions[len(positions) - 1] = initial_velocity           # Initial velocity of right block
     return positions
 
 def solve_1d():
-    num_blocks = 5
+    num_blocks = 8
     r = ode(Differential(num_blocks))
     r.set_integrator('dopri5')
     r.set_initial_value(initial_positions(num_blocks, .2))
     sol = []
+    energies = []
+    times = []
     while r.successful() and r.t < 300:
-        sol.append(r.integrate(r.t+.1))
-    return np.array(sol)
+        values = r.integrate(r.t+.1)
+        times.append(r.t)
+        sol.append(values)
+        energies.append(potential_energy(values))
+    return times, np.array(sol), np.array(energies)
 
 
 if __name__ == '__main__':
-    solution = solve_1d()
+    times, solution, energies = solve_1d()
+    view_energy(times, energies)
     view_1d(solution)

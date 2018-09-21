@@ -3,7 +3,7 @@ import numpy as np
 
 from src.graphing.graphing import *
 
-epsilon = 1e-1
+epsilon = 1e-2
 
 
 def _friction_force(velocity, static_coefficient, kinetic_coefficient, mass):
