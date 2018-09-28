@@ -7,14 +7,17 @@ from viewers.tkviewer1d import view_1d
 from friction import OneDimFrictionalForce
 from springforce import OneDimSpringForce
 from velocity import OneDimVelocity
+from drivingplate import OneDimDrivingPlate
 
 
 spring_length = 1
 mass = .5
 gravitational_acceleration = g = 9.81
-spring_constant = k = .5
+spring_constant = k = 1
 static_friction = us = .1
 kinetic_friction = uk = 10
+plate_velocity = .05
+plate_spring_constant = .5
 
 
 def potential_energy(values):
@@ -28,6 +31,7 @@ def potential_energy(values):
 class Differential:
     def __init__(self, num_blocks):
         self.one_dim_spring_force = OneDimSpringForce(num_blocks, k, spring_length, mass)
+        self.one_dim_plate = OneDimDrivingPlate(num_blocks, plate_spring_constant, spring_length, plate_velocity, mass)
         self.one_dim_friction_force = OneDimFrictionalForce(num_blocks, static_friction, kinetic_friction, mass)
         self.one_dim_velocity = OneDimVelocity(num_blocks)
 
@@ -40,8 +44,9 @@ class Differential:
         """
         spring_force = self.one_dim_spring_force(values)
         friction_force = self.one_dim_friction_force(values)
+        plate_force = self.one_dim_plate(values, t)
         new_positions = self.one_dim_velocity(values)
-        net = spring_force  + new_positions + friction_force
+        net = spring_force + new_positions + friction_force + plate_force
         np.set_printoptions(precision=4)
         return net
 
@@ -50,7 +55,6 @@ def initial_positions(num_blocks, initial_velocity):
     for i in range(num_blocks):
         positions[2*i] = spring_length * (i + random.random() / 2)  # Initial positions 1 unit apart
         positions[2*i + 1] = 0                                         # Initial velocities zero
-    positions[len(positions) - 1] = initial_velocity           # Initial velocity of right block
     return positions
 
 def solve_1d():

@@ -28,7 +28,7 @@ class OneDimFrictionalForce:
 
     def __call__(self, values):
         results = np.zeros(self.num_blocks * 2)
-        for i in range(0, self.num_blocks - 1):
+        for i in range(0, self.num_blocks):
             results[2*i + 1] = _friction_force(values[2*i + 1],
                                                self.static_coefficient, self.kinetic_coefficient, self.mass) * (1 / self.mass)
         return results
