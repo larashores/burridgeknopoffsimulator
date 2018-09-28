@@ -20,11 +20,14 @@ plate_velocity = .05
 plate_spring_constant = .5
 
 
-def potential_energy(values):
+def potential_energy(time, values):
     total_energy = 0
     for i in range(0, len(values)//2 - 1):
         length = values[2*i + 2] - values[2*i]
         energy = .5 * k * (length - spring_length)**2
+        total_energy += energy
+    for i in range(len(values)//2):
+        energy = .5 * plate_spring_constant * (i * spring_length + plate_velocity * time -values[2*i])
         total_energy += energy
     return total_energy
 
@@ -69,7 +72,7 @@ def solve_1d():
         values = r.integrate(r.t+.1)
         times.append(r.t)
         sol.append(values)
-        energies.append(potential_energy(values))
+        energies.append(potential_energy(r.t, values))
     return times, np.array(sol), np.array(energies)
 
 
