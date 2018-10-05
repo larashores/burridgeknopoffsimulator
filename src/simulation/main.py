@@ -1,10 +1,11 @@
 import random
+from datetime import datetime
 
 from scipy.integrate import ode
 
+from files.readwrite import write_data
 from simulation.blockarray import BlockArray
 from simulation.differential import Differential
-from viewers.tkviewer2d import view_2d
 
 spring_length = 1
 mass = .5
@@ -42,5 +43,8 @@ def solve(num_rows, num_cols):
 if __name__ == '__main__':
     rows = 3
     cols = 3
+    file_name = 'data/{}x{}-{}.dat'.format(rows, cols, datetime.now().strftime('%Y%m%dT%H%M%SZ'))
+
     times, solution = solve(rows, cols)
-    view_2d(rows, cols, solution)
+    write_data(rows, cols, times, solution, file_name)
+    print('File saved to: {}'.format(file_name))
