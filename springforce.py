@@ -1,6 +1,6 @@
-from util import TwoDimBlockArray
+from blockarray import BlockArray
 
-class SpringForcce:
+class SpringForce:
     def __init__(self, num_rows, num_columns, spring_constant, spring_length, mass):
         self.num_rows = num_rows
         self.num_columns = num_columns
@@ -12,8 +12,8 @@ class SpringForcce:
         """
         values in form [x0, v0, x1, v1, ..., xN, vN]
         """
-        current = TwoDimBlockArray(values, self.num_columns)
-        results = TwoDimBlockArray(self.num_rows, self.num_columns)
+        current = BlockArray(values, self.num_columns)
+        results = BlockArray(self.num_rows, self.num_columns)
 
         positions = current.positions
 

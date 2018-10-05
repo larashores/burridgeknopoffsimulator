@@ -1,7 +1,7 @@
 from tkinter import ttk
 import tkinter as tk
 
-from util import TwoDimBlockArray
+from blockarray import BlockArray
 
 
 class TkViewer2d(ttk.Frame):
@@ -17,21 +17,13 @@ class TkViewer2d(ttk.Frame):
         self.scale = scale
         self.block_size = block_size
         self.time_interval = time_interval
-        num_blocks = solution.shape[1] // 2
-        min_position = -float('inf')
-        max_position = float('inf')
-        for values in solution:
-            for i in range(num_blocks):
-                position = values[2*i]
-                min_position = min(min_position, position)
-                max_position = max(max_position, position)
         self.time_label.pack()
         self.canvas.pack(expand=tk.YES, fill=tk.BOTH)
 
     def draw_blocks(self, positions):
         height = self.winfo_height()
         half_size = self.block_size / 2
-        block_array = TwoDimBlockArray(positions, self.cols)
+        block_array = BlockArray(positions, self.cols)
         for i in range(self.rows):
             for j in range(self.cols):
                 x_pos = block_array.positions[i, j]

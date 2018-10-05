@@ -2,7 +2,7 @@ from physicalconstants import g
 import numpy as np
 
 from src.graphing.graphing import *
-from util import TwoDimBlockArray
+from blockarray import BlockArray
 
 epsilon = 1e-2
 
@@ -28,8 +28,8 @@ class FrictionalForce:
         self.mass = mass
 
     def __call__(self, values):
-        current = TwoDimBlockArray(values, self.num_cols)
-        results = TwoDimBlockArray(self.num_rows, self.num_cols)
+        current = BlockArray(values, self.num_cols)
+        results = BlockArray(self.num_rows, self.num_cols)
 
         for i in range(self.num_rows):
             for j in range(self.num_cols):

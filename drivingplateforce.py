@@ -1,4 +1,4 @@
-from util import TwoDimBlockArray
+from blockarray import BlockArray
 
 
 class DrivingPlateForce:
@@ -14,8 +14,8 @@ class DrivingPlateForce:
         """
         values in form [x0, v0, x1, v1, ..., xN, vN]
         """
-        current = TwoDimBlockArray(values, self.num_columns)
-        results = TwoDimBlockArray(self.num_rows, self.num_columns)
+        current = BlockArray(values, self.num_columns)
+        results = BlockArray(self.num_rows, self.num_columns)
 
         for i in range(self.num_rows):
             for j in range(self.num_columns):
