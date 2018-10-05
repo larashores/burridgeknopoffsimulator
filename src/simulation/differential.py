@@ -1,7 +1,7 @@
-from drivingplateforce import DrivingPlateForce
-from frictionalforce import FrictionalForce
-from positionupdater import PositionUpdater
-from springforce import SpringForce
+from src.simulation.drivingplateforce import DrivingPlateForce
+from src.simulation.frictionalforce import FrictionalForce
+from src.simulation.positionupdater import PositionUpdater
+from src.simulation.springforce import SpringForce
 
 
 class Differential:

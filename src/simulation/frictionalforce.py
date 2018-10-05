@@ -1,8 +1,8 @@
-from physicalconstants import g
 import numpy as np
 
+from src.physicalconstants import g
 from src.graphing.graphing import *
-from blockarray import BlockArray
+from src.simulation.blockarray import BlockArray
 
 epsilon = 1e-2
 

@@ -1,4 +1,4 @@
-from blockarray import BlockArray
+from src.simulation.blockarray import BlockArray
 
 class SpringForce:
     def __init__(self, num_rows, num_columns, spring_constant, spring_length, mass):
