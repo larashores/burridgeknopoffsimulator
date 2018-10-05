@@ -57,9 +57,9 @@ class TwoDimSpringForce:
 
                 force = 0
                 if (i - 1) >= 0:
-                    force += positions[i+1, j] - cur
-                if (i + 1) < self.num_rows:
                     force += positions[i-1, j] - cur
+                if (i + 1) < self.num_rows:
+                    force += positions[i+1, j] - cur
                 if (j - 1) >= 0:
                     force += (positions[i, j-1] - cur + self.spring_length)
                 if (j + 1) < self.num_columns:

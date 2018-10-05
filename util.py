@@ -21,7 +21,11 @@ class TwoDimBlockArray:
 
         def __getitem__(self, item):
             i, j = item
-            return self.parent.array[2*self.num_columns*i + 2*j]
+            try:
+                return self.parent.array[2*self.num_columns*i + 2*j]
+            except:
+                print(i, j, self.num_rows, self.num_columns)
+                raise
 
         def __setitem__(self, key, value):
             i, j = key
@@ -47,5 +51,7 @@ class TwoDimBlockArray:
             self.array = arg1
         else:
             self.array = np.zeros(arg1 * cols * 2)
-        self.positions = self._PositionGetter(self, len(self.array)  // (2 * cols), cols)
-        self.velocities = self._VelocityGetter(self, len(self.array) // (2 * cols), cols)
+        self.rows = len(self.array)  // (2 * cols)
+        self.cols = cols
+        self.positions = self._PositionGetter(self, self.rows, self.cols)
+        self.velocities = self._VelocityGetter(self, self.rows, self.cols)
