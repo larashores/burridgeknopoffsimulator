@@ -48,8 +48,9 @@ def saveable_int(int_type):
                 raise ValueError("Int {} is too large. Max={}".format(value, _max))
             self.value = value
 
-        def load_in_place(self, byte_array):
-            self.value = unpack_integer(byte_array, *str_to_type[int_type])
+        def load_in_place(self, byte_array, index=0):
+            self.value, index = unpack_integer(byte_array, index, *str_to_type[int_type])
+            return index
 
         def to_byte_array(self):
             array = bytearray()
@@ -59,7 +60,7 @@ def saveable_int(int_type):
     return SaveableInt
 
 
-def unpack_integer(data, size, signed):
+def unpack_integer(data, index, size, signed):
     """
     Purpose: Returns a int of size 'size' from front of packed data. Will strip
              off the int from the data
@@ -81,11 +82,9 @@ def unpack_integer(data, size, signed):
         raise ValueError('Size Invalid')
     if signed:
         fmt = fmt.lower()
-    b_int = data[:(size//8)]
-    for x in range(size//8):
-        data.pop(0)
+    b_int = data[index:index + (size//8)]
     _int = struct.unpack('<'+fmt, b_int)[0]
-    return _int
+    return _int, index + (size // 8)
 
 
 def pack_integer(data, _int, size, signed):
@@ -119,3 +118,13 @@ U32 = saveable_int('u32')
 S8 = saveable_int('s8')
 S16 = saveable_int('s16')
 S32 = saveable_int('s32')
+
+
+if __name__ == '__main__':
+    a = U32(34)
+    array = a.to_byte_array()
+    print('a:', a)
+    print('bytearray(a)', array)
+    b = U32.from_byte_array(array, 0)
+    print('b', b)
+    print('bytearray(a)', array)

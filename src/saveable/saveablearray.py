@@ -89,12 +89,13 @@ def array(array_type, int_type=U16):
             for ind in range(len(self.values)-1, -1, -1):
                 self.pop(ind)
 
-        def load_in_place(self, byte_array):
+        def load_in_place(self, byte_array, index=0):
             self.clear()
-            size = self.int_type.from_byte_array(byte_array)
+            size, index = self.int_type.from_byte_array(byte_array, index)
             for _ in range(size.value):
-                obj = array_type.from_byte_array(byte_array)
+                obj, index = array_type.from_byte_array(byte_array, index)
                 self.append(obj)
+            return index
 
         def to_byte_array(self):
             size = self.int_type()

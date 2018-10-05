@@ -3,7 +3,7 @@ import numpy as np
 
 def read_data(file_name):
     with open(file_name, 'rb') as file:
-        data =  Data.from_byte_array(bytearray(file.read()))
+        data, index =  Data.from_byte_array(bytearray(file.read()))
         values_list = []
         for values in data.values_list:
             array = np.zeros(len(values))

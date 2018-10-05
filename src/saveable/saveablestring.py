@@ -17,13 +17,14 @@ class SaveableString(SaveableType):
     def get(self):
         return self.value
 
-    def load_in_place(self, byte_array):
+    def load_in_place(self, byte_array, index=0):
         self.value = ''
-        length = U32.from_byte_array(byte_array)
+        length, index = U32.from_byte_array(byte_array, index)
         for _ in range(length.value):
-            char = struct.unpack('c', bytes((byte_array[0],)))
+            char = struct.unpack('c', bytes((byte_array[index],)))
             self.value += char[0].decode('ascii')
-            byte_array.pop(0)
+            index += 1
+        return index
 
     def to_byte_array(self):
         length = U32()

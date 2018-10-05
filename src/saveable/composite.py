@@ -107,9 +107,10 @@ class Composite(SaveableType, metaclass=CompositeMeta):
         else:
             return saveable_type
 
-    def load_in_place(self, byte_array):
+    def load_in_place(self, byte_array, index=0):
         for key in self.__ordered__:
-            self.__dict__[key].load_in_place(byte_array)
+            index = self.__dict__[key].load_in_place(byte_array, index)
+        return index
 
     def to_byte_array(self):
         array_ = bytearray()
@@ -153,5 +154,5 @@ if __name__ == '__main__':
     print(c)
     a = c.to_byte_array()
     print(a)
-    c.load_in_place(a)
+    c.load_in_place(bytes(a), 0)
     print(c)

@@ -18,11 +18,11 @@ class SaveableChar(SaveableType):
     def get(self):
         return self.value
 
-    def load_in_place(self, byte_array):
+    def load_in_place(self, byte_array, index=0):
         self.value = ''
-        char = struct.unpack('c', bytes((byte_array[0],)))
+        char = struct.unpack('c', bytes((byte_array[index],)))
         self.value += char[0].decode('ascii')
-        byte_array.pop(0)
+        return index + 1
 
     def to_byte_array(self):
         array = bytearray()

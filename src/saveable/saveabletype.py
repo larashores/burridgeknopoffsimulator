@@ -7,7 +7,7 @@ class SaveableType(metaclass=ABCMeta):
     """
 
     @classmethod
-    def from_byte_array(cls, byte_array):
+    def from_byte_array(cls, byte_array, index=0):
         """
         Makes a new Component object from a bytearray
 
@@ -18,8 +18,8 @@ class SaveableType(metaclass=ABCMeta):
             A Component object
         """
         obj = cls()
-        obj.load_in_place(byte_array)
-        return obj
+        index = obj.load_in_place(byte_array, index)
+        return obj, index
 
     @abstractmethod
     def to_byte_array(self):
@@ -32,14 +32,14 @@ class SaveableType(metaclass=ABCMeta):
         return bytearray()
 
     @abstractmethod
-    def load_in_place(self, byte_array):
+    def load_in_place(self, byte_array, index=0):
         """
         Given a byte array, loads all values of the saveable object and pops the data off the bytearray
 
         Args:
             byte_array: The bytearray to load
         """
-        pass
+        return index
 
     def copy(self):
         new = type(self)()

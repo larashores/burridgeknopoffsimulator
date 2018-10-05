@@ -99,16 +99,16 @@ class Union(SaveableType, metaclass=UnionMeta):
             return None
         return current
 
-    def load_in_place(self, byte_array):
-        #print('Union eating', byte_array)
+    def load_in_place(self, byte_array, ind=0):
         index = saveable_int('u8')()
-        index.load_in_place(byte_array)
+        ind = index.load_in_place(byte_array, ind)
         index = index.get()
         if not (0 <= index < len(self.__ordered__)):
             raise ValueError('Union index {} is out of range'.format(index))
         Type = self.__typemap__[self.__ordered__[index]]
         self.set(Type)
-        self.__current__.load_in_place(byte_array)
+        ind = self.__current__.load_in_place(byte_array, ind)
+        return ind
 
     def to_byte_array(self):
         if self.__current__ is None:

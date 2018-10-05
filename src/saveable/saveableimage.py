@@ -20,13 +20,13 @@ class SaveableImage(SaveableType):
     def get(self):
         return self.image
 
-    def load_in_place(self, byte_array):
-        size = U32.from_byte_array(byte_array)
+    def load_in_place(self, byte_array, index=0):
+        size, index = U32.from_byte_array(byte_array, index)
         stream = io.BytesIO(byte_array)
         self.image = Image.open(stream)
         self.image.load()
         stream.close()
-        del byte_array[:size.value]
+        return index + size.value
 
     def to_byte_array(self):
         _bytes = io.BytesIO()

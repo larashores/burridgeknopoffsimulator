@@ -28,11 +28,10 @@ def create_floating_point(num_bytes, fmt):
                 raise ValueError("Value not int! {}".format(value))
             self.value = value
 
-        def load_in_place(self, byte_array):
-            data = byte_array[:num_bytes]
-            for _ in range(num_bytes):
-                byte_array.pop(0)
+        def load_in_place(self, byte_array, index=0):
+            data = byte_array[index:index + num_bytes]
             self.value = struct.unpack('<'+fmt, data)[0]
+            return index + num_bytes
 
         def to_byte_array(self):
             return bytearray(struct.pack('<'+fmt, self.value))
