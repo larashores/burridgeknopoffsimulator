@@ -1,12 +1,17 @@
-import numpy as np
+from util import TwoDimBlockArray
 
 
 class OneDimVelocity:
-    def __init__(self, num_blocks):
-        self.num_blocks = num_blocks
+    def __init__(self, num_rows, num_cols):
+        self.num_rows = num_rows
+        self.num_cols = num_cols
 
     def __call__(self, values):
-        results = np.zeros(self.num_blocks * 2)
-        for i in range(0, self.num_blocks):
-            results[2*i] = values[2*i + 1]
-        return results
+        current = TwoDimBlockArray(values, self.num_cols)
+        results = TwoDimBlockArray(self.num_rows, self.num_cols)
+
+        for i in range(self.num_rows):
+            for j in range(self.num_cols):
+                results.positions[i, j] = current.velocities[i, j]
+
+        return results.array

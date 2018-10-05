@@ -2,6 +2,7 @@ from physicalconstants import g
 import numpy as np
 
 from src.graphing.graphing import *
+from util import TwoDimBlockArray
 
 epsilon = 1e-2
 
@@ -18,20 +19,25 @@ def _friction_force(velocity, static_coefficient, kinetic_coefficient, mass):
         return (y2-y1)*(velocity+epsilon)/(2*epsilon) + y1
 
 
-
-class OneDimFrictionalForce:
-    def __init__(self, num_blocks, static_coefficient, kinetic_coefficient, mass):
-        self.num_blocks = num_blocks
+class FrictionalForce:
+    def __init__(self, num_rows, num_cols, static_coefficient, kinetic_coefficient, mass):
+        self.num_rows = num_rows
+        self.num_cols = num_cols
         self.static_coefficient = static_coefficient
         self.kinetic_coefficient = kinetic_coefficient
         self.mass = mass
 
     def __call__(self, values):
-        results = np.zeros(self.num_blocks * 2)
-        for i in range(0, self.num_blocks):
-            results[2*i + 1] = _friction_force(values[2*i + 1],
-                                               self.static_coefficient, self.kinetic_coefficient, self.mass) * (1 / self.mass)
-        return results
+        current = TwoDimBlockArray(values, self.num_cols)
+        results = TwoDimBlockArray(self.num_rows, self.num_cols)
+
+        for i in range(self.num_rows):
+            for j in range(self.num_cols):
+                results.velocities[i, j] = _friction_force(current.velocities[i, j],
+                                                           self.static_coefficient,
+                                                           self.kinetic_coefficient,
+                                                           self.mass) * (1 / self.mass)
+        return results.array
 
 
 if __name__ == '__main__':
