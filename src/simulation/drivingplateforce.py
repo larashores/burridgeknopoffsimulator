@@ -1,4 +1,4 @@
-from src.simulation.blockarray import BlockArray
+from simulation.blockarray import BlockArray
 
 
 class DrivingPlateForce:

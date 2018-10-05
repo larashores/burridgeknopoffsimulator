@@ -2,9 +2,9 @@ import random
 
 from scipy.integrate import ode
 
-from blockarray import BlockArray
-from src.simulation.differential import Differential
-from src.viewers.tkviewer2d import view_2d
+from simulation.blockarray import BlockArray
+from simulation.differential import Differential
+from viewers.tkviewer2d import view_2d
 
 spring_length = 1
 mass = .5
