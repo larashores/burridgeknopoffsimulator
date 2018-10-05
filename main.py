@@ -8,6 +8,8 @@ from friction import OneDimFrictionalForce
 from springforce import OneDimSpringForce
 from velocity import OneDimVelocity
 from drivingplate import OneDimDrivingPlate
+from util import TwoDimBlockArray
+from springforce import TwoDimSpringForce
 
 
 spring_length = 1
@@ -33,7 +35,7 @@ def potential_energy(time, values):
 
 class Differential:
     def __init__(self, num_blocks):
-        self.one_dim_spring_force = OneDimSpringForce(num_blocks, k, spring_length, mass)
+        self.one_dim_spring_force = TwoDimSpringForce(1, num_blocks, k, spring_length, mass)
         self.one_dim_plate = OneDimDrivingPlate(num_blocks, plate_spring_constant, spring_length, plate_velocity, mass)
         self.one_dim_friction_force = OneDimFrictionalForce(num_blocks, static_friction, kinetic_friction, mass)
         self.one_dim_velocity = OneDimVelocity(num_blocks)
@@ -62,9 +64,12 @@ def initial_positions(num_blocks, initial_velocity):
 
 def solve_1d():
     num_blocks = 8
+    blocks = TwoDimBlockArray(1, num_blocks)
+    for j in range(num_blocks):
+        blocks.positions[0, j] = spring_constant * (j + random.random() / 2)
     r = ode(Differential(num_blocks))
     r.set_integrator('dopri5')
-    r.set_initial_value(initial_positions(num_blocks, .2))
+    r.set_initial_value(blocks.array)
     sol = []
     energies = []
     times = []
@@ -74,7 +79,6 @@ def solve_1d():
         sol.append(values)
         energies.append(potential_energy(r.t, values))
     return times, np.array(sol), np.array(energies)
-
 
 if __name__ == '__main__':
     times, solution, energies = solve_1d()
