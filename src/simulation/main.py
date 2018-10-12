@@ -3,50 +3,59 @@ from datetime import datetime
 
 from scipy.integrate import ode
 
+from files.saveables import Data
 from files.readwrite import write_data
 from simulation.blockarray import BlockArray
 from simulation.differential import Differential
 
 
-def solve(num_rows, num_cols, spring_length, mass, spring_constant, static_friction, kinetic_friction, plate_velocity,
-          plate_spring_constant):
-    blocks = BlockArray(num_rows, num_cols)
-    for i in range(num_rows):
-        for j in range(num_cols):
-            blocks.positions[i, j] = spring_constant * (j + random.random() / 2)
-    r = ode(Differential(num_rows, num_cols,
-                         block_spring_constant=k, plate_spring_constant=plate_spring_constant,
-                         static_friction=static_friction, kinetic_friction=kinetic_friction,
-                         mass=mass, spring_length=spring_length, plate_velocity=plate_velocity))
+def solve(data):
+    print('Creating initial data')
+    blocks = BlockArray(data.rows.get(), data.cols.get())
+    for i in range(data.rows.get()):
+        for j in range(data.cols.get()):
+            blocks.positions[i, j] = data.spring_constant.get() * (j + random.random() / 2)
+    print('Initial data created')
+    r = ode(Differential(data.rows.get(), data.cols.get(),
+                         block_spring_constant=data.spring_constant.get(),
+                         plate_spring_constant=data.plate_spring_constant.get(),
+                         static_friction=data.static_friction.get(), kinetic_friction=data.kinetic_friction.get(),
+                         mass=data.mass.get(), spring_length=data.spring_length.get(),
+                         plate_velocity=data.plate_velocity.get()))
     r.set_integrator('dopri5')
     r.set_initial_value(blocks.array)
     times = []
     sol = []
     progress_at = 0
+    start = datetime.now().timestamp()
     while r.successful() and r.t < 300:
         values = r.integrate(r.t+.1)
         times.append(r.t)
         sol.append(values)
         if r.t > progress_at:
-            print('Time: {}'.format(progress_at))
+            current = datetime.now().timestamp() - start
+            print('Time-step: {}, Real-time: {:.2f}'.format(progress_at, current))
             progress_at += 1
-    return times, sol
+    current = datetime.now().timestamp() - start
+    print('Finished at: {:.2f}'.format(current))
+
+    return times, sol, current
 
 
 if __name__ == '__main__':
-    rows = 3
-    cols = 3
-    spring_length = l = 1
-    mass = m =.5
-    spring_constant = k = 1
-    static_friction = us = .1
-    kinetic_friction = uk = 10
-    plate_velocity = v = .05
-    plate_spring_constant = kp = .5
-    file_name = 'data/{}x{}-{}.dat'.format(rows, cols, datetime.now().strftime('%Y%m%dT%H%M%SZ'))
+    data = Data()
+    data.rows = 3
+    data.cols = 3
+    data.spring_length = 1
+    data.mass = .5
+    data.spring_constant = 1
+    data.static_friction = .1
+    data.kinetic_friction = 10
+    data.plate_velocity = 0.5
+    data.plate_spring_constant = 0.5
+    file_name = 'data/{}x{}-{}.dat'.format(data.rows.get(), data.cols.get(), datetime.now().strftime('%Y%m%dT%H%M%SZ'))
 
-    times, solution = solve(rows, cols, spring_length, mass, spring_constant, static_friction,
-                            kinetic_friction, plate_velocity, plate_spring_constant)
-    write_data(file_name, rows, cols, spring_length, mass, spring_constant, static_friction,
-               kinetic_friction, plate_velocity, plate_spring_constant, times, solution)
+    times, solution, elapsed = solve(data)
+    data.total_time = elapsed
+    write_data(file_name, data, times, solution)
     print('File saved to: {}'.format(file_name))

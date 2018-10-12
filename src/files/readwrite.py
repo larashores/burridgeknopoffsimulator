@@ -16,18 +16,7 @@ def read_data(file_name):
         return data.rows.get(), data.cols.get(), times, values_list
 
 
-def write_data(file_name, rows, cols, spring_length, mass, spring_constant, static_friction, kinetic_friction,
-               plate_velocity, plate_spring_constant, times, values_list):
-    data = Data()
-    data.rows = rows
-    data.cols = cols
-    data.spring_length = spring_length
-    data.mass = mass
-    data.spring_constant = spring_constant
-    data.static_friction = static_friction
-    data.kinetic_friction = kinetic_friction
-    data.plate_velocity = plate_velocity
-    data.plate_spring_constant = plate_spring_constant
+def write_data(file_name, data, times, values_list):
     for time in times:
         data.times.append(time)
     for values in values_list:

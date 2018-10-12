@@ -18,6 +18,7 @@ class Data(Composite):
     kinetic_friction = SaveableDouble
     plate_velocity = SaveableDouble
     plate_spring_constant = SaveableDouble
+    total_time = SaveableDouble
     times = array(SaveableDouble)
     values_list = array(Timeslice)
 

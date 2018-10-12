@@ -2,6 +2,7 @@ from saveable.saveabletype import SaveableType
 
 import enum
 import struct
+import numbers
 
 
 def create_floating_point(num_bytes, fmt):
@@ -24,8 +25,8 @@ def create_floating_point(num_bytes, fmt):
             return self.value
 
         def set(self, value):
-            if not isinstance(value, float):
-                raise ValueError("Value not int! {}".format(value))
+            if not isinstance(value, numbers.Number):
+                raise ValueError("Value not float! {}".format(value))
             self.value = value
 
         def load_in_place(self, byte_array, index=0):
