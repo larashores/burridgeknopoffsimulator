@@ -4,9 +4,9 @@ project(BurridgeKnopoffLib VERSION 0.1)
 #-----------Project Files------------
 
 set(SOURCE_FILES src/python.cpp
-                 src/blockarray.cpp)
+                 src/springforce.cpp)
 
-set(HEADER_FILES include/blockarray.h)
+set(HEADER_FILES include/springforce.h)
 
 #------------------------------------
 
@@ -15,7 +15,7 @@ set(ARCHITECTURE x64)
 set(BUILD_STATIC ON)
 
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall -Wextra -pedantic -g")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall -Wextra -pedantic -g -O3")
 set(CMAKE_CXX_COMPILER_ARCHITECTURE_ID ${ARCHITECTURE})  # Used to find Boost libraries correctly
 #------------------------------------
 
@@ -57,6 +57,6 @@ target_include_directories(burridgeknopoff SYSTEM PRIVATE ${Boost_INCLUDE_DIRS} 
 target_link_libraries(burridgeknopoff ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
 
 install(TARGETS burridgeknopoff
-        DESTINATION "E:/Users/Vincent/Documents/Capstone/Capstone 1/BurridgeKnopoffLib/build"
+        DESTINATION "E:/Users/Vincent/Documents/Capstone/Capstone 1/simulator"
         CONFIGURATIONS Debug Release)
 #-----------------------------------

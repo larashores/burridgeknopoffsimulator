@@ -1,7 +1,7 @@
 #include <boost/python.hpp>
 #include <boost/python/numpy.hpp>
 
-#include "blockarray.h"
+#include "springforce.h"
 
 namespace PY = boost::python;
 namespace NP = boost::python::numpy;
@@ -10,6 +10,6 @@ BOOST_PYTHON_MODULE(burridgeknopoff)
 {
     Py_Initialize();
     NP::initialize();
-    PY::class_<BlockArray>("BlockArray", PY::init<PY::object&>())
-            .def("get", &BlockArray::get);
+    PY::class_<SpringForce>("SpringForce", PY::init<int, int, double, double, double>())
+            .def("__call__", &SpringForce::differentiate);
 }
