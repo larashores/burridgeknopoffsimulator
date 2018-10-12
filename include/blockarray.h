@@ -7,8 +7,11 @@
 class BlockArray
 {
 public:
-    BlockArray(boost::python::numpy::ndarray& array);
+    explicit BlockArray(boost::python::object& array);
+    ~BlockArray();
+
+    double get(int index);
 
 private:
-    boost::python::numpy::ndarray& m_array;
+    boost::python::numpy::ndarray m_array;
 };
