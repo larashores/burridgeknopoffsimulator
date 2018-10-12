@@ -1,7 +1,7 @@
 from simulation.drivingplateforce import DrivingPlateForce
 from simulation.frictionalforce import FrictionalForce
 from simulation.positionupdater import PositionUpdater
-from simulation.springforce import SpringForce
+from burridgeknopoff import SpringForce
 
 
 class Differential:

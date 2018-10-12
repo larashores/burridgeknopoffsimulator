@@ -34,24 +34,24 @@ def solve(data):
         sol.append(values)
         if r.t > progress_at:
             current = datetime.now().timestamp() - start
-            print('Time-step: {}, Real-time: {:.2f}'.format(progress_at, current))
+            print('Time-step: {}, Real-time: {:.2f}s'.format(progress_at, current))
             progress_at += 1
     current = datetime.now().timestamp() - start
-    print('Finished at: {:.2f}'.format(current))
+    print('Finished at: {:.2f}s'.format(current))
 
     return times, sol, current
 
 
 if __name__ == '__main__':
     data = Data()
-    data.rows = 3
-    data.cols = 3
+    data.rows = 5
+    data.cols = 5
     data.spring_length = 1
     data.mass = .5
     data.spring_constant = 1
     data.static_friction = .1
     data.kinetic_friction = 10
-    data.plate_velocity = 0.5
+    data.plate_velocity = 0.2
     data.plate_spring_constant = 0.5
     file_name = 'data/{}x{}-{}.dat'.format(data.rows.get(), data.cols.get(), datetime.now().strftime('%Y%m%dT%H%M%SZ'))
 
