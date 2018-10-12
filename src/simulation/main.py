@@ -7,16 +7,9 @@ from files.readwrite import write_data
 from simulation.blockarray import BlockArray
 from simulation.differential import Differential
 
-spring_length = 1
-mass = .5
-spring_constant = k = 1
-static_friction = us = .1
-kinetic_friction = uk = 10
-plate_velocity = .05
-plate_spring_constant = .5
 
-
-def solve(num_rows, num_cols):
+def solve(num_rows, num_cols, spring_length, mass, spring_constant, static_friction, kinetic_friction, plate_velocity,
+          plate_spring_constant):
     blocks = BlockArray(num_rows, num_cols)
     for i in range(num_rows):
         for j in range(num_cols):
@@ -43,8 +36,17 @@ def solve(num_rows, num_cols):
 if __name__ == '__main__':
     rows = 3
     cols = 3
+    spring_length = l = 1
+    mass = m =.5
+    spring_constant = k = 1
+    static_friction = us = .1
+    kinetic_friction = uk = 10
+    plate_velocity = v = .05
+    plate_spring_constant = kp = .5
     file_name = 'data/{}x{}-{}.dat'.format(rows, cols, datetime.now().strftime('%Y%m%dT%H%M%SZ'))
 
-    times, solution = solve(rows, cols)
-    write_data(rows, cols, times, solution, file_name)
+    times, solution = solve(rows, cols, spring_length, mass, spring_constant, static_friction,
+                            kinetic_friction, plate_velocity, plate_spring_constant)
+    write_data(file_name, rows, cols, spring_length, mass, spring_constant, static_friction,
+               kinetic_friction, plate_velocity, plate_spring_constant, times, solution)
     print('File saved to: {}'.format(file_name))
