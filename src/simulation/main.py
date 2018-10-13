@@ -44,15 +44,15 @@ def solve(data):
 
 if __name__ == '__main__':
     data = Data()
-    data.rows = 5
-    data.cols = 5
-    data.spring_length = 1
-    data.mass = .5
-    data.spring_constant = 1
-    data.static_friction = .1
-    data.kinetic_friction = 10
-    data.plate_velocity = 0.2
-    data.plate_spring_constant = 0.5
+    data.rows = 25
+    data.cols = 25
+    data.spring_length = 1.0
+    data.mass = 2.0
+    data.spring_constant = 1.0
+    data.static_friction = 0.1
+    data.kinetic_friction = 6.0
+    data.plate_velocity = 0.05
+    data.plate_spring_constant = 3
     file_name = 'data/{}x{}-{}.dat'.format(data.rows.get(), data.cols.get(), datetime.now().strftime('%Y%m%dT%H%M%SZ'))
 
     times, solution, elapsed = solve(data)

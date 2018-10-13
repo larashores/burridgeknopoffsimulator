@@ -13,5 +13,5 @@ if __name__ == '__main__':
         file = os.path.join('data', sys.argv[1])
     else:
         raise TypeError('Usage: [filename]')
-    rows, cols, times, solution = read_data(file)
-    view_2d(rows, cols, solution)
+    rows, cols, times, solution, velocity = read_data(file)
+    view_2d(rows, cols, solution, velocity=velocity)

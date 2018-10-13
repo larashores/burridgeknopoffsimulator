@@ -3,6 +3,7 @@ import numpy as np
 from physicalconstants import g
 from graphing.graphing import *
 from simulation.blockarray import BlockArray
+import burridgeknopoff as bk
 
 epsilon = 1e-2
 
@@ -33,10 +34,10 @@ class FrictionalForce:
 
         for i in range(self.num_rows):
             for j in range(self.num_cols):
-                results.velocities[i, j] = _friction_force(current.velocities[i, j],
-                                                           self.static_coefficient,
-                                                           self.kinetic_coefficient,
-                                                           self.mass) * (1 / self.mass)
+                results.velocities[i, j] = bk.friction_force(current.velocities[i, j],
+                                                             self.static_coefficient,
+                                                             self.kinetic_coefficient,
+                                                             self.mass) * (1 / self.mass)
         return results.array
 
 

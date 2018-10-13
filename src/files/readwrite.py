@@ -13,7 +13,7 @@ def read_data(file_name):
         times = []
         for time in data.times:
             times.append(time.get())
-        return data.rows.get(), data.cols.get(), times, values_list
+        return data.rows.get(), data.cols.get(), times, values_list, data.plate_velocity.get()
 
 
 def write_data(file_name, data, times, values_list):

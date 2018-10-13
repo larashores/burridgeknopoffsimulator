@@ -2,7 +2,6 @@ from abc import ABCMeta
 import collections
 import inspect
 
-from simulation.blockarray import BlockArray
 from saveable.saveablearray import SaveableType
 
 
