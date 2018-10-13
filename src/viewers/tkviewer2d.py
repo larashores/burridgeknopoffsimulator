@@ -7,12 +7,13 @@ from src.simulation.blockarray import BlockArray
 
 class TkViewer2d(ttk.Frame):
     LABEL_TEXT = 'Time: {:.1f}'
-    def __init__(self, parent, rows, cols, solution, time_interval=.1, velocity=.1, scale=30, block_size=10, **kwargs):
+    def __init__(self, parent, rows, cols, solution, time_interval=.1, spring_length=1, velocity=.1, scale=30, block_size=10, **kwargs):
         ttk.Frame.__init__(self, parent, **kwargs)
         self.rows = rows
         self.cols = cols
         self.solution = solution
         self.time = 0
+        self.spring_length = spring_length
         self.velocity = velocity
         self.time_label = ttk.Label(self, text=self.LABEL_TEXT.format(self.time))
         self.canvas = tk.Canvas(self)
@@ -23,19 +24,17 @@ class TkViewer2d(ttk.Frame):
         self.canvas.pack(expand=tk.YES, fill=tk.BOTH)
 
     def draw_blocks(self, positions):
+        width = self.winfo_width()
         height = self.winfo_height()
-        half_size = self.block_size / 2
+        distance = (self.spring_length * self.scale)
+        start_x = (width - (self.rows-1)*distance - self.block_size) / 2
+        start_y = (height - (self.cols-1)*distance - self.block_size) / 2
         block_array = BlockArray(positions, self.cols)
         for i in range(self.rows):
             for j in range(self.cols):
                 x_pos = block_array.positions[i, j]
-                x, y = x_pos * self.scale + self.block_size, (height // 2) - (i * self.block_size * 2)
-                self.canvas.create_rectangle(x - half_size, y - half_size, x + half_size, y + half_size)
-        x1 = self.block_size
-        x2 = self.block_size + (self.cols * self.scale)
-        offset = self.time * self.velocity * self.scale
-        y = (height // 2) - (2 * self.block_size * self.rows)
-        self.canvas.create_line(x1 + offset, y, x2 + offset, y)
+                x, y = start_x + x_pos * self.scale, start_y + distance * i
+                self.canvas.create_rectangle(x, y, x + self.block_size, y + self.block_size)
 
     def draw_recursive(self, i):
         self.time += self.time_interval
@@ -52,7 +51,6 @@ class TkViewer2d(ttk.Frame):
 
 def view_2d(rows, cols, solution, velocity):
     root = tk.Tk()
-    root.geometry('1600x600')
     viewer = TkViewer2d(root, rows, cols, solution, velocity=velocity)
     button = ttk.Button(root, text='Start', command=lambda: viewer.start())
     viewer.pack(expand=tk.YES, fill=tk.BOTH)
