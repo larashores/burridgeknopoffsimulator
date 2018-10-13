@@ -93,6 +93,7 @@ class Sidebar(ttk.Frame):
         int_validate(speed_spinbox, (5, 50))
         self.speed_var.set(1)
 
+        self.message = tk.Message(self, font=('consolas', 10))
         self.button_start = ttk.Button(self, text='Start')
 
         block_size_label.pack()
@@ -101,22 +102,24 @@ class Sidebar(ttk.Frame):
         scale_spinbox.pack(pady=(0, 10))
         speed_label.pack()
         speed_spinbox.pack(pady=(0, 10))
-        self.button_start.pack()
+        self.message.pack(fill=tk.BOTH)
+        self.button_start.pack(pady=(6, 10))
 
 
 class TkViewer:
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, message='', **kwargs):
         self.gui = TkViewer2dGui(*args, **kwargs)
         self.gui.sidebar.button_start.config(command=self.on_start)
+        self.gui.sidebar.message.config(text=message)
 
     def on_start(self):
         self.gui.sidebar.button_start.state(['disabled'])
         self.gui.start()
 
 
-def view_2d(rows, cols, solution):
+def view_2d(rows, cols, solution, description):
     root = tk.Tk()
     root.wm_title('Block Viewer')
-    viewer = TkViewer(root, rows, cols, solution)
+    viewer = TkViewer(root, rows, cols, solution, message=description)
     viewer.gui.pack(expand=tk.YES, fill=tk.BOTH)
     root.mainloop()

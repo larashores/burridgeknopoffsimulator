@@ -1,6 +1,7 @@
 import glob
 import os
 import sys
+import numpy as np
 
 from files.readwrite import read_data
 from viewers.tkviewer2d import view_2d
@@ -13,5 +14,22 @@ if __name__ == '__main__':
         file = os.path.join('data', sys.argv[1])
     else:
         raise TypeError('Usage: [filename]')
-    rows, cols, times, solution, velocity = read_data(file)
-    view_2d(rows, cols, solution, velocity=velocity)
+
+    data = read_data(file)
+    solution = []
+    for values in data.values_list:
+        array = np.zeros(len(values))
+        for i, value in enumerate(values):
+            array[i] = value.get()
+        solution.append(array)
+    desc = ('rows: {}\n' +
+            'cols: {}\n' +
+            'm:    {}\n' +
+            'v:    {}\n' +
+            'k_b:  {}\n' +
+            'k_p:  {}\n' +
+            'u_s:  {}\n' +
+            'u_k:  {}').format(data.rows.get(), data.cols.get(), data.mass.get(), data.plate_velocity.get(),
+                                data.spring_constant.get(), data.plate_spring_constant.get(),
+                                data.static_friction.get(), data.kinetic_friction.get())
+    view_2d(data.rows.get(), data.cols.get(), solution, desc)
