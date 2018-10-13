@@ -29,7 +29,9 @@ if __name__ == '__main__':
             'k_b:  {}\n' +
             'k_p:  {}\n' +
             'u_s:  {}\n' +
-            'u_k:  {}').format(data.rows.get(), data.cols.get(), data.mass.get(), data.plate_velocity.get(),
-                                data.spring_constant.get(), data.plate_spring_constant.get(),
-                                data.static_friction.get(), data.kinetic_friction.get())
-    view_2d(data.rows.get(), data.cols.get(), solution, desc)
+            'u_k:  {}\n' +
+            'dt:   {}').format(data.rows.get(), data.cols.get(), data.mass.get(), data.plate_velocity.get(),
+                               data.spring_constant.get(), data.plate_spring_constant.get(),
+                               data.static_friction.get(), data.kinetic_friction.get(),
+                               data.time_interval.get())
+    view_2d(data.rows.get(), data.cols.get(), data.spring_length.get(), data.time_interval.get(), solution, desc)

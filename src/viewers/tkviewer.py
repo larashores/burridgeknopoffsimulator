@@ -8,7 +8,7 @@ from viewers.integercheck import int_validate
 
 class TkViewerGui(ttk.Frame):
     LABEL_TEXT = 'Time: {:.1f}'
-    def __init__(self, parent, rows, cols, solution, time_interval=.1, spring_length=1,  **kwargs):
+    def __init__(self, parent, rows, cols, spring_length, time_interval, solution, **kwargs):
         ttk.Frame.__init__(self, parent, **kwargs)
         self.time = 0
         self.rows = rows
@@ -117,9 +117,9 @@ class TkViewer:
         self.gui.start()
 
 
-def view_2d(rows, cols, solution, description):
+def view_2d(rows, cols, spring_length, time_interval, solution, description):
     root = tk.Tk()
     root.wm_title('Block Viewer')
-    viewer = TkViewer(root, rows, cols, solution, message=description)
+    viewer = TkViewer(root, rows, cols, spring_length, time_interval, solution, message=description)
     viewer.gui.pack(expand=tk.YES, fill=tk.BOTH)
     root.mainloop()

@@ -7,7 +7,7 @@ class Timeslice(array(SaveableDouble)):
     pass
 
 class Data(Composite):
-    VERSION = 1
+    VERSION = 2
 
     rows = U16
     cols = U16
@@ -18,6 +18,7 @@ class Data(Composite):
     kinetic_friction = SaveableDouble
     plate_velocity = SaveableDouble
     plate_spring_constant = SaveableDouble
+    time_interval = SaveableDouble
     total_time = SaveableDouble
     times = array(SaveableDouble)
     values_list = array(Timeslice)
