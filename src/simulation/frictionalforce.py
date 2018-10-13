@@ -21,11 +21,12 @@ def _friction_force(velocity, static_coefficient, kinetic_coefficient, mass):
 
 
 class FrictionalForce:
-    def __init__(self, num_rows, num_cols, static_coefficient, kinetic_coefficient, mass):
+    def __init__(self, num_rows, num_cols, static_coefficient, kinetic_coefficient, plate_velocity, mass):
         self.num_rows = num_rows
         self.num_cols = num_cols
         self.static_coefficient = static_coefficient
         self.kinetic_coefficient = kinetic_coefficient
+        self.plate_velocity = plate_velocity
         self.mass = mass
 
     def __call__(self, values):
@@ -34,7 +35,7 @@ class FrictionalForce:
 
         for i in range(self.num_rows):
             for j in range(self.num_cols):
-                results.velocities[i, j] = bk.friction_force(current.velocities[i, j],
+                results.velocities[i, j] = bk.friction_force(self.plate_velocity + current.velocities[i, j],
                                                              self.static_coefficient,
                                                              self.kinetic_coefficient,
                                                              self.mass) * (1 / self.mass)

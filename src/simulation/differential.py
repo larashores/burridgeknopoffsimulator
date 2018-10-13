@@ -10,9 +10,9 @@ class Differential:
                  spring_length, mass):
         self.velocity = PositionUpdater(num_rows, num_cols)
         self.spring_force = SpringForce(num_rows, num_cols, block_spring_constant, spring_length, mass)
-        self.frictional_force = FrictionalForce(num_rows, num_cols, static_friction, kinetic_friction, mass)
-        self.driving_plate_force = DrivingPlateForce(num_rows, num_cols,  plate_spring_constant, spring_length,
-                                                     plate_velocity, mass)
+        self.driving_plate_force = DrivingPlateForce(num_rows, num_cols,  plate_spring_constant, spring_length, mass)
+        self.frictional_force = FrictionalForce(num_rows, num_cols, static_friction, kinetic_friction, plate_velocity,
+                                                mass)
 
     def __call__(self, t, values):
         """
@@ -23,7 +23,7 @@ class Differential:
         """
         spring_force = self.spring_force(values)
         friction_force = self.frictional_force(values)
-        plate_force = self.driving_plate_force(values, t)
+        plate_force = self.driving_plate_force(values)
         new_positions = self.velocity(values)
         net = spring_force + new_positions + friction_force + plate_force
         return net
