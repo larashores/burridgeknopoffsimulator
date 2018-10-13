@@ -6,7 +6,7 @@ from src.simulation.blockarray import BlockArray
 from viewers.integercheck import int_validate
 
 
-class TkViewer2dGui(ttk.Frame):
+class TkViewerGui(ttk.Frame):
     LABEL_TEXT = 'Time: {:.1f}'
     def __init__(self, parent, rows, cols, solution, time_interval=.1, spring_length=1,  **kwargs):
         ttk.Frame.__init__(self, parent, **kwargs)
@@ -108,7 +108,7 @@ class Sidebar(ttk.Frame):
 
 class TkViewer:
     def __init__(self, *args, message='', **kwargs):
-        self.gui = TkViewer2dGui(*args, **kwargs)
+        self.gui = TkViewerGui(*args, **kwargs)
         self.gui.sidebar.button_start.config(command=self.on_start)
         self.gui.sidebar.message.config(text=message)
 

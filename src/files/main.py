@@ -4,7 +4,7 @@ import sys
 import numpy as np
 
 from files.readwrite import read_data
-from viewers.tkviewer2d import view_2d
+from viewers.tkviewer import view_2d
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
