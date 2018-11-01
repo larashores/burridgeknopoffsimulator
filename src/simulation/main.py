@@ -7,14 +7,16 @@ from files.saveables import Data
 from files.readwrite import write_data
 from simulation.blockarray import BlockArray
 from simulation.differential import Differential
+from physicalconstants import g
 
+import winsound
 
 def solve(data):
     print('Creating initial data')
     blocks = BlockArray(data.rows.get(), data.cols.get())
     for i in range(data.rows.get()):
         for j in range(data.cols.get()):
-            blocks.positions[i, j] = data.spring_constant.get() * (j + random.random() / 2)
+            blocks.positions[i, j] = data.spring_length.get() * (j + random.random() / 3)
     print('Initial data created')
     r = ode(Differential(data.rows.get(), data.cols.get(),
                          block_spring_constant=data.spring_constant.get(),
@@ -22,7 +24,7 @@ def solve(data):
                          static_friction=data.static_friction.get(), kinetic_friction=data.kinetic_friction.get(),
                          mass=data.mass.get(), spring_length=data.spring_length.get(),
                          plate_velocity=data.plate_velocity.get()))
-    r.set_integrator('dopri5')
+    r.set_integrator('dopri5', nsteps=10000)
     r.set_initial_value(blocks.array)
     times = []
     sol = []
@@ -44,19 +46,22 @@ def solve(data):
 
 if __name__ == '__main__':
     data = Data()
-    data.rows = 3
-    data.cols = 3
-    data.spring_length = 1.0
-    data.mass = 2.0
-    data.spring_constant = 1.0
-    data.static_friction = 0.1
-    data.kinetic_friction = 6.0
-    data.plate_velocity = 0.05
-    data.plate_spring_constant = 3
-    data.time_interval = 0.1
-    file_name = 'data/{}x{}-{}.dat'.format(data.rows.get(), data.cols.get(), datetime.now().strftime('%Y%m%dT%H%M%SZ'))
+    data.rows = 5
+    data.cols = 5
+    data.spring_length = 2.0
+    data.mass = 1.0
+    data.spring_constant = 0.8
+    data.static_friction = 1.0 / (data.mass.get() * g)
+    data.kinetic_friction = 10.0
+    data.plate_velocity = 0.01
+    data.plate_spring_constant = 1.0
+    data.time_interval = 0.2
+    file_name = 'data/{}x{}-{}-V{}.dat'.format(data.rows.get(), data.cols.get(),
+                                                datetime.now().strftime('%Y%m%dT%H%M%SZ'),
+                                                Data.VERSION)
 
     times, solution, elapsed = solve(data)
+    winsound.Beep(2500, 500)
     data.total_time = elapsed
     write_data(file_name, data, times, solution)
     print('File saved to: {}'.format(file_name))
