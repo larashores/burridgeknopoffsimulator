@@ -5,7 +5,7 @@ from graphing.graphing import *
 from simulation.blockarray import BlockArray
 import burridgeknopoff as bk
 
-epsilon = 1e-2
+epsilon = 1e-3
 
 
 def _friction_force(velocity, static_coefficient, kinetic_coefficient, mass):
@@ -43,8 +43,8 @@ class FrictionalForce:
 
 
 if __name__ == '__main__':
-    xs = np.linspace(-5, 5, 1000)
-    ys = np.array(list(map(lambda x: _friction_force(x, 0.03, 10, 1), xs)))
+    xs = np.linspace(-.05, .05, 1000)
+    ys = np.array(list(map(lambda x: _friction_force(x, 1.0 / g, 50, 1), xs)))
     graph = Graph(xs, ys, plot_type='-', legend_label='$k $m$={}, $\mu_s={}, $\mu_k={}'.format(1, 1, 1))
     draw(SubPlot(graph, x_label='Velocity', y_label='Frictional Force'),
          title='Velocity Dependent Frictional Force')
