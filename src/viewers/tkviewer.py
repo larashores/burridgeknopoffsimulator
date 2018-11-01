@@ -1,6 +1,8 @@
 from tkinter import ttk
 import tkinter as tk
 import numpy as np
+import datetime
+import math
 
 from src.simulation.blockarray import BlockArray
 from viewers.integercheck import int_validate
@@ -42,13 +44,26 @@ class TkViewerGui(ttk.Frame):
                 x, y = start_x + x_pos * self.scale, start_y + distance * i
                 self.canvas.create_rectangle(x, y, x + self.block_size, y + self.block_size)
 
+        x1 = 0
+        num = 0
+        while x1 < width:
+            x1 = int((width / 2) + num * self.scale)
+            x2 = int((width / 2) - num * self.scale)
+            self.canvas.create_line(x1, height, x1, height - 20)
+            self.canvas.create_line(x2, height, x2, height - 20)
+            self.canvas.create_text((x1, height - 30), text=str(num))
+            self.canvas.create_text((x2, height - 30), text=str(-num))
+            num += math.ceil(30 / self.scale)
+
     def draw_recursive(self, i):
+        start = datetime.datetime.now().timestamp()
         self.update_values()
         self.time_label.config(text=self.LABEL_TEXT.format(self.time))
         self.canvas.delete(tk.ALL)
         self.draw_blocks(np.array(self.solution[i]))
+        end = datetime.datetime.now().timestamp()
         if i < len(self.solution) - 1:
-            self.after(int(self.time_interval * self.wait_time), lambda: self.draw_recursive(i + 1))
+            self.after(int(self.time_interval * self.wait_time) - int((end - start) * 1e3), lambda: self.draw_recursive(i + 1))
         else:
             self.sidebar.button_start.state(['!disabled'])
         self.time += self.time_interval
