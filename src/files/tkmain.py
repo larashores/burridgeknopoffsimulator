@@ -16,12 +16,6 @@ if __name__ == '__main__':
         raise TypeError('Usage: [filename]')
 
     data = read_data(file)
-    solution = []
-    for values in data.values_list:
-        array = np.zeros(len(values))
-        for i, value in enumerate(values):
-            array[i] = value.get()
-        solution.append(array)
     desc = ('rows: {}\n' +
             'cols: {}\n' +
             'm:    {}\n' +
@@ -37,4 +31,4 @@ if __name__ == '__main__':
                                data.spring_constant.get(), data.plate_spring_constant.get(),
                                data.static_friction.get(), data.kinetic_friction.get(),
                                data.time_interval.get())
-    view_2d(data.rows.get(), data.cols.get(), data.spring_length.get(), data.time_interval.get(), solution, desc)
+    view_2d(data, desc)

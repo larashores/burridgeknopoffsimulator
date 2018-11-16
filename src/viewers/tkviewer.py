@@ -10,14 +10,10 @@ from viewers.integercheck import int_validate
 
 class TkViewerGui(ttk.Frame):
     LABEL_TEXT = 'Time: {:.1f}'
-    def __init__(self, parent, rows, cols, spring_length, time_interval, solution, **kwargs):
+    def __init__(self, parent, data, **kwargs):
         ttk.Frame.__init__(self, parent, **kwargs)
         self.time = 0
-        self.rows = rows
-        self.cols = cols
-        self.solution = solution
-        self.spring_length = spring_length
-        self.time_interval = time_interval
+        self._data = data
 
         self.sidebar = Sidebar(self)
         self.separator = ttk.Separator(self, orient=tk.VERTICAL)
@@ -34,12 +30,12 @@ class TkViewerGui(ttk.Frame):
     def draw_blocks(self, positions):
         width = self.canvas.winfo_width()
         height = self.canvas.winfo_height()
-        distance = (self.spring_length * self.scale)
-        start_x = (width - (self.cols-1)*distance - self.block_size) / 2
-        start_y = (height - (self.rows-1)*distance - self.block_size) / 2
-        block_array = BlockArray(positions, self.cols)
-        for i in range(self.rows):
-            for j in range(self.cols):
+        distance = (self._data.spring_length.get() * self.scale)
+        start_x = (width - (self._data.cols.get()-1)*distance - self.block_size) / 2
+        start_y = (height - (self._data.rows.get()-1)*distance - self.block_size) / 2
+        block_array = BlockArray(positions, self._data.cols.get())
+        for i in range(self._data.rows.get()):
+            for j in range(self._data.cols.get()):
                 x_pos = block_array.positions[i, j]
                 x, y = start_x + x_pos * self.scale, start_y + distance * i
                 self.canvas.create_rectangle(x, y, x + self.block_size, y + self.block_size)
@@ -60,13 +56,14 @@ class TkViewerGui(ttk.Frame):
         self.update_values()
         self.time_label.config(text=self.LABEL_TEXT.format(self.time))
         self.canvas.delete(tk.ALL)
-        self.draw_blocks(np.array(self.solution[i]))
+        self.draw_blocks(np.array([value.get() for value in self._data.values_list[i]]))
         end = datetime.datetime.now().timestamp()
-        if i < len(self.solution) - 1:
-            self.after(int(self.time_interval * self.wait_time) - int((end - start) * 1e3), lambda: self.draw_recursive(i + 1))
+        if i < len(self._data.values_list) - 1:
+            self.after(int(self._data.time_interval.get() * self.wait_time) - int((end - start) * 1e3),
+                       lambda: self.draw_recursive(i + 1))
         else:
             self.sidebar.button_start.state(['!disabled'])
-        self.time += self.time_interval
+        self.time += self._data.time_interval.get()
 
     def update_values(self):
         try:
@@ -132,9 +129,9 @@ class TkViewer:
         self.gui.start()
 
 
-def view_2d(rows, cols, spring_length, time_interval, solution, description):
+def view_2d(data, description):
     root = tk.Tk()
     root.wm_title('Block Viewer')
-    viewer = TkViewer(root, rows, cols, spring_length, time_interval, solution, message=description)
+    viewer = TkViewer(root, data, message=description)
     viewer.gui.pack(expand=tk.YES, fill=tk.BOTH)
     root.mainloop()

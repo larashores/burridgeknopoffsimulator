@@ -3,8 +3,13 @@ from saveable.saveablearray import array
 from saveable.saveablefloat import SaveableDouble
 from saveable.saveableint import U16
 
+
 class Timeslice(array(SaveableDouble)):
-    pass
+    def __init__(self, values=list()):
+        super(Timeslice, self).__init__()
+        for value in values:
+            self.append(value)
+
 
 class Data(Composite):
     VERSION = 2
@@ -25,15 +30,19 @@ class Data(Composite):
 
     def __init__(self):
         Composite.__init__(self)
-        self.version = U16(Data.VERSION)
+        self._version = U16(Data.VERSION)
+
+    def add_slice(self, time, values):
+        self.times.append(time)
+        self.values_list.append(Timeslice(values))
 
     def to_byte_array(self):
-        byte_array = self.version.to_byte_array()
+        byte_array = self._version.to_byte_array()
         byte_array += Composite.to_byte_array(self)
         return byte_array
 
     def load_in_place(self, byte_array, index=0):
-        index = self.version.load_in_place(byte_array, index)
-        if self.version.get() != Data.VERSION:
-            raise TypeError("Incorrect file version: '{}'".format(self.version.get()))
+        index = self._version.load_in_place(byte_array, index)
+        if self._version.get() != Data.VERSION:
+            raise TypeError("Incorrect file version: '{}'".format(self._version.get()))
         Composite.load_in_place(self, byte_array, index)

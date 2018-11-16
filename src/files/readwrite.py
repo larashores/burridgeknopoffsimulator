@@ -5,15 +5,6 @@ def read_data(file_name):
         data, index =  Data.from_byte_array(bytearray(file.read()))
         return data
 
-
-def write_data(file_name, data, times, values_list):
-    for time in times:
-        data.times.append(time)
-    for values in values_list:
-        timeslice = Timeslice()
-        for value in values:
-            timeslice.append(value)
-        data.values_list.append(timeslice)
-
+def write_data(file_name, data):
     with open(file_name, 'wb') as file:
         file.write(data.to_byte_array())

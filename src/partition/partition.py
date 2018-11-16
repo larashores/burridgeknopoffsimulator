@@ -10,10 +10,10 @@ class SingleSlipEvent:
     end_index = property(lambda self: self._end_index)
     distance = property(lambda self: self._distance)
 
-    def __init__(self, solution, num_cols, row, col, start_index):
+    def __init__(self, data,  row, col, start_index):
         self._distance = 0
-        self._solution = solution
-        self._num_columns = num_cols
+        self._data = data
+        self._data = data
         self._row = row
         self._col = col
         self._start_index = start_index
@@ -21,28 +21,26 @@ class SingleSlipEvent:
 
     def set_end(self, end_index):
         self._end_index = end_index
-        start_block_array = BlockArray(self._solution[self._start_index], self._num_columns)
-        end_block_array = BlockArray(self._solution[self._end_index], self._num_columns)
+        start_array = np.array([value.get() for value in self._data.values_list[self._start_index]])
+        end_array = np.array([value.get() for value in self._data.values_list[self._end_index]])
+        start_block_array = BlockArray(start_array, self._data.cols.get())
+        end_block_array = BlockArray(end_array, self._data.cols.get())
         self._distance = end_block_array.positions[self._row, self._col] -  \
                          start_block_array.positions[self._row, self._col]
 
 
 class SlipEvent:
-    start_time = property(lambda self: self._start_time)
-    end_time = property(lambda self: self._end_time)
+    start_time = property(lambda self: self._data.times[self._start_index].get())
+    end_time = property(lambda self: self._data.times[self._end_index].get())
     start_index = property(lambda self: self._start_index)
     end_index = property(lambda self: self._end_index)
     slipped_blocks = property(lambda self: self._blocks_to_events.copy())
 
-    def __init__(self, solution, rows, cols, time, start_index):
+    def __init__(self, data, start_index):
         self._blocks_to_events = {}
-        self._solution = solution
-        self._start_time = time
-        self._end_time = time
+        self._data = data
         self._start_index = start_index
         self._end_index = start_index
-        self._rows = rows
-        self._cols = cols
 
     @property
     def distance(self):
@@ -52,20 +50,20 @@ class SlipEvent:
                 dist += single_slip.distance
         return dist
 
-    def set_end(self, end_time, end_index):
-        self._end_time = end_time
+    def set_end(self, end_index):
         self._end_index = end_index
-        for row in range(self._rows):
-            for col in range(self._cols):
+        for row in range(self._data.rows.get()):
+            for col in range(self._data.cols.get()):
                 slipping = False
                 for ind in range(self._start_index, self._end_index + 1):
-                    block_array = BlockArray(self._solution[ind], self._cols)
+                    block_array = BlockArray(np.array([value.get() for value in self._data.values_list[ind]]),
+                                             self._data.cols.get())
                     if block_array.velocities[row, col] > 0:
                         if not slipping:
                             if (row, col) not in self._blocks_to_events:
                                 self._blocks_to_events[(row, col)] = []
                             self._blocks_to_events[(row, col)].append(
-                                SingleSlipEvent(self._solution, self._cols, row, col, ind))
+                                SingleSlipEvent(self._data, row, col, ind))
                             slipping = True
                     elif slipping:
                         self._blocks_to_events[(row, col)][-1].set_end(ind)
@@ -73,26 +71,19 @@ class SlipEvent:
 
 
 def partition(data):
-    solution = []
-    for values in data.values_list:
-        array = np.zeros(len(values))
-        for i, value in enumerate(values):
-            array[i] = value.get()
-        solution.append(array)
-
     slip_events = []
     slipping = False
-    for ind, time_slice in enumerate(solution):
-        block_array = BlockArray(time_slice, data.cols.get())
+    for ind, time_slice in enumerate(data.values_list):
+        block_array = BlockArray(np.array([value.get() for value in time_slice]), data.cols.get())
         slip = False
         for ind_, value in enumerate(block_array.velocities):
             if value > 0:
                 slip = True
                 break
         if not slipping and slip:
-            slip_events.append(SlipEvent(solution, data.rows.get(), data.cols.get(), data.times[ind].get(), ind))
+            slip_events.append(SlipEvent(data, ind))
         elif slipping and not slip:
-            slip_events[-1].set_end(data.times[ind].get(), ind)
+            slip_events[-1].set_end(ind)
         slipping = slip
 
     return slip_events

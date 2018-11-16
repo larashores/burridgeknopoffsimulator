@@ -1,7 +1,6 @@
 import glob
 import os
 import sys
-import numpy as np
 
 from files.readwrite import read_data
 from viewers.slipviewer import view_slip
@@ -16,12 +15,6 @@ if __name__ == '__main__':
         raise TypeError('Usage: [filename]')
 
     data = read_data(file)
-    solution = []
-    for values in data.values_list:
-        array = np.zeros(len(values))
-        for i, value in enumerate(values):
-            array[i] = value.get()
-        solution.append(array)
     desc = ('rows: {}\n' +
             'cols: {}\n' +
             'm:    {}\n' +
@@ -37,4 +30,4 @@ if __name__ == '__main__':
                                data.spring_constant.get(), data.plate_spring_constant.get(),
                                data.static_friction.get(), data.kinetic_friction.get(),
                                data.time_interval.get())
-    view_slip(data.rows.get(), data.cols.get(), data.time_interval.get(), solution, desc)
+    view_slip(data, desc)

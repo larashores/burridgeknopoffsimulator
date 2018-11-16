@@ -9,13 +9,11 @@ from viewers.integercheck import int_validate
 
 class SlipViewerGui(ttk.Frame):
     LABEL_TEXT = 'Time: {:.1f}'
-    def __init__(self, parent, rows, cols, time_interval, solution, **kwargs):
+    def __init__(self, parent, data, **kwargs):
         ttk.Frame.__init__(self, parent, **kwargs)
         self.time = 0
-        self.rows = rows
-        self.cols = cols
-        self.solution = solution
-        self.time_interval = time_interval
+        self.data = data
+        self.time_interval = data.time_interval.get()
 
         self.sidebar = SlipSidebar(self)
         self.separator = ttk.Separator(self, orient=tk.VERTICAL)
@@ -29,14 +27,14 @@ class SlipViewerGui(ttk.Frame):
 
         self.update_values()
 
-    def draw_blocks(self, positions):
+    def draw_blocks(self, timeslice):
         width = self.canvas.winfo_width()
         height = self.canvas.winfo_height()
-        start_x = (width - self.cols*self.block_size) / 2
-        start_y = (height - self.rows*self.block_size) / 2
-        block_array = BlockArray(positions, self.cols)
-        for i in range(self.rows):
-            for j in range(self.cols):
+        start_x = (width - self.data.cols.get()*self.block_size) / 2
+        start_y = (height - self.data.rows.get()*self.block_size) / 2
+        block_array = BlockArray(np.array([value.get() for value in timeslice]), self.data.cols.get())
+        for i in range(self.data.rows.get()):
+            for j in range(self.data.cols.get()):
                 velocity = block_array.velocities[i, j]
                 color = 'black' if velocity > 0.01 else 'white'
                 x, y = start_x + self.block_size * j, start_y + self.block_size * i
@@ -47,9 +45,9 @@ class SlipViewerGui(ttk.Frame):
         self.update_values()
         self.time_label.config(text=self.LABEL_TEXT.format(self.time))
         self.canvas.delete(tk.ALL)
-        self.draw_blocks(np.array(self.solution[i]))
+        self.draw_blocks(np.array(self.data.values_list[i]))
         end = datetime.datetime.now().timestamp()
-        if i < len(self.solution) - 1:
+        if i < len(self.data.values_list) - 1:
             self.after(int(self.time_interval * self.wait_time - (end - start) * 1e3), lambda: self.draw_recursive(i + 1))
         else:
             self.sidebar.button_start.state(['!disabled'])
@@ -107,9 +105,9 @@ class SlipViewer:
         self.gui.start()
 
 
-def view_slip(rows, cols, time_interval, solution, description):
+def view_slip(data, description):
     root = tk.Tk()
     root.wm_title('Block Viewer')
-    viewer = SlipViewer(root, rows, cols, time_interval, solution, message=description)
+    viewer = SlipViewer(root, data, message=description)
     viewer.gui.pack(expand=tk.YES, fill=tk.BOTH)
     root.mainloop()

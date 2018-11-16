@@ -26,22 +26,18 @@ def solve(data):
                          plate_velocity=data.plate_velocity.get()))
     r.set_integrator('dopri5', nsteps=10000)
     r.set_initial_value(blocks.array)
-    times = []
-    sol = []
     progress_at = 0
     start = datetime.now().timestamp()
     while r.successful() and r.t < 300:
         values = r.integrate(r.t+data.time_interval.get())
-        times.append(r.t)
-        sol.append(values)
+        data.add_slice(r.t, values)
         if r.t > progress_at:
             current = datetime.now().timestamp() - start
             print('Time-step: {}, Real-time: {:.2f}s'.format(progress_at, current))
             progress_at += 1
-    current = datetime.now().timestamp() - start
-    print('Finished at: {:.2f}s'.format(current))
-
-    return times, sol, current
+    elapsed = datetime.now().timestamp() - start
+    data.time_interval = elapsed
+    print('Finished at: {:.2f}s'.format(elapsed))
 
 
 if __name__ == '__main__':
@@ -60,8 +56,7 @@ if __name__ == '__main__':
                                                 datetime.now().strftime('%Y%m%dT%H%M%SZ'),
                                                 Data.VERSION)
 
-    times, solution, elapsed = solve(data)
+    solve(data)
     winsound.Beep(2500, 500)
-    data.total_time = elapsed
-    write_data(file_name, data, times, solution)
+    write_data(file_name, data)
     print('File saved to: {}'.format(file_name))
