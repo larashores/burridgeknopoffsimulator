@@ -6,7 +6,7 @@ from saveable.saveableint import U16
 
 
 def saveable_enum(enum_type, int_type=U16):
-    if not issubclass(enum_type, enum.IntEnum):
+    if not issubclass(enum_type, enum.Enum):
         raise ValueError('Argument must be int enum:', enum_type)
 
     class SaveableEnum(SaveableType):
@@ -26,20 +26,21 @@ def saveable_enum(enum_type, int_type=U16):
             self._value = value
 
         def to_byte_array(self):
-            return int_type(self._value).to_byte_array()
+            position = list(enum_type.__members__.keys()).index(self._value.name)
+            return int_type(position).to_byte_array()
 
         def load_in_place(self, byte_array, index=0):
-            value, index = int_type.from_byte_array(byte_array, index)
-            self._value = list(enum_type.__members__.values())[value.get()]
+            position, index = int_type.from_byte_array(byte_array, index)
+            self._value = list(enum_type.__members__.values())[position.get()]
             return index
 
     return SaveableEnum
 
 
 if __name__ == '__main__':
-    class MyEnum(enum.IntEnum):
+    class MyEnum(enum.Enum):
         A = 0
-        B = 1
+        B = 2
 
     MySaveableEnum = saveable_enum(MyEnum)
     a = MySaveableEnum()
