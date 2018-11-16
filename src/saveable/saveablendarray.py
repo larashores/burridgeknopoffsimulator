@@ -30,6 +30,9 @@ def ndarray(int_type=U16):
             else:
                 self._array = np.zeros([])
 
+        def __iter__(self):
+            return self._array.__iter__()
+
         def get(self):
             return self._array
 
@@ -45,7 +48,7 @@ def ndarray(int_type=U16):
             index += self._array.nbytes
             size_array, index = _IntArray.from_byte_array(byte_array, index)
             self._array = np.reshape(self._array, [value.get() for value in size_array])
-            return index + self._array.nbytes
+            return index
 
         def to_byte_array(self):
             _array = SaveableString(str(self._array.dtype)).to_byte_array()
