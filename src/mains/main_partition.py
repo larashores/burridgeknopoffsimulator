@@ -1,5 +1,5 @@
 from files import util
-from partition import view_partition
+from partition.partition import view_partition
 
 if __name__ == '__main__':
     file = util.get_file_name()

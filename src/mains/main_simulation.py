@@ -4,7 +4,7 @@ from datetime import datetime
 from scipy.integrate import ode
 
 from files.saveables import Data
-from files.readwrite import write_data
+from files.util import write_data
 from simulation.blockarray import BlockArray
 from simulation.differential import Differential
 from physicalconstants import g
@@ -28,7 +28,7 @@ def solve(data):
     r.set_initial_value(blocks.array)
     progress_at = 0
     start = datetime.now().timestamp()
-    while r.successful() and r.t < 300:
+    while r.successful() and r.t < 100:
         values = r.integrate(r.t+data.time_interval.get())
         data.add_slice(r.t, values)
         if r.t > progress_at:
@@ -36,14 +36,14 @@ def solve(data):
             print('Time-step: {}, Real-time: {:.2f}s'.format(progress_at, current))
             progress_at += 1
     elapsed = datetime.now().timestamp() - start
-    data.time_interval = elapsed
+    data.total_time = elapsed
     print('Finished at: {:.2f}s'.format(elapsed))
 
 
 if __name__ == '__main__':
     data = Data()
-    data.rows = 5
-    data.cols = 5
+    data.rows = 3
+    data.cols = 3
     data.spring_length = 2.0
     data.mass = 1.0
     data.spring_constant = 0.8
@@ -57,6 +57,6 @@ if __name__ == '__main__':
                                                 Data.VERSION)
 
     solve(data)
-    winsound.Beep(2500, 500)
+    #winsound.Beep(2500, 500)
     write_data(file_name, data)
     print('File saved to: {}'.format(file_name))

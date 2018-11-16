@@ -32,7 +32,7 @@ class SlipViewerGui(ttk.Frame):
         height = self.canvas.winfo_height()
         start_x = (width - self.data.cols.get()*self.block_size) / 2
         start_y = (height - self.data.rows.get()*self.block_size) / 2
-        block_array = BlockArray(np.array([value.get() for value in timeslice]), self.data.cols.get())
+        block_array = BlockArray(timeslice, self.data.cols.get())
         for i in range(self.data.rows.get()):
             for j in range(self.data.cols.get()):
                 velocity = block_array.velocities[i, j]
@@ -45,7 +45,7 @@ class SlipViewerGui(ttk.Frame):
         self.update_values()
         self.time_label.config(text=self.LABEL_TEXT.format(self.time))
         self.canvas.delete(tk.ALL)
-        self.draw_blocks(np.array(self.data.values_list[i]))
+        self.draw_blocks(self.data.values_list[i].get())
         end = datetime.datetime.now().timestamp()
         if i < len(self.data.values_list) - 1:
             self.after(int(self.time_interval * self.wait_time - (end - start) * 1e3), lambda: self.draw_recursive(i + 1))

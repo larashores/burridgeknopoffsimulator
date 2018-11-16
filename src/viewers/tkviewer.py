@@ -56,7 +56,7 @@ class TkViewerGui(ttk.Frame):
         self.update_values()
         self.time_label.config(text=self.LABEL_TEXT.format(self.time))
         self.canvas.delete(tk.ALL)
-        self.draw_blocks(np.array([value.get() for value in self._data.values_list[i]]))
+        self.draw_blocks(self._data.values_list[i].get())
         end = datetime.datetime.now().timestamp()
         if i < len(self._data.values_list) - 1:
             self.after(int(self._data.time_interval.get() * self.wait_time) - int((end - start) * 1e3),

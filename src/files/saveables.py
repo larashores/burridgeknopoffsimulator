@@ -2,17 +2,15 @@ from saveable.composite import Composite
 from saveable.saveablearray import array
 from saveable.saveablefloat import SaveableDouble
 from saveable.saveableint import U16
+from saveable.saveablendarray import ndarray
 
 
-class Timeslice(array(SaveableDouble)):
-    def __init__(self, values=list()):
-        super(Timeslice, self).__init__()
-        for value in values:
-            self.append(value)
+class Timeslice(ndarray()):
+    pass
 
 
 class Data(Composite):
-    VERSION = 2
+    VERSION = 3
 
     rows = U16
     cols = U16
