@@ -11,7 +11,7 @@ class _IntArray(array(U16)):
     pass
 
 
-def ndarray(shape, int_type=U16):
+def ndarray(int_type=U16):
     """
     A saveable array type that stores numpy arrays of numeric types
 
@@ -23,9 +23,12 @@ def ndarray(shape, int_type=U16):
     """
 
     class SaveableNdArray(SaveableType):
-        def __init__(self):
+        def __init__(self, value=None):
             SaveableType.__init__(self)
-            self._array = np.zeros(shape)
+            if value is not None:
+                self.set(value)
+            else:
+                self._array = np.zeros([])
 
         def get(self):
             return self._array
@@ -38,8 +41,8 @@ def ndarray(shape, int_type=U16):
         def load_in_place(self, byte_array, index=0):
             data_type, index = SaveableString.from_byte_array(byte_array, index)
             size, index = int_type.from_byte_array(byte_array, index)
-            self._array, index = np.frombuffer(byte_array, data_type.get(), size.get(), index), \
-                                 index + self._array.nbytes
+            self._array = np.frombuffer(byte_array, data_type.get(), size.get(), index)
+            index += self._array.nbytes
             size_array, index = _IntArray.from_byte_array(byte_array, index)
             self._array = np.reshape(self._array, [value.get() for value in size_array])
             return index + self._array.nbytes
