@@ -27,16 +27,16 @@ def saveable_int(int_type):
         """
 
         def __init__(self, value=0):
-            self.value = value
+            self._value = value
 
         def __str__(self):
-            return str(self.value)
+            return str(self._value)
 
         def __repr__(self):
-            return self.value.__repr__()
+            return self._value.__repr__()
 
         def get(self):
-            return self.value
+            return self._value
 
         def set(self, value):
             if not isinstance(value, int):
@@ -46,15 +46,15 @@ def saveable_int(int_type):
                 raise ValueError("Int {} is too small. Min={}".format(value, _min))
             if value > _max:
                 raise ValueError("Int {} is too large. Max={}".format(value, _max))
-            self.value = value
+            self._value = value
 
         def load_in_place(self, byte_array, index=0):
-            self.value, index = unpack_integer(byte_array, index, *str_to_type[int_type])
+            self._value, index = unpack_integer(byte_array, index, *str_to_type[int_type])
             return index
 
         def to_byte_array(self):
             array = bytearray()
-            pack_integer(array, self.value, *str_to_type[int_type])
+            pack_integer(array, self._value, *str_to_type[int_type])
             return array
 
     return SaveableInt

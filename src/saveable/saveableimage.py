@@ -10,27 +10,27 @@ class SaveableImage(SaveableType):
     A Saveable image type that can hold PIL images
     """
     def __init__(self, image=None):
-        self.image = image
+        self._image = image
 
     def set(self, value):
         if not isinstance(value, Image.Image):
             raise ValueError('{} is not an image type'.format(value))
-        self.image = value
+        self._image = value
 
     def get(self):
-        return self.image
+        return self._image
 
     def load_in_place(self, byte_array, index=0):
         size, index = U32.from_byte_array(byte_array, index)
         stream = io.BytesIO(byte_array)
-        self.image = Image.open(stream)
-        self.image.load()
+        self._image = Image.open(stream)
+        self._image.load()
         stream.close()
         return index + size.value
 
     def to_byte_array(self):
         _bytes = io.BytesIO()
-        self.image.save(_bytes, format=self.image.format if self.image.format is not None else 'PNG')
+        self._image.save(_bytes, format=self._image.format if self._image.format is not None else 'PNG')
         size = U32()
         size.set(len(_bytes.getvalue()))
         return size.to_byte_array() + bytearray(_bytes.getvalue())
