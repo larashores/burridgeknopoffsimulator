@@ -65,7 +65,7 @@ class Composite(SaveableType, metaclass=CompositeMeta):
 
 
     """
-    RETURN_GET = False
+    RETURN_GET = True
 
     def __init__(self):
         """

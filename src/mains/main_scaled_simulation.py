@@ -14,22 +14,22 @@ import winsound
 
 def solve(data):
     print('Creating initial data')
-    blocks = BlockArray(data.rows.get(), data.cols.get())
-    for i in range(data.rows.get()):
-        for j in range(data.cols.get()):
-            blocks.positions[i, j] = data.spring_length.get() * (j + random.random() / 3)
+    blocks = BlockArray(data.rows, data.cols)
+    for i in range(data.rows):
+        for j in range(data.cols):
+            blocks.positions[i, j] = data.spring_length * (j + random.random() / 3)
     print('Initial data created')
-    r = ode(ScaledDifferential(data.rows.get(), data.cols.get(),
-                               scaled_spring_length=data.spring_length.get(),
-                               scaled_plate_velocity=data.plate_velocity.get(),
-                               alpha=data.alpha.get(),
-                               l = data.l.get()))
+    r = ode(ScaledDifferential(data.rows, data.cols,
+                               scaled_spring_length=data.spring_length,
+                               scaled_plate_velocity=data.plate_velocity,
+                               alpha=data.alpha,
+                               l = data.l))
     r.set_integrator('dopri5', nsteps=10000)
     r.set_initial_value(blocks.array)
     progress_at = 0
     start = datetime.now().timestamp()
     while r.successful() and r.t < 300:
-        values = r.integrate(r.t+data.time_interval.get())
+        values = r.integrate(r.t+data.time_interval)
         data.add_slice(r.t, values)
         if r.t > progress_at:
             current = datetime.now().timestamp() - start
@@ -50,7 +50,7 @@ if __name__ == '__main__':
     data.alpha = 2.5
     data.l = 10
     data.time_interval = 2.0
-    file_name = 'data/S-{}x{}-{}-V{}.dat'.format(data.rows.get(), data.cols.get(),
+    file_name = 'data/S-{}x{}-{}-V{}.dat'.format(data.rows, data.cols,
                                                 datetime.now().strftime('%Y%m%dT%H%M%SZ'),
                                                 ScaledData.VERSION)
 

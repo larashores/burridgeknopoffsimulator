@@ -21,15 +21,15 @@ class SingleSlipEvent:
 
     def set_end(self, end_index):
         self._end_index = end_index
-        start_block_array = BlockArray(self._data.values_list[self._start_index].get(), self._data.cols.get())
-        end_block_array = BlockArray(self._data.values_list[self._end_index].get(), self._data.cols.get())
+        start_block_array = BlockArray(self._data.values_list[self._start_index], self._data.cols)
+        end_block_array = BlockArray(self._data.values_list[self._end_index], self._data.cols)
         self._distance = end_block_array.positions[self._row, self._col] -  \
                          start_block_array.positions[self._row, self._col]
 
 
 class SlipEvent:
-    start_time = property(lambda self: self._data.times[self._start_index].get())
-    end_time = property(lambda self: self._data.times[self._end_index].get())
+    start_time = property(lambda self: self._data.times[self._start_index])
+    end_time = property(lambda self: self._data.times[self._end_index])
     start_index = property(lambda self: self._start_index)
     end_index = property(lambda self: self._end_index)
     slipped_blocks = property(lambda self: self._blocks_to_events.copy())
@@ -50,12 +50,12 @@ class SlipEvent:
 
     def set_end(self, end_index):
         self._end_index = end_index
-        for row in range(self._data.rows.get()):
-            for col in range(self._data.cols.get()):
+        for row in range(self._data.rows):
+            for col in range(self._data.cols):
                 slipping = False
                 for ind in range(self._start_index, self._end_index + 1):
-                    block_array = BlockArray(self._data.values_list[ind].get(),
-                                             self._data.cols.get())
+                    block_array = BlockArray(self._data.values_list[ind],
+                                             self._data.cols)
                     if block_array.velocities[row, col] > 0:
                         if not slipping:
                             if (row, col) not in self._blocks_to_events:
@@ -72,7 +72,7 @@ def partition(data):
     slip_events = []
     slipping = False
     for ind, time_slice in enumerate(data.values_list):
-        block_array = BlockArray(time_slice.get(), data.cols.get())
+        block_array = BlockArray(time_slice, data.cols)
         slip = False
         for ind_, value in enumerate(block_array.velocities):
             if value > 0:

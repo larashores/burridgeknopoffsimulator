@@ -32,12 +32,12 @@ def data_desc(data):
                'k_p:  {}\n' +
                'u_s:  {}\n' +
                'u_k:  {}\n' +
-               'dt:   {}').format(data.rows.get(), data.cols.get(), data.mass.get(),
-                               data.plate_velocity.get(),
-                               data.spring_length.get(),
-                               data.spring_constant.get(), data.plate_spring_constant.get(),
-                               data.static_friction.get(), data.kinetic_friction.get(),
-                               data.time_interval.get())
+               'dt:   {}').format(data.rows, data.cols, data.mass,
+                               data.plate_velocity,
+                               data.spring_length,
+                               data.spring_constant, data.plate_spring_constant,
+                               data.static_friction, data.kinetic_friction,
+                               data.time_interval)
 def scaled_data_desc(data):
         return ('rows: {}\n' +
                 'cols: {}\n' +
@@ -45,9 +45,9 @@ def scaled_data_desc(data):
                 'v:    {}\n' +
                 'a:    {}\n' +
                 'l:    {}\n' +
-                'dt:   {}').format(data.rows.get(), data.cols.get(),
-                                   data.spring_length.get(),
-                                   data.plate_velocity.get(),
-                                   data.alpha.get(),
-                                   data.l.get(),
-                                   data.time_interval.get())
+                'dt:   {}').format(data.rows, data.cols,
+                                   data.spring_length,
+                                   data.plate_velocity,
+                                   data.alpha,
+                                   data.l,
+                                   data.time_interval)

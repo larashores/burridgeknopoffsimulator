@@ -13,7 +13,7 @@ class SlipViewerGui(ttk.Frame):
         ttk.Frame.__init__(self, parent, **kwargs)
         self.time = 0
         self.data = data
-        self.time_interval = data.time_interval.get()
+        self.time_interval = data.time_interval
 
         self.sidebar = SlipSidebar(self)
         self.separator = ttk.Separator(self, orient=tk.VERTICAL)
@@ -30,11 +30,11 @@ class SlipViewerGui(ttk.Frame):
     def draw_blocks(self, timeslice):
         width = self.canvas.winfo_width()
         height = self.canvas.winfo_height()
-        start_x = (width - self.data.cols.get()*self.block_size) / 2
-        start_y = (height - self.data.rows.get()*self.block_size) / 2
-        block_array = BlockArray(timeslice, self.data.cols.get())
-        for i in range(self.data.rows.get()):
-            for j in range(self.data.cols.get()):
+        start_x = (width - self.data.cols*self.block_size) / 2
+        start_y = (height - self.data.rows*self.block_size) / 2
+        block_array = BlockArray(timeslice, self.data.cols)
+        for i in range(self.data.rows):
+            for j in range(self.data.cols):
                 velocity = block_array.velocities[i, j]
                 color = 'black' if velocity > 0.01 else 'white'
                 x, y = start_x + self.block_size * j, start_y + self.block_size * i
@@ -45,7 +45,7 @@ class SlipViewerGui(ttk.Frame):
         self.update_values()
         self.time_label.config(text=self.LABEL_TEXT.format(self.time))
         self.canvas.delete(tk.ALL)
-        self.draw_blocks(self.data.values_list[i].get())
+        self.draw_blocks(self.data.values_list[i])
         end = datetime.datetime.now().timestamp()
         if i < len(self.data.values_list) - 1:
             self.after(int(self.time_interval * self.wait_time - (end - start) * 1e3), lambda: self.draw_recursive(i + 1))
@@ -55,11 +55,11 @@ class SlipViewerGui(ttk.Frame):
 
     def update_values(self):
         try:
-            self.block_size = self.sidebar.block_size_var.get()
+            self.block_size = self.sidebar.block_size_var
         except tk.TclError:
             pass
         try:
-            self.wait_time = 1000 // self.sidebar.speed_var.get()
+            self.wait_time = 1000 // self.sidebar.speed_var
         except tk.TclError:
             pass
 

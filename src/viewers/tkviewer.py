@@ -30,12 +30,12 @@ class TkViewerGui(ttk.Frame):
     def draw_blocks(self, positions):
         width = self.canvas.winfo_width()
         height = self.canvas.winfo_height()
-        distance = (self._data.spring_length.get() * self.scale)
-        start_x = (width - (self._data.cols.get()-1)*distance - self.block_size) / 2
-        start_y = (height - (self._data.rows.get()-1)*distance - self.block_size) / 2
-        block_array = BlockArray(positions, self._data.cols.get())
-        for i in range(self._data.rows.get()):
-            for j in range(self._data.cols.get()):
+        distance = (self._data.spring_length * self.scale)
+        start_x = (width - (self._data.cols-1)*distance - self.block_size) / 2
+        start_y = (height - (self._data.rows-1)*distance - self.block_size) / 2
+        block_array = BlockArray(positions, self._data.cols)
+        for i in range(self._data.rows):
+            for j in range(self._data.cols):
                 x_pos = block_array.positions[i, j]
                 x, y = start_x + x_pos * self.scale, start_y + distance * i
                 self.canvas.create_rectangle(x, y, x + self.block_size, y + self.block_size)
@@ -56,14 +56,14 @@ class TkViewerGui(ttk.Frame):
         self.update_values()
         self.time_label.config(text=self.LABEL_TEXT.format(self.time))
         self.canvas.delete(tk.ALL)
-        self.draw_blocks(self._data.values_list[i].get())
+        self.draw_blocks(self._data.values_list[i])
         end = datetime.datetime.now().timestamp()
         if i < len(self._data.values_list) - 1:
-            self.after(int(self._data.time_interval.get() * self.wait_time) - int((end - start) * 1e3),
+            self.after(int(self._data.time_interval * self.wait_time) - int((end - start) * 1e3),
                        lambda: self.draw_recursive(i + 1))
         else:
             self.sidebar.button_start.state(['!disabled'])
-        self.time += self._data.time_interval.get()
+        self.time += self._data.time_interval
 
     def update_values(self):
         try:

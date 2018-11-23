@@ -13,23 +13,23 @@ import winsound
 
 def solve(data):
     print('Creating initial data')
-    blocks = BlockArray(data.rows.get(), data.cols.get())
-    for i in range(data.rows.get()):
-        for j in range(data.cols.get()):
-            blocks.positions[i, j] = data.spring_length.get() * (j + random.random() / 3)
+    blocks = BlockArray(data.rows, data.cols)
+    for i in range(data.rows):
+        for j in range(data.cols):
+            blocks.positions[i, j] = data.spring_length * (j + random.random() / 3)
     print('Initial data created')
-    r = ode(Differential(data.rows.get(), data.cols.get(),
-                         block_spring_constant=data.spring_constant.get(),
-                         plate_spring_constant=data.plate_spring_constant.get(),
-                         static_friction=data.static_friction.get(), kinetic_friction=data.kinetic_friction.get(),
-                         mass=data.mass.get(), spring_length=data.spring_length.get(),
-                         plate_velocity=data.plate_velocity.get()))
+    r = ode(Differential(data.rows, data.cols,
+                         block_spring_constant=data.spring_constant,
+                         plate_spring_constant=data.plate_spring_constant,
+                         static_friction=data.static_friction, kinetic_friction=data.kinetic_friction,
+                         mass=data.mass, spring_length=data.spring_length,
+                         plate_velocity=data.plate_velocity))
     r.set_integrator('dopri5', nsteps=10000)
     r.set_initial_value(blocks.array)
     progress_at = 0
     start = datetime.now().timestamp()
     while r.successful() and r.t < 100:
-        values = r.integrate(r.t+data.time_interval.get())
+        values = r.integrate(r.t+data.time_interval)
         data.add_slice(r.t, values)
         if r.t > progress_at:
             current = datetime.now().timestamp() - start
