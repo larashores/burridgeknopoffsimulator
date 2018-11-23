@@ -101,7 +101,7 @@ def view_partition(data):
     at_least = np.linspace(-1, 3, 100)
     amount = []
     for magnitude in at_least:
-        amount.append(sum((lambda x: x > magnitude)(x) for x in magnitudes))
+        amount.append(sum((lambda x: x > magnitude)(x) for x in magnitudes) / len(slip_events))
 
     magnitudes.sort()
     graph = Graph(list(range(len(magnitudes))), magnitudes)

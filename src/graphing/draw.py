@@ -80,12 +80,12 @@ def _draw_graph(axis, graph, x_log=False):
                 name = ' for ' + graph.legend_label if graph.legend_label is not None else ''
                 print("Best-fit{}: {}".format(name, make_fit_string(fit.string, optimal, stddev)))
 
-        if graph.legend_label is not None:
-            if graph.curve_fits:
-                regression.set_label(graph.legend_label)
-            else:
-                line.set_label(graph.legend_label)
-        axis.legend().remove()
+    if graph.legend_label is not None:
+        if graph.curve_fits:
+            regression.set_label(graph.legend_label)
+        else:
+            line.set_label(graph.legend_label)
+    axis.legend().remove()
 
 
 def draw(subplots, title=''):

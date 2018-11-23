@@ -3,13 +3,14 @@ from datetime import datetime
 
 from scipy.integrate import ode
 
-from files.data import Data
+from files.scaledata import ScaledData
 from files.util import write_data
 from simulation.blockarray import BlockArray
-from simulation.differential import Differential
+from simulation.scaleddifferential import ScaledDifferential
 from physicalconstants import g
 
 import winsound
+
 
 def solve(data):
     print('Creating initial data')
@@ -18,17 +19,16 @@ def solve(data):
         for j in range(data.cols.get()):
             blocks.positions[i, j] = data.spring_length.get() * (j + random.random() / 3)
     print('Initial data created')
-    r = ode(Differential(data.rows.get(), data.cols.get(),
-                         block_spring_constant=data.spring_constant.get(),
-                         plate_spring_constant=data.plate_spring_constant.get(),
-                         static_friction=data.static_friction.get(), kinetic_friction=data.kinetic_friction.get(),
-                         mass=data.mass.get(), spring_length=data.spring_length.get(),
-                         plate_velocity=data.plate_velocity.get()))
+    r = ode(ScaledDifferential(data.rows.get(), data.cols.get(),
+                               scaled_spring_length=data.spring_length.get(),
+                               scaled_plate_velocity=data.plate_velocity.get(),
+                               alpha=data.alpha.get(),
+                               l = data.l.get()))
     r.set_integrator('dopri5', nsteps=10000)
     r.set_initial_value(blocks.array)
     progress_at = 0
     start = datetime.now().timestamp()
-    while r.successful() and r.t < 100:
+    while r.successful() and r.t < 300:
         values = r.integrate(r.t+data.time_interval.get())
         data.add_slice(r.t, values)
         if r.t > progress_at:
@@ -41,20 +41,18 @@ def solve(data):
 
 
 if __name__ == '__main__':
-    data = Data()
-    data.rows = 3
-    data.cols = 3
-    data.spring_length = 2.0
-    data.mass = 1.0
-    data.spring_constant = 0.8
-    data.static_friction = 1.0 / (data.mass.get() * g)
-    data.kinetic_friction = 10.0
+    data = ScaledData()
+
+    data.rows = 1
+    data.cols = 1
+    data.spring_length = 1.0
     data.plate_velocity = 0.01
-    data.plate_spring_constant = 1.0
-    data.time_interval = 0.2
-    file_name = 'data/{}x{}-{}-V{}.dat'.format(data.rows.get(), data.cols.get(),
+    data.alpha = 2.5
+    data.l = 10
+    data.time_interval = 2.0
+    file_name = 'data/S-{}x{}-{}-V{}.dat'.format(data.rows.get(), data.cols.get(),
                                                 datetime.now().strftime('%Y%m%dT%H%M%SZ'),
-                                                Data.VERSION)
+                                                ScaledData.VERSION)
 
     solve(data)
     #winsound.Beep(2500, 500)

@@ -2,7 +2,7 @@ import glob
 import os
 import sys
 
-from files.saveables import Data
+from files.data import Data
 
 def read_data(file_name):
     with open(file_name, 'rb') as file:
@@ -38,3 +38,16 @@ def data_desc(data):
                                data.spring_constant.get(), data.plate_spring_constant.get(),
                                data.static_friction.get(), data.kinetic_friction.get(),
                                data.time_interval.get())
+def scaled_data_desc(data):
+        return ('rows: {}\n' +
+                'cols: {}\n' +
+                'L:    {}\n' +
+                'v:    {}\n' +
+                'a:    {}\n' +
+                'l:    {}\n' +
+                'dt:   {}').format(data.rows.get(), data.cols.get(),
+                                   data.spring_length.get(),
+                                   data.plate_velocity.get(),
+                                   data.alpha.get(),
+                                   data.l.get(),
+                                   data.time_interval.get())
