@@ -8,7 +8,7 @@ class ScaledDifferential:
     def __init__(self, num_rows, num_cols, *, scaled_spring_length, scaled_plate_velocity, alpha, l):
         self._velocity = PositionUpdater(num_rows, num_cols)
         self._spring_force = ScaledSpringForce(num_rows, num_cols, scaled_spring_length, l)
-        self._driving_plate_force = ScaledPlateForce(num_rows, num_cols, scaled_spring_length, l)
+        self._driving_plate_force = ScaledPlateForce(num_rows, num_cols, scaled_spring_length)
         self._frictional_force = ScaledFrictionalForce(num_rows, num_cols, scaled_plate_velocity, alpha)
 
     def __call__(self, t, values):
@@ -18,7 +18,7 @@ class ScaledDifferential:
 
         Function should return a list of values [
         """
-        spring_force = self._spring_force(values)
+        spring_force = self._spring_force.diff(values)
         friction_force = self._frictional_force(values)
         plate_force = self._driving_plate_force(values)
         new_positions = self._velocity(values)
