@@ -1,17 +1,21 @@
+from files.datafile import DataFile
+from files.data import Data
+from files.scaledata import ScaledData
+
 import glob
 import os
 import sys
 
-from files.data import Data
-
 def read_data(file_name):
     with open(file_name, 'rb') as file:
-        data, index =  Data.from_byte_array(bytearray(file.read()))
-        return data
+        data, index =  DataFile.from_byte_array(bytearray(file.read()))
+        return data.get()
 
 def write_data(file_name, data):
+    data_file = DataFile()
+    data_file.set(type(data), data)
     with open(file_name, 'wb') as file:
-        file.write(data.to_byte_array())
+        file.write(data_file.to_byte_array())
 
 def get_file_name():
     if len(sys.argv) == 1:
@@ -23,6 +27,7 @@ def get_file_name():
         raise TypeError('Usage: [filename]')
 
 def data_desc(data):
+    if type(data) == Data:
         return ('rows: {}\n' +
                'cols: {}\n' +
                'm:    {}\n' +
@@ -38,7 +43,7 @@ def data_desc(data):
                                data.spring_constant, data.plate_spring_constant,
                                data.static_friction, data.kinetic_friction,
                                data.time_interval)
-def scaled_data_desc(data):
+    elif type(data) == ScaledData:
         return ('rows: {}\n' +
                 'cols: {}\n' +
                 'L:    {}\n' +

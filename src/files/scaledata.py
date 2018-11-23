@@ -37,3 +37,4 @@ class ScaledData(Composite):
         if self._version.get() != ScaledData.VERSION:
             raise TypeError("Incorrect file version: '{}'".format(self._version.get()))
         Composite.load_in_place(self, byte_array, index)
+        return index

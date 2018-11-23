@@ -58,17 +58,22 @@ class Union(SaveableType, metaclass=UnionMeta):
         SaveableType.__init__(self)
         self.__current__ = self.__typemap__[self.__ordered__[0]]()
 
-    def set(self, Type):
+    def set(self, Type, value=None):
         if Type in self.__revtypemap__:
-            self.__current__ = Type()
+            if value is None:
+                self.__current__ = Type()
+            elif type(value) == Type:
+                self.__current__ = value
+            else:
+                raise ValueError('Value not {}! {}'.format(Type, value))
             return
         raise ValueError('Invalid Type {}'.format(Type))
 
     def get(self):
-        return type(self.__current__)
-
-    def get_current(self):
         return self.__current__
+
+    def get_type(self):
+        return type(self.__current__)
 
     def __setattr__(self, key, value):
         """

@@ -45,7 +45,7 @@ class SlipViewerGui(ttk.Frame):
         self.update_values()
         self.time_label.config(text=self.LABEL_TEXT.format(self.time))
         self.canvas.delete(tk.ALL)
-        self.draw_blocks(self.data.values_list[i])
+        self.draw_blocks(self.data.values_list[i].get())
         end = datetime.datetime.now().timestamp()
         if i < len(self.data.values_list) - 1:
             self.after(int(self.time_interval * self.wait_time - (end - start) * 1e3), lambda: self.draw_recursive(i + 1))
@@ -55,11 +55,11 @@ class SlipViewerGui(ttk.Frame):
 
     def update_values(self):
         try:
-            self.block_size = self.sidebar.block_size_var
+            self.block_size = self.sidebar.block_size_var.get()
         except tk.TclError:
             pass
         try:
-            self.wait_time = 1000 // self.sidebar.speed_var
+            self.wait_time = 1000 // self.sidebar.speed_var.get()
         except tk.TclError:
             pass
 
