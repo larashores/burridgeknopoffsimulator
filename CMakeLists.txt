@@ -4,13 +4,17 @@ project(BurridgeKnopoffLib VERSION 0.1)
 #-----------Project Files------------
 
 set(SOURCE_FILES src/python.cpp
+                 src/utilities.cpp
                  src/springforce.cpp
                  src/frictionforce.cpp
-                 src/scaledspringforce.cpp)
+                 src/scaledspringforce.cpp
+                 src/scaledplateforce.cpp)
 
 set(HEADER_FILES include/springforce.h
+                 include/utilities.h
                  include/frictionforce.h
-                 include/scaledspringforce.h)
+                 include/scaledspringforce.h
+                 include/scaledplateforce.h)
 
 #------------------------------------
 

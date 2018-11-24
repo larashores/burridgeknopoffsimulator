@@ -1,18 +1,7 @@
 #include "springforce.h"
+#include "utilities.h"
 
 #include <sstream>
-
-namespace {
-    inline double get_position(double* array, int num_cols, int row, int col)
-    {
-        return array[2*num_cols*row + 2*col];
-    }
-
-    inline void set_velocity(double* array, int num_cols, int row, int col, double value)
-    {
-        array[2*num_cols*row + 2*col + 1] = value;
-    }
-}
 
 namespace NP = boost::python::numpy;
 

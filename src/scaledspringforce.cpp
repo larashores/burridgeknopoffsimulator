@@ -1,28 +1,8 @@
 #include "scaledspringforce.h"
+#include "utilities.h"
 
 #include <sstream>
 
-namespace {
-    inline double get_position(double* array, int num_cols, int row, int col)
-    {
-        return array[2*num_cols*row + 2*col];
-    }
-
-    inline void set_velocity(double* array, int num_cols, int row, int col, double value)
-    {
-        array[2*num_cols*row + 2*col + 1] = value;
-    }
-
-    inline double get_1d_position(double* array, int col)
-    {
-        return array[2*col];
-    }
-
-    inline void set_1d_velocity(double* array, int col, double value)
-    {
-        array[2*col + 1] = value;
-    }
-}
 
 namespace NP = boost::python::numpy;
 
@@ -40,17 +20,17 @@ boost::python::numpy::ndarray ScaledSpringForce::differentiate(NP::ndarray& curr
     auto results {reinterpret_cast<double*>(results_ndarray.get_data())};
     auto current {reinterpret_cast<double*>(current_ndarray.get_data())};
 
-    set_1d_velocity(results, 0,
-                    m_l_squared * (get_1d_position(current, 1) - get_1d_position(current, 0) - m_spring_length));
-    set_1d_velocity(results, m_cols - 1, m_l_squared *
-                    (get_1d_position(current, m_cols-2) - get_1d_position(current, m_cols-1) + m_spring_length));
+    set_velocity(results, 0,
+                    m_l_squared * (get_position(current, 1) - get_position(current, 0) - m_spring_length));
+    set_velocity(results, m_cols - 1, m_l_squared *
+                    (get_position(current, m_cols-2) - get_position(current, m_cols-1) + m_spring_length));
     for(int j=1; j < m_cols - 1; j++)
     {
-        double force{m_l_squared * (get_1d_position(current, j - 1)
-                                    + get_1d_position(current, j + 1)
-                                    - 2 * get_1d_position(current, j))};
+        double force{m_l_squared * (get_position(current, j - 1)
+                                    + get_position(current, j + 1)
+                                    - 2 * get_position(current, j))};
 
-        set_1d_velocity(results, j, force);
+        set_velocity(results, j, force);
     }
 
     return results_ndarray;
