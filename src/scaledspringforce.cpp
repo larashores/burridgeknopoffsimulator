@@ -1,0 +1,57 @@
+#include "scaledspringforce.h"
+
+#include <sstream>
+
+namespace {
+    inline double get_position(double* array, int num_cols, int row, int col)
+    {
+        return array[2*num_cols*row + 2*col];
+    }
+
+    inline void set_velocity(double* array, int num_cols, int row, int col, double value)
+    {
+        array[2*num_cols*row + 2*col + 1] = value;
+    }
+
+    inline double get_1d_position(double* array, int col)
+    {
+        return array[2*col];
+    }
+
+    inline void set_1d_velocity(double* array, int col, double value)
+    {
+        array[2*col + 1] = value;
+    }
+}
+
+namespace NP = boost::python::numpy;
+
+ScaledSpringForce::ScaledSpringForce(int rows, int cols, double spring_length, double l) :
+        m_rows{rows},
+        m_cols{cols},
+        m_spring_length{spring_length},
+        m_l_squared{l*l}
+{
+}
+
+boost::python::numpy::ndarray ScaledSpringForce::differentiate(NP::ndarray& current_ndarray) const
+{
+    auto results_ndarray {NP::zeros(boost::python::make_tuple(m_rows*m_cols*2), NP::dtype::get_builtin<double>())};
+    auto results {reinterpret_cast<double*>(results_ndarray.get_data())};
+    auto current {reinterpret_cast<double*>(current_ndarray.get_data())};
+
+    set_1d_velocity(results, 0,
+                    m_l_squared * (get_1d_position(current, 1) - get_1d_position(current, 0) - m_spring_length));
+    set_1d_velocity(results, m_cols - 1, m_l_squared *
+                    (get_1d_position(current, m_cols-2) - get_1d_position(current, m_cols-1) + m_spring_length));
+    for(int j=1; j < m_cols - 1; j++)
+    {
+        double force{m_l_squared * (get_1d_position(current, j - 1)
+                                    + get_1d_position(current, j + 1)
+                                    - 2 * get_1d_position(current, j))};
+
+        set_1d_velocity(results, j, force);
+    }
+
+    return results_ndarray;
+}
