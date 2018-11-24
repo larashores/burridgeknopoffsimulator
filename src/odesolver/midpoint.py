@@ -4,7 +4,7 @@ from src.odesolver.test import test
 
 class Midpoint(OdeSolver):
     """
-    Implements a solving algorithm using the Midpoint Method / Improved Euler Method
+    Implements a solving algorithm using the Midpoint Method
     """
     def _step(self):
         first_derivative = self._difeqs(self._time, self._current_values)
