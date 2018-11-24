@@ -8,11 +8,10 @@ epsilon = 1e-3
 
 
 def _friction_force(velocity, alpha):
-    if -epsilon < velocity < epsilon:
-        y2 = - 1 / (2*alpha*epsilon + 1)
-        return y2 * np.sin((np.pi/(2*epsilon))*velocity)
-    else:
+    if velocity < -epsilon or velocity > epsilon:
         return - np.sign(velocity) / (2*alpha*abs(velocity) + 1)
+    else:
+        return -(velocity / (2*alpha*epsilon + 1)) / epsilon
 
 
 class ScaledFrictionalForce:
