@@ -8,13 +8,15 @@ set(SOURCE_FILES src/python.cpp
                  src/springforce.cpp
                  src/frictionforce.cpp
                  src/scaledspringforce.cpp
-                 src/scaledplateforce.cpp)
+                 src/scaledplateforce.cpp
+                 src/positionupdater.cpp)
 
 set(HEADER_FILES include/springforce.h
                  include/utilities.h
                  include/frictionforce.h
                  include/scaledspringforce.h
-                 include/scaledplateforce.h)
+                 include/scaledplateforce.h
+                 include/positionupdater.h)
 
 #------------------------------------
 
