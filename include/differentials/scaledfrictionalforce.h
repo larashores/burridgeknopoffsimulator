@@ -8,7 +8,8 @@ class ScaledFrictionalForce
 public:
     ScaledFrictionalForce(int rows, int cols, double plate_velocity, double alpha);
 
-    boost::python::numpy::ndarray differentiate(boost::python::numpy::ndarray& current_array) const;
+    void differentiate(boost::python::numpy::ndarray& current_array,
+                       boost::python::numpy::ndarray& results_array) const;
 
 private:
     const int m_rows;

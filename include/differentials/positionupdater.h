@@ -8,7 +8,8 @@ class PositionUpdater
 public:
     PositionUpdater(int rows, int cols);
 
-    boost::python::numpy::ndarray differentiate(boost::python::numpy::ndarray& current_array) const;
+    void differentiate(boost::python::numpy::ndarray& current_array,
+                       boost::python::numpy::ndarray& results_array) const;
 
 private:
     const int m_rows;

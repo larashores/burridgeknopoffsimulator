@@ -15,9 +15,8 @@ ScaledFrictionalForce::ScaledFrictionalForce(int rows, int cols, double plate_ve
 {
 }
 
-boost::python::numpy::ndarray ScaledFrictionalForce::differentiate(NP::ndarray& current_ndarray) const
+void ScaledFrictionalForce::differentiate(NP::ndarray& current_ndarray, NP::ndarray& results_ndarray) const
 {
-    auto results_ndarray {NP::zeros(boost::python::make_tuple(m_rows*m_cols*2), NP::dtype::get_builtin<double>())};
     auto results {reinterpret_cast<double*>(results_ndarray.get_data())};
     auto current {reinterpret_cast<double*>(current_ndarray.get_data())};
     for(int i=0; i < m_rows; i++)
@@ -25,8 +24,8 @@ boost::python::numpy::ndarray ScaledFrictionalForce::differentiate(NP::ndarray& 
         for(int j=0; j < m_cols; j++)
         {
             double force {scaled_friction_force(m_plate_velocity + get_velocity(current, m_cols, i, j), m_alpha)};
-            set_velocity(results, m_cols, i, j, force);
+            double old {get_velocity(results, m_cols, i, j)};
+            set_velocity(results, m_cols, i, j, old + force);
         }
     }
-    return results_ndarray;
 }

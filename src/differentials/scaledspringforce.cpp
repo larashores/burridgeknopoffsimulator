@@ -14,21 +14,20 @@ ScaledSpringForce::ScaledSpringForce(int rows, int cols, double spring_length, d
 {
     if (rows == 1 and cols >= 2)
     {
-        m_diff_func = [this](auto current){return diff_one_dim(current);};
+        m_diff_func = [this](auto current, auto results){return diff_one_dim(current, results);};
     } else
     {
-        m_diff_func = [this](auto current){return diff_full(current);};
+        m_diff_func = [this](auto current, auto results){return diff_full(current, results);};
     }
 }
 
-boost::python::numpy::ndarray ScaledSpringForce::differentiate(NP::ndarray& current_ndarray) const
+void ScaledSpringForce::differentiate(NP::ndarray& current_ndarray, NP::ndarray& results_ndarray) const
 {
-    return m_diff_func(current_ndarray);
+    return m_diff_func(current_ndarray, results_ndarray);
 }
 
-boost::python::numpy::ndarray ScaledSpringForce::diff_full(NP::ndarray& current_ndarray) const
+void ScaledSpringForce::diff_full(NP::ndarray& current_ndarray, NP::ndarray& results_ndarray) const
 {
-    auto results_ndarray {NP::zeros(boost::python::make_tuple(m_rows*m_cols*2), NP::dtype::get_builtin<double>())};
     auto results {reinterpret_cast<double*>(results_ndarray.get_data())};
     auto current {reinterpret_cast<double*>(current_ndarray.get_data())};
 
@@ -48,16 +47,14 @@ boost::python::numpy::ndarray ScaledSpringForce::diff_full(NP::ndarray& current_
             } if(j < m_cols - 1) {
                 force += get_position(current, m_cols, i, j + 1) - cur - m_spring_length;
             }
-            set_velocity(results, m_cols, i, j, force * m_l_squared);
+            double old {get_velocity(results, m_cols, i, j)};
+            set_velocity(results, m_cols, i, j, old + force * m_l_squared);
         }
     }
-
-    return results_ndarray;
 }
 
-boost::python::numpy::ndarray ScaledSpringForce::diff_one_dim(NP::ndarray& current_ndarray) const
+void ScaledSpringForce::diff_one_dim(NP::ndarray& current_ndarray, NP::ndarray& results_ndarray) const
 {
-    auto results_ndarray {NP::zeros(boost::python::make_tuple(m_rows*m_cols*2), NP::dtype::get_builtin<double>())};
     auto results {reinterpret_cast<double*>(results_ndarray.get_data())};
     auto current {reinterpret_cast<double*>(current_ndarray.get_data())};
 
@@ -70,9 +67,7 @@ boost::python::numpy::ndarray ScaledSpringForce::diff_one_dim(NP::ndarray& curre
         double force{m_l_squared * (get_position(current, j - 1)
                                     + get_position(current, j + 1)
                                     - 2 * get_position(current, j))};
-
-        set_velocity(results, j, force);
+        double old {get_velocity(results, j)};
+        set_velocity(results, j, old + force);
     }
-
-    return results_ndarray;
 }
