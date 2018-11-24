@@ -22,8 +22,7 @@ void ScaledPlateForce::differentiate(NP::ndarray& current_ndarray, NP::ndarray& 
         for(int j=0; j < m_cols; j++)
         {
             double force {j * m_spring_length - get_position(current, m_cols, i, j)};
-            double old {get_velocity(results, m_cols, i, j)};
-            set_velocity(results, m_cols, i, j, old + force);
+            add_velocity(results, m_cols, i, j, force);
         }
     }
 }

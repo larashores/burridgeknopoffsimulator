@@ -24,8 +24,7 @@ void ScaledFrictionalForce::differentiate(NP::ndarray& current_ndarray, NP::ndar
         for(int j=0; j < m_cols; j++)
         {
             double force {scaled_friction_force(m_plate_velocity + get_velocity(current, m_cols, i, j), m_alpha)};
-            double old {get_velocity(results, m_cols, i, j)};
-            set_velocity(results, m_cols, i, j, old + force);
+            add_velocity(results, m_cols, i, j, force);
         }
     }
 }

@@ -20,8 +20,7 @@ void PositionUpdater::differentiate(NP::ndarray& current_ndarray, NP::ndarray& r
     {
         for(int j=0; j < m_cols; j++)
         {
-            double old {get_position(results, m_cols, i, j)};
-            set_position(results, m_cols, i, j, old + get_velocity(current, m_cols, i, j));
+            add_position(results, m_cols, i, j, get_velocity(current, m_cols, i, j));
         }
     }
 }

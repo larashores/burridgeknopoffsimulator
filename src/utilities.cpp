@@ -20,6 +20,16 @@ void set_position(double* array, int col, double value)
     array[2*col] = value;
 }
 
+void add_position(double* array, int num_cols, int row, int col, double value)
+{
+    array[2*num_cols*row + 2*col] += value;
+}
+
+void add_position(double* array, int col, double value)
+{
+    array[2*col] += value;
+}
+
 double get_velocity(double* array, int num_cols, int row, int col)
 {
     return array[2*num_cols*row + 2*col + 1];
@@ -38,4 +48,14 @@ void set_velocity(double* array, int num_cols, int row, int col, double value)
 void set_velocity(double* array, int col, double value)
 {
     array[2*col + 1] = value;
+}
+
+void add_velocity(double* array, int num_cols, int row, int col, double value)
+{
+    array[2*num_cols*row + 2*col + 1] += value;
+}
+
+void add_velocity(double* array, int col, double value)
+{
+    array[2*col + 1] += value;
 }

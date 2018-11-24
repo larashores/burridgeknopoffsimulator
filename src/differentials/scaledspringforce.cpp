@@ -47,8 +47,7 @@ void ScaledSpringForce::diff_full(NP::ndarray& current_ndarray, NP::ndarray& res
             } if(j < m_cols - 1) {
                 force += get_position(current, m_cols, i, j + 1) - cur - m_spring_length;
             }
-            double old {get_velocity(results, m_cols, i, j)};
-            set_velocity(results, m_cols, i, j, old + force * m_l_squared);
+            add_velocity(results, m_cols, i, j, force * m_l_squared);
         }
     }
 }
@@ -64,10 +63,9 @@ void ScaledSpringForce::diff_one_dim(NP::ndarray& current_ndarray, NP::ndarray& 
                                       (get_position(current, m_cols-2) - get_position(current, m_cols-1) + m_spring_length));
     for(int j=1; j < m_cols - 1; j++)
     {
-        double force{m_l_squared * (get_position(current, j - 1)
-                                    + get_position(current, j + 1)
-                                    - 2 * get_position(current, j))};
-        double old {get_velocity(results, j)};
-        set_velocity(results, j, old + force);
+        double force {m_l_squared * (get_position(current, j - 1)
+                                     + get_position(current, j + 1)
+                                     - 2 * get_position(current, j))};
+        add_velocity(results, j, force);
     }
 }
