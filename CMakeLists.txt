@@ -6,6 +6,7 @@ project(BurridgeKnopoffLib VERSION 0.1)
 set(SOURCE_FILES src/differentials/python.cpp
                  src/utilities.cpp
                  src/frictionforce.cpp
+                 src/differentials/differential.cpp
                  src/differentials/springforce.cpp
                  src/differentials/scaledspringforce.cpp
                  src/differentials/scaledplateforce.cpp
@@ -14,6 +15,7 @@ set(SOURCE_FILES src/differentials/python.cpp
 
 set(HEADER_FILES  include/utilities.h
                   include/frictionforce.h
+                  include/differentials/differential.h
                   include/differentials/springforce.h
                   include/differentials/scaledspringforce.h
                   include/differentials/scaledplateforce.h
