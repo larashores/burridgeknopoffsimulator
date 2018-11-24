@@ -11,6 +11,5 @@ class Euler(OdeSolver):
         return self._current_values + (derivatives * self._step_size)
 
 
-
 if __name__ == '__main__':
     test(Euler)
