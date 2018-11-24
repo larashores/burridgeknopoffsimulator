@@ -1,4 +1,4 @@
-#include "scaledfrictionalforce.h"
+#include "differentials/scaledfrictionalforce.h"
 #include "frictionforce.h"
 #include "utilities.h"
 

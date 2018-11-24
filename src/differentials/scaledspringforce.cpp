@@ -1,4 +1,4 @@
-#include "scaledspringforce.h"
+#include "differentials/scaledspringforce.h"
 #include "utilities.h"
 
 #include <sstream>

@@ -3,22 +3,22 @@ project(BurridgeKnopoffLib VERSION 0.1)
 
 #-----------Project Files------------
 
-set(SOURCE_FILES src/python.cpp
+set(SOURCE_FILES src/differentials/python.cpp
                  src/utilities.cpp
-                 src/springforce.cpp
                  src/frictionforce.cpp
-                 src/scaledspringforce.cpp
-                 src/scaledplateforce.cpp
-                 src/positionupdater.cpp
-                 src/scaledfrictionalforce.cpp)
+                 src/differentials/springforce.cpp
+                 src/differentials/scaledspringforce.cpp
+                 src/differentials/scaledplateforce.cpp
+                 src/differentials/positionupdater.cpp
+                 src/differentials/scaledfrictionalforce.cpp)
 
-set(HEADER_FILES include/springforce.h
-                 include/utilities.h
-                 include/frictionforce.h
-                 include/scaledspringforce.h
-                 include/scaledplateforce.h
-                 include/positionupdater.h
-                 include/scaledfrictionalforce.h)
+set(HEADER_FILES  include/utilities.h
+                  include/frictionforce.h
+                  include/differentials/springforce.h
+                  include/differentials/scaledspringforce.h
+                  include/differentials/scaledplateforce.h
+                  include/differentials/positionupdater.h
+                  include/differentials/scaledfrictionalforce.h)
 
 #------------------------------------
 

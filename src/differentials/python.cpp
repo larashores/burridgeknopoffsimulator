@@ -1,8 +1,8 @@
 #include <boost/python.hpp>
 #include <boost/python/numpy.hpp>
 
-#include "scaledspringforce.h"
-#include "springforce.h"
+#include "differentials/scaledspringforce.h"
+#include "differentials/springforce.h"
 #include "frictionforce.h"
 
 namespace PY = boost::python;

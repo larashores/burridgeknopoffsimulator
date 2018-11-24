@@ -1,4 +1,4 @@
-#include "springforce.h"
+#include "differentials/springforce.h"
 #include "utilities.h"
 
 #include <sstream>
