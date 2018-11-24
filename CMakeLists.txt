@@ -9,14 +9,16 @@ set(SOURCE_FILES src/python.cpp
                  src/frictionforce.cpp
                  src/scaledspringforce.cpp
                  src/scaledplateforce.cpp
-                 src/positionupdater.cpp)
+                 src/positionupdater.cpp
+                 src/scaledfrictionalforce.cpp)
 
 set(HEADER_FILES include/springforce.h
                  include/utilities.h
                  include/frictionforce.h
                  include/scaledspringforce.h
                  include/scaledplateforce.h
-                 include/positionupdater.h)
+                 include/positionupdater.h
+                 include/scaledfrictionalforce.h)
 
 #------------------------------------
 
