@@ -23,11 +23,7 @@ class OdeSolver(ABC):
         current_values: Read only property to get the current values. To set this use set_current_values
     """
 
-    DEFAULT_STEP_SIZE = .002
-
-    t = property(lambda self: self._time)
-
-    def __init__(self, ode_system, *, start_time=0, initial_values=None, step_size=None):
+    def __init__(self, ode_system):
         """
         Initializes a new Solver. Should be called by subclasses and not used directly.
         To solve a differential equation solve_until_time or solve_until_termination should be used. The
@@ -40,20 +36,25 @@ class OdeSolver(ABC):
             step_size: The initial step size to solve with
         """
         self._difeqs = ode_system
-        self._time = start_time
-        self._current_values = initial_values
+        self._current_values = None
+        self._time = 0
+        self._step_size = 0.002
+
+    def set_current_values(self, values):
+        self._current_values = np.array(values, dtype='float64')
+
+    def set_step_size(self, step_size):
         self._step_size = step_size
-
-    def set_initial_values(self, values):
-        self._current_values = np.array(values)
-
-    def succesful(self):
-        return True
 
     def step(self):
         self._time += self._step_size
-        self._current_values = self._step()
-        return self._current_values
+        self._step()
+
+    def time(self):
+        return self._time
+
+    def current_values(self):
+        return self._current_values.copy()
 
     def integrate(self, time):
         """

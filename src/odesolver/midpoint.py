@@ -10,7 +10,7 @@ class Midpoint(OdeSolver):
         first_derivative = self._difeqs(self._time, self._current_values)
         half_step_values = self._current_values + (first_derivative * (self._step_size / 2))
         half_step_derivative = self._difeqs(self._time + (self._step_size / 2), half_step_values)
-        return self._current_values + (half_step_derivative * self._step_size)
+        self._current_values += half_step_derivative * self._step_size
 
 if __name__ == '__main__':
     test(Midpoint)
