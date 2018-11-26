@@ -12,17 +12,21 @@ set(SOURCE_FILES src/python.cpp
                  src/differentials/positionupdater.cpp
                  src/differentials/scaledfrictionalforce.cpp
                  src/odesolver/odesolver.cpp
-                 src/odesolver/euler.cpp)
+                 src/odesolver/euler.cpp
+                 src/odesolver/rungekutta.cpp
+                 src/odesolver/rungekutta4.cpp)
 
-set(HEADER_FILES  include/utilities.h
-                  include/frictionforce.h
-                  include/differentials/springforce.h
-                  include/differentials/scaledspringforce.h
-                  include/differentials/scaledplateforce.h
-                  include/differentials/positionupdater.h
-                  include/differentials/scaledfrictionalforce.h
-                  include/odesolver/odesolver.h
-                  include/odesolver/euler.h)
+set(HEADER_FILES include/utilities.h
+                 include/frictionforce.h
+                 include/differentials/springforce.h
+                 include/differentials/scaledspringforce.h
+                 include/differentials/scaledplateforce.h
+                 include/differentials/positionupdater.h
+                 include/differentials/scaledfrictionalforce.h
+                 include/odesolver/odesolver.h
+                 include/odesolver/euler.h
+                 include/odesolver/rungekutta.h
+                 include/odesolver/rungekutta4.h)
 
 #------------------------------------
 

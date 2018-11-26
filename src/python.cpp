@@ -1,6 +1,8 @@
 #include <boost/python.hpp>
 #include <boost/python/numpy.hpp>
 
+#include "odesolver/rungekutta4.h"
+#include "odesolver/rungekutta.h"
 #include "odesolver/odesolver.h"
 #include "odesolver/euler.h"
 #include "differentials/positionupdater.h"
@@ -12,6 +14,7 @@
 
 namespace PY = boost::python;
 namespace NP = boost::python::numpy;
+
 
 BOOST_PYTHON_MODULE(burridgeknopoff)
 {
@@ -37,6 +40,9 @@ BOOST_PYTHON_MODULE(burridgeknopoff)
             .def("step", &OdeSolver::step);
 
     PY::class_<Euler, PY::bases<OdeSolver>>("Euler", PY::init<OdeSolver::FuncType, double>());
+
+    PY::class_<RungeKutta, PY::bases<OdeSolver>, boost::noncopyable>("RungeKutta", PY::no_init);
+    PY::class_<RungeKutta4, PY::bases<RungeKutta>>("RungeKutta4", PY::init<OdeSolver::FuncType, double>());
 
     PY::def("friction_force", friction_force);
     PY::def("scaled_friction_force", scaled_friction_force);
