@@ -6,5 +6,5 @@
 class RungeKutta4 : public RungeKutta
 {
 public:
-    RungeKutta4(OdeSolver::FuncType difeqs, double start_time);
+    explicit RungeKutta4(OdeSolver::FuncType difeqs);
 };

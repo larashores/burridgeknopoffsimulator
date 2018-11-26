@@ -8,8 +8,8 @@ namespace NP = boost::python::numpy;
 
 RungeKutta::RungeKutta(const std::vector<double>& step_weights,
                        const std::vector<double>& weight_coefficients,
-                       OdeSolver::FuncType difeqs, double start_time) :
-    OdeSolver{difeqs, start_time},
+                       OdeSolver::FuncType difeqs) :
+    OdeSolver{difeqs},
     m_step_weights{step_weights},
     m_weight_coefficients{weight_coefficients},
     m_total_weight{std::accumulate(weight_coefficients.begin(), weight_coefficients.end(), 0.0)}

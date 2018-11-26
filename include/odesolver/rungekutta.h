@@ -6,15 +6,12 @@
 class RungeKutta : public OdeSolver
 {
 public:
-    using OdeSolver::OdeSolver;
-
     virtual ~RungeKutta() = default;
 
 protected:
     RungeKutta(const std::vector<double>& step_weights,
                const std::vector<double>& weight_coefficients,
-               OdeSolver::FuncType difeqs,
-               double start_time = 0);
+               OdeSolver::FuncType difeqs);
 private:
     void step_impl() override;
 

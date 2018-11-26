@@ -9,7 +9,7 @@ class OdeSolver
 public:
     using FuncType = PyObject*;
 
-    OdeSolver(FuncType difeq, double start_time = 0);
+    explicit OdeSolver(FuncType difeq);
     virtual ~OdeSolver() = default;
 
     double time() const;

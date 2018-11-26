@@ -33,16 +33,16 @@ BOOST_PYTHON_MODULE(burridgeknopoff)
 
 
     PY::class_<OdeSolver, boost::noncopyable>("OdeSolver", PY::no_init)
-              .def("time", &OdeSolver::time)
+            .def("time", &OdeSolver::time)
             .def("set_current_values", &OdeSolver::set_current_values)
             .def("set_step_size", &OdeSolver::set_step_size)
             .def("current_values", &OdeSolver::current_values)
             .def("step", &OdeSolver::step);
 
-    PY::class_<Euler, PY::bases<OdeSolver>>("Euler", PY::init<OdeSolver::FuncType, double>());
+    PY::class_<Euler, PY::bases<OdeSolver>>("Euler", PY::init<OdeSolver::FuncType>());
 
     PY::class_<RungeKutta, PY::bases<OdeSolver>, boost::noncopyable>("RungeKutta", PY::no_init);
-    PY::class_<RungeKutta4, PY::bases<RungeKutta>>("RungeKutta4", PY::init<OdeSolver::FuncType, double>());
+    PY::class_<RungeKutta4, PY::bases<RungeKutta>>("RungeKutta4", PY::init<OdeSolver::FuncType>());
 
     PY::def("friction_force", friction_force);
     PY::def("scaled_friction_force", scaled_friction_force);
