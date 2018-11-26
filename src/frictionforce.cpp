@@ -3,7 +3,7 @@
 #include <cmath>
 
 
-constexpr double epsilon {1e-3};
+constexpr double epsilon {0.0};
 constexpr double g {9.81};
 
 namespace {
