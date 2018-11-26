@@ -11,7 +11,8 @@ set(SOURCE_FILES src/python.cpp
                  src/differentials/scaledplateforce.cpp
                  src/differentials/positionupdater.cpp
                  src/differentials/scaledfrictionalforce.cpp
-                 src/odesolver/odesolver.cpp)
+                 src/odesolver/odesolver.cpp
+                 src/odesolver/euler.cpp)
 
 set(HEADER_FILES  include/utilities.h
                   include/frictionforce.h
@@ -20,7 +21,8 @@ set(HEADER_FILES  include/utilities.h
                   include/differentials/scaledplateforce.h
                   include/differentials/positionupdater.h
                   include/differentials/scaledfrictionalforce.h
-                  include/odesolver/odesolver.h)
+                  include/odesolver/odesolver.h
+                  include/odesolver/euler.h)
 
 #------------------------------------
 

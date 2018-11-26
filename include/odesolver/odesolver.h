@@ -6,15 +6,20 @@
 
 class OdeSolver
 {
-    using FuncType = std::function<boost::python::numpy::ndarray(double, boost::python::numpy::ndarray&)>;
+public:
+    using FuncType = PyObject*;
 
-    OdeSolver(const FuncType& difeq, double start_time = 0);
+    OdeSolver(FuncType difeq, double start_time = 0);
+    virtual ~OdeSolver() = default;
 
-    void set_initial_value(boost::python::numpy::ndarray& values);
+    double time() const;
+
+    void set_current_values(const boost::python::object& values);
     void set_step_size(double step);
 
-    boost::python::numpy::ndarray& step();
+    boost::python::numpy::ndarray current_values();
 
+    void step();
 
 protected:
     FuncType m_difeqs;
@@ -26,6 +31,4 @@ private:
     virtual void start() {};
     virtual void finish() {};
     virtual void step_impl() = 0;
-
-
 };

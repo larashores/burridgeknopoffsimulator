@@ -1,9 +1,10 @@
 #include "odesolver/odesolver.h"
 
+namespace PY = boost::python;
 namespace NP = boost::python::numpy;
 
 
-OdeSolver::OdeSolver(const OdeSolver::FuncType& difeqs,
+OdeSolver::OdeSolver(OdeSolver::FuncType difeqs,
                      double start_time) :
         m_difeqs{difeqs},
         m_current_values{NP::zeros(boost::python::make_tuple(0), NP::dtype::get_builtin<double>())},
@@ -12,9 +13,15 @@ OdeSolver::OdeSolver(const OdeSolver::FuncType& difeqs,
 {
 }
 
-void OdeSolver::set_initial_value(boost::python::numpy::ndarray& values)
+double OdeSolver::time() const
 {
-    m_current_values = values;
+    return m_time;
+}
+
+
+void OdeSolver::set_current_values(const PY::object& values)
+{
+    m_current_values = NP::array(values, NP::dtype::get_builtin<double>());
 }
 
 void OdeSolver::set_step_size(double step)
@@ -22,10 +29,15 @@ void OdeSolver::set_step_size(double step)
     m_step_size = step;
 }
 
-boost::python::numpy::ndarray& OdeSolver::step()
+
+boost::python::numpy::ndarray OdeSolver::current_values()
+{
+    return m_current_values.copy();
+}
+
+void OdeSolver::step()
 {
     m_time += m_step_size;
     step_impl();
-    return m_current_values;
 }
 
