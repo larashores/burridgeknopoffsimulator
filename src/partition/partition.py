@@ -1,6 +1,7 @@
 import numpy as np
-from src.simulation.blockarray import BlockArray
-from graphing.graphing import *
+from files.partition import Partition
+from simulation.blockarray import BlockArray
+import math
 
 
 class SingleSlipEvent:
@@ -10,7 +11,7 @@ class SingleSlipEvent:
     end_index = property(lambda self: self._end_index)
     distance = property(lambda self: self._distance)
 
-    def __init__(self, data,  row, col, start_index):
+    def __init__(self, data, row, col, start_index):
         self._distance = 0
         self._data = data
         self._data = data
@@ -21,15 +22,15 @@ class SingleSlipEvent:
 
     def set_end(self, end_index):
         self._end_index = end_index
-        start_block_array = BlockArray(self._data.values_list[self._start_index], self._data.cols)
-        end_block_array = BlockArray(self._data.values_list[self._end_index], self._data.cols)
+        start_block_array = BlockArray(self._data.values_list[self._start_index].get(), self._data.run_info.cols)
+        end_block_array = BlockArray(self._data.values_list[self._end_index].get(), self._data.run_info.cols)
         self._distance = end_block_array.positions[self._row, self._col] -  \
                          start_block_array.positions[self._row, self._col]
 
 
 class SlipEvent:
-    start_time = property(lambda self: self._data.times[self._start_index])
-    end_time = property(lambda self: self._data.times[self._end_index])
+    start_time = property(lambda self: self._data.times[self._start_index].get())
+    end_time = property(lambda self: self._data.times[self._end_index].get())
     start_index = property(lambda self: self._start_index)
     end_index = property(lambda self: self._end_index)
     slipped_blocks = property(lambda self: self._blocks_to_events.copy())
@@ -50,12 +51,12 @@ class SlipEvent:
 
     def set_end(self, end_index):
         self._end_index = end_index
-        for row in range(self._data.rows):
-            for col in range(self._data.cols):
+        for row in range(self._data.run_info.rows):
+            for col in range(self._data.run_info.cols):
                 slipping = False
                 for ind in range(self._start_index, self._end_index + 1):
-                    block_array = BlockArray(self._data.values_list[ind],
-                                             self._data.cols)
+                    block_array = BlockArray(self._data.values_list[ind].get(),
+                                             self._data.run_info.cols)
                     if block_array.velocities[row, col] > 0:
                         if not slipping:
                             if (row, col) not in self._blocks_to_events:
@@ -68,43 +69,47 @@ class SlipEvent:
                         slipping = False
 
 
-def partition(data):
+def create_events(data):
     slip_events = []
     slipping = False
     for ind, time_slice in enumerate(data.values_list):
-        block_array = BlockArray(time_slice, data.cols)
+        block_array = BlockArray(time_slice.get(), data.run_info.cols)
         slip = False
         for ind_, value in enumerate(block_array.velocities):
             if value > 0:
                 slip = True
                 break
         if not slipping and slip:
-            slip_events.append(SlipEvent(data, ind))
+            event = SlipEvent(data, ind)
+            slip_events.append(event)
+            print('Event start at: {} ({}s)'.format(ind, event.start_time))
         elif slipping and not slip:
-            slip_events[-1].set_end(ind)
+            event = slip_events[-1]
+            event.set_end(ind)
+            print('Event end at: (', round(event.start_time, 1),
+                  ',', round(event.end_time, 1),
+                  ') from', event.start_index,
+                  'to', event.end_index,
+                  ', num slipped:', len(event.slipped_blocks),
+                  ', distance:', event.distance)
         slipping = slip
 
     return slip_events
 
-def view_partition(data):
-    slip_events = partition(data)
+def partition(data):
+    print('Searching for events')
+    slip_events = create_events(data)
     magnitudes = []
     for event in slip_events:
-        print('Event at: (', round(event.start_time, 1),
-              ',', round(event.end_time, 1),
-              ') from', event.start_index,
-              'to', event.end_index,
-              ', num slipped:', len(event.slipped_blocks),
-              ', distance:', event.distance)
-        magnitudes.append(np.log(event.distance))
-    print(magnitudes)
-    at_least = np.linspace(-1, 3, 100)
-    amount = []
-    for magnitude in at_least:
-        amount.append(sum((lambda x: x > magnitude)(x) for x in magnitudes) / len(slip_events))
+        magnitude = np.log(event.distance)
+        if not math.isnan(magnitude):
+            magnitudes.append(magnitude)
 
-    magnitudes.sort()
-    graph = Graph(list(range(len(magnitudes))), magnitudes)
-    graph2 = Graph(at_least, amount, plot_type='-')
-    draw(SubPlot(graph))
-    draw(SubPlot(graph2))
+    file = Partition()
+    file.run_info = data.run_info
+    file.event_magnitudes = np.array(sorted(magnitudes))
+    file.magnitudes_of_at_least = np.linspace(-15, 5, 100)
+    file.amount_of_at_least = np.zeros(len(file.magnitudes_of_at_least))
+    for ind, magnitude in enumerate(file.magnitudes_of_at_least):
+        file.amount_of_at_least[ind] = sum((lambda x: x > magnitude)(x) for x in magnitudes)
+    return file
