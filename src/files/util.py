@@ -17,9 +17,9 @@ def write_data(file_name, data):
     with open(file_name, 'wb') as file:
         file.write(data_file.to_byte_array())
 
-def get_file_name():
+def get_file_name(ext='dat'):
     if len(sys.argv) == 1:
-        files = glob.iglob('data/*')
+        files = glob.iglob('data/*.'+ext)
         return max(files, key=os.path.getctime)
     elif len(sys.argv) == 2:
         return os.path.join('data', sys.argv[1])
