@@ -1,33 +1,32 @@
 import random
 from datetime import datetime
 from scipy.integrate import ode
+from odesolver.rungekutta import RungeKutta4
 
 from simulation.blockarray import BlockArray
 
 
 def solve(data, differential, initial_steps, steps):
     print('Creating initial data')
-    blocks = BlockArray(data.rows, data.cols)
-    for i in range(data.rows):
-        for j in range(data.cols):
-            blocks.positions[i, j] = data.spring_length * (j + random.random() / 3)
+    blocks = BlockArray(data.run_info.rows, data.run_info.cols)
+    for i in range(data.run_info.rows):
+        for j in range(data.run_info.cols):
+            blocks.positions[i, j] = data.run_info.spring_length * (j + random.random() / 3)
     print('Initial data created')
-    r = ode(differential)
-    r.set_integrator('dopri5', nsteps=10000)
-    r.set_initial_value(blocks.array)
+    r = RungeKutta4(differential)
+    r.set_step_size(.0001)
+    r.set_current_values(blocks.array)
     start = datetime.now().timestamp()
     progress_at = start + 3
-    for step in range(initial_steps + steps):
-        values = r.integrate(r.t+data.time_interval)
+    for step in range(steps+initial_steps):
+        for _ in range(int(data.run_info.time_interval / .001)):
+            r.step()
         if step > initial_steps:
-            data.add_slice(r.t, values)
+            data.add_slice(r.time(), r.current_values())
         current = datetime.now().timestamp()
         if current > progress_at:
-            print('Initial steps: {}, Step: {}, Time: {}, Real-time: {:.2f}s'.format(initial_steps,
-                                                                                     step, r.t, current - start))
+            print('Step: {}, Time: {}, Real-time: {:.2f}s'.format(step, r.time(), current - start))
             progress_at = current + 3
-        if not r.successful():
-            break
     elapsed = datetime.now().timestamp() - start
-    data.total_time = elapsed
+    data.run_info.total_time = elapsed
     print('Finished at: {:.2f}s'.format(elapsed))
