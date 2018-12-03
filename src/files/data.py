@@ -3,22 +3,13 @@ from saveable.saveablearray import array
 from saveable.saveablefloat import SaveableDouble
 from saveable.saveableint import U16
 from files.timeslice import Timeslice
+from files.runinfo import RunInfo
 
 
 class Data(Composite):
     VERSION = 3
 
-    rows = U16
-    cols = U16
-    spring_length = SaveableDouble
-    mass = SaveableDouble
-    spring_constant = SaveableDouble
-    static_friction = SaveableDouble
-    kinetic_friction = SaveableDouble
-    plate_velocity = SaveableDouble
-    plate_spring_constant = SaveableDouble
-    time_interval = SaveableDouble
-    total_time = SaveableDouble
+    run_info = RunInfo
     times = array(SaveableDouble)
     values_list = array(Timeslice)
 

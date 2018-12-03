@@ -1,23 +1,17 @@
 from saveable.composite import Composite
 from saveable.saveablearray import array
 from saveable.saveablefloat import SaveableDouble
-from saveable.saveableint import U16
+from saveable.saveableint import U16, U32
 from files.timeslice import Timeslice
+from files.scaledruninfo import ScaledRunInfo
 
 
 class ScaledData(Composite):
     VERSION = 1
 
-    rows = U16
-    cols = U16
-    spring_length = SaveableDouble
-    plate_velocity = SaveableDouble
-    alpha = SaveableDouble
-    l = SaveableDouble
-    time_interval = SaveableDouble
-    total_time = SaveableDouble
-    times = array(SaveableDouble)
-    values_list = array(Timeslice)
+    run_info = ScaledRunInfo
+    times = array(SaveableDouble, U32)
+    values_list = array(Timeslice, U32)
 
     def __init__(self):
         Composite.__init__(self)
