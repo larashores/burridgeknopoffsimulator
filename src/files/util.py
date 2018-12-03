@@ -28,6 +28,7 @@ def get_file_name():
 
 def data_desc(data):
     if type(data) == Data:
+        info = data.run_info
         return ('rows: {}\n' +
                'cols: {}\n' +
                'm:    {}\n' +
@@ -37,22 +38,23 @@ def data_desc(data):
                'k_p:  {}\n' +
                'u_s:  {}\n' +
                'u_k:  {}\n' +
-               'dt:   {}').format(data.rows, data.cols, data.mass,
-                               data.plate_velocity,
-                               data.spring_length,
-                               data.spring_constant, data.plate_spring_constant,
-                               data.static_friction, data.kinetic_friction,
-                               data.time_interval)
+               'dt:   {}').format(info.rows, info.cols, info.mass,
+                                  info.plate_velocity,
+                                  info.spring_length,
+                                  info.spring_constant, info.plate_spring_constant,
+                                  info.static_friction, info.kinetic_friction,
+                                  info.time_interval)
     elif type(data) == ScaledData:
+        info = data.run_info
         return ('rows: {}\n' +
                 'cols: {}\n' +
                 'L:    {}\n' +
                 'v:    {}\n' +
                 'a:    {}\n' +
                 'l:    {}\n' +
-                'dt:   {}').format(data.rows, data.cols,
-                                   data.spring_length,
-                                   data.plate_velocity,
-                                   data.alpha,
-                                   data.l,
-                                   data.time_interval)
+                'dt:   {}').format(info.rows, info.cols,
+                                   info.spring_length,
+                                   info.plate_velocity,
+                                   info.alpha,
+                                   info.l,
+                                   info.time_interval)
