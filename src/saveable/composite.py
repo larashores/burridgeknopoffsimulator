@@ -106,6 +106,12 @@ class Composite(SaveableType, metaclass=CompositeMeta):
         else:
             return saveable_type
 
+    def set(self, other):
+        if type(other) != type(self):
+            raise ValueError('Types do not match {}, {}'.format(type(other, type(self))))
+        for attr in other.__ordered__:
+            self.__setattr__(attr, other.__getattribute__(attr))
+
     def load_in_place(self, byte_array, index=0):
         for key in self.__ordered__:
             index = self.__dict__[key].load_in_place(byte_array, index)
