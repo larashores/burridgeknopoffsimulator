@@ -28,14 +28,15 @@ class TkViewerGui(ttk.Frame):
         self.update_values()
 
     def draw_blocks(self, positions):
+        rows, cols = self._data.run_info.rows, self._data.run_info.cols
         width = self.canvas.winfo_width()
         height = self.canvas.winfo_height()
-        distance = (self._data.spring_length * self.scale)
-        start_x = (width - (self._data.cols-1)*distance - self.block_size) / 2
-        start_y = (height - (self._data.rows-1)*distance - self.block_size) / 2
-        block_array = BlockArray(positions, self._data.cols)
-        for i in range(self._data.rows):
-            for j in range(self._data.cols):
+        distance = (self._data.run_info.spring_length * self.scale)
+        start_x = (width - (cols-1)*distance - self.block_size) / 2
+        start_y = (height - (rows-1)*distance - self.block_size) / 2
+        block_array = BlockArray(positions, cols)
+        for i in range(rows):
+            for j in range(cols):
                 x_pos = block_array.positions[i, j]
                 x, y = start_x + x_pos * self.scale, start_y + distance * i
                 self.canvas.create_rectangle(x, y, x + self.block_size, y + self.block_size)
@@ -59,11 +60,22 @@ class TkViewerGui(ttk.Frame):
         self.draw_blocks(self._data.values_list[i].get())
         end = datetime.datetime.now().timestamp()
         if i < len(self._data.values_list) - 1:
-            self.after(int(self._data.time_interval * self.wait_time) - int((end - start) * 1e3),
+            self.after(int(self._data.run_info.time_interval * self.wait_time) - int((end - start) * 1e3),
                        lambda: self.draw_recursive(i + 1))
         else:
             self.sidebar.button_start.state(['!disabled'])
-        self.time += self._data.time_interval
+        self.time += self._data.run_info.time_interval
+
+    def draw_step(self, i):
+        self.time_label.config(text=self.LABEL_TEXT.format(self.time))
+        self.canvas.delete(tk.ALL)
+        self.draw_blocks(self._data.values_list[i].get())
+        self.time += self._data.run_info.time_interval
+        array = BlockArray(self._data.values_list[i].get(), self._data.cols)
+        print('Step: ', i)
+        print('Positions: ', [pos for pos in array.positions])
+        print('Velocities: ', [pos for pos in array.velocities])
+        print()
 
     def update_values(self):
         try:
@@ -79,9 +91,9 @@ class TkViewerGui(ttk.Frame):
         except tk.TclError:
             pass
 
-    def start(self):
+    def start(self, step):
         self.time = 0
-        self.draw_recursive(0)
+        self.draw_recursive(step)
 
 
 class Sidebar(ttk.Frame):
@@ -107,6 +119,7 @@ class Sidebar(ttk.Frame):
 
         self.message = tk.Message(self, font=('consolas', 10))
         self.button_start = ttk.Button(self, text='Start')
+        self.button_step = ttk.Button(self, text='Step')
 
         block_size_label.pack()
         block_size_spinbox.pack(pady=(0, 10))
@@ -115,19 +128,25 @@ class Sidebar(ttk.Frame):
         speed_label.pack()
         speed_spinbox.pack(pady=(0, 10))
         self.message.pack(fill=tk.BOTH)
-        self.button_start.pack(pady=(6, 10))
+        self.button_start.pack(pady=(6, 3))
+        self.button_step.pack(pady=(3, 10))
 
 
 class TkViewer:
     def __init__(self, *args, message='', **kwargs):
         self.gui = TkViewerGui(*args, **kwargs)
         self.gui.sidebar.button_start.config(command=self.on_start)
+        self.gui.sidebar.button_step.config(command=self.on_step)
         self.gui.sidebar.message.config(text=message)
+        self.step = 0
 
     def on_start(self):
         self.gui.sidebar.button_start.state(['disabled'])
-        self.gui.start()
+        self.gui.start(self.step)
 
+    def on_step(self):
+        self.gui.draw_step(self.step)
+        self.step += 1
 
 def view_2d(data, description):
     root = tk.Tk()

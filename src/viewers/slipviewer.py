@@ -13,7 +13,7 @@ class SlipViewerGui(ttk.Frame):
         ttk.Frame.__init__(self, parent, **kwargs)
         self.time = 0
         self.data = data
-        self.time_interval = data.time_interval
+        self.time_interval = data.run_info.time_interval
 
         self.sidebar = SlipSidebar(self)
         self.separator = ttk.Separator(self, orient=tk.VERTICAL)
@@ -28,13 +28,14 @@ class SlipViewerGui(ttk.Frame):
         self.update_values()
 
     def draw_blocks(self, timeslice):
+        rows, cols = self.data.run_info.rows, self.data.run_info.cols
         width = self.canvas.winfo_width()
         height = self.canvas.winfo_height()
-        start_x = (width - self.data.cols*self.block_size) / 2
-        start_y = (height - self.data.rows*self.block_size) / 2
-        block_array = BlockArray(timeslice, self.data.cols)
-        for i in range(self.data.rows):
-            for j in range(self.data.cols):
+        start_x = (width - cols*self.block_size) / 2
+        start_y = (height - rows*self.block_size) / 2
+        block_array = BlockArray(timeslice, cols)
+        for i in range(rows):
+            for j in range(cols):
                 velocity = block_array.velocities[i, j]
                 color = 'black' if velocity > 0.01 else 'white'
                 x, y = start_x + self.block_size * j, start_y + self.block_size * i
