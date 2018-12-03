@@ -5,34 +5,16 @@ import inspect
 from saveable.saveablearray import SaveableType
 
 
-class SaveableViewer:
-    def __init__(self, parent):
-        self._parent = parent
-
-    def __getattribute__(self, item):
-        """
-        Catches all attribute getting. If the attribute defines a 'get' method returns that instead, otherwise just
-        returns the attribute
-        """
-        get_attr_self = lambda item: object.__getattribute__(self, item)
-        get_attribute = lambda item: SaveableType.__getattribute__(get_attr_self('parent'), item)
-        _dict = get_attribute('__dict__')
-        if item not in type(get_attr_self('parent')).__ordered__:
-            raise ValueError('Saveable ' + item + " does not exist")
-        saveable_type = _dict[item]
-        return saveable_type
-
-
 class CompositeMeta(ABCMeta):
     """
     Meta class that keeps track of an ordered list of class attributes to later be used by the Composite class.
     Adds all class attributes of type SaveableType to member __ordered__ of the class __dict__
     """
     @classmethod
-    def __prepare__(self, name, bases):
+    def __prepare__(mcs, name, bases):
         return collections.OrderedDict()
 
-    def __new__(self, name, bases, classdict):
+    def __new__(mcs, name, bases, classdict):
         for base in bases:
             if hasattr(base, '__ordered__'):
                 for key in base.__ordered__:
@@ -40,8 +22,9 @@ class CompositeMeta(ABCMeta):
         classdict['__ordered__'] = [key for key in classdict.keys() if
                                     inspect.isclass(classdict[key]) and
                                     issubclass(classdict[key], SaveableType)]
+        classdict['__typemap__'] = {key: classdict[key] for key in classdict['__ordered__']}
 
-        return type.__new__(self, name, bases, dict(classdict))
+        return type.__new__(mcs, name, bases, dict(classdict))
 
 
 class Composite(SaveableType, metaclass=CompositeMeta):
@@ -72,11 +55,8 @@ class Composite(SaveableType, metaclass=CompositeMeta):
         Creates an instance attribute for each type in the class attribute '__ordered__'.
         """
         SaveableType.__init__(self)
-        self.saveables = SaveableViewer(self)
-        self.__typemap__ = {key: type(self).__dict__[key] for key in self.__ordered__}
         for key, Type in self.__typemap__.items():
-            item = Type()
-            self.__dict__[key] = item
+            self.__dict__[key] = Type()
 
     def __setattr__(self, key, value):
         """
