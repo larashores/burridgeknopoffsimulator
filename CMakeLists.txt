@@ -16,6 +16,7 @@ set(SOURCE_FILES src/python.cpp
                  src/differentials/c/cplateforce.cpp
                  src/differentials/c/cpositionupdater.cpp
                  src/differentials/c/cfrictionalforce.cpp
+                 src/differentials/c/cdifferential.cpp
                  src/odesolver/odesolver.cpp
                  src/odesolver/euler.cpp
                  src/odesolver/rungekutta.cpp
@@ -33,6 +34,7 @@ set(HEADER_FILES include/utilities.h
                  include/differentials/c/cplateforce.h
                  include/differentials/c/cpositionupdater.h
                  include/differentials/c/cfrictionalforce.h
+                 include/differentials/c/cdifferential.h
                  include/odesolver/odesolver.h
                  include/odesolver/euler.h
                  include/odesolver/rungekutta.h
