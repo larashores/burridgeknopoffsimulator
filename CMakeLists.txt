@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
-project(BurridgeKnopoffLib VERSION 0.1)
+project(BurridgeKnopoffLib VERSION 1.0)
 
 #-----------Project Files------------
 
@@ -38,12 +38,14 @@ set(ARCHITECTURE x64)
 set(BUILD_STATIC ON)
 
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall -Wextra -pedantic -g -O3")
+set(CMAKE_CXX_FLAGS "-std=c++17 -Wall -Wextra -pedantic -g")
+set(CMAKE_CXX_FLAGS_RELEASE "-O2")
 set(CMAKE_CXX_COMPILER_ARCHITECTURE_ID ${ARCHITECTURE})  # Used to find Boost libraries correctly
 #------------------------------------
 
 #------Find boost python and numpy library-----
-set(BOOST_LIBRARYDIR C:/boost_1_67_0/stage/${ARCHITECTURE}/lib)
+set(BOOST_ROOT C:/boost_1_69_0)
+set(BOOST_LIBRARYDIR C:/boost_1_69_0/stage/${ARCHITECTURE}/lib)
 set(Boost_USE_STATIC_LIBS ${BUILD_STATIC})
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME ${BUILD_STATIC})
@@ -51,7 +53,7 @@ if(${BUILD_STATIC})
     add_definitions(-DBOOST_PYTHON_STATIC_LIB)
     add_definitions(-DBOOST_NUMPY_STATIC_LIB)
 endif()
-find_package(Boost 1.67.0 REQUIRED python37 numpy37)
+find_package(Boost 1.69.0 REQUIRED python37 numpy37)
 if (Boost_FOUND)
     message(" Boost include directory found at ${Boost_INCLUDE_DIRS}")
     message(" Boost libraries found at ${Boost_LIBRARIES}")
