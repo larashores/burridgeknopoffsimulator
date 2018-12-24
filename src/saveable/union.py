@@ -63,7 +63,7 @@ class Union(SaveableType, metaclass=UnionMeta):
             if value is None:
                 self._current = Type()
             elif type(value) == Type:
-                self._current.set(value)
+                self._current = value
             else:
                 raise ValueError('Value not {}! {}'.format(Type, value))
             return

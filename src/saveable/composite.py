@@ -88,7 +88,7 @@ class Composite(SaveableType, metaclass=CompositeMeta):
 
     def set(self, other):
         if type(other) != type(self):
-            raise ValueError('Types do not match {}, {}'.format(type(other, type(self))))
+            raise ValueError('Types do not match {}, {}'.format(type(other), type(self)))
         for attr in other.__ordered__:
             self.__setattr__(attr, other.__getattribute__(attr))
 
