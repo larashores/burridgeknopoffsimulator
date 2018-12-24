@@ -12,7 +12,7 @@ namespace odesolver {
 class OdeSolver
 {
 public:
-    explicit OdeSolver(std::shared_ptr<Difeq> difeq);
+    OdeSolver(std::shared_ptr<Difeq> difeq);
     virtual ~OdeSolver() = default;
 
     void resize(std::size_t size);

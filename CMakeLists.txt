@@ -25,7 +25,8 @@ set(SOURCE_FILES src/python.cpp
                  src/odesolver/c/euler.cpp
                  src/odesolver/c/rungekutta.cpp
                  src/odesolver/c/rungekutta4.cpp
-                 src/python/odesolver/py_odesolver.cpp)
+                 src/python/odesolver/py_odesolver.cpp
+        )
 
 set(HEADER_FILES include/utilities.h
                  include/cutilities.h
@@ -49,7 +50,8 @@ set(HEADER_FILES include/utilities.h
                  include/odesolver/c/euler.h
                  include/odesolver/c/rungekutta.h
                  include/odesolver/c/rungekutta4.h
-                 include/python/odesolver/py_odesolver.h)
+                 include/python/odesolver/py_odesolver.h
+        )
 
 #------------------------------------
 
@@ -100,6 +102,6 @@ target_include_directories(burridgeknopoff SYSTEM PRIVATE ${Boost_INCLUDE_DIRS} 
 target_link_libraries(burridgeknopoff ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
 
 install(TARGETS burridgeknopoff
-        DESTINATION "E:/Users/Vincent/Documents/Capstone/Capstone 1/simulator"
+        DESTINATION "E:/Users/Vincent/Documents/RIT/Capstone/Capstone 1/simulator"
         CONFIGURATIONS Debug Release)
 #-----------------------------------

@@ -4,10 +4,11 @@
 #include "differentials/c/cplateforce.h"
 #include "differentials/c/cpositionupdater.h"
 #include "differentials/c/cspringforce.h"
+#include "differentials/c/difeq.h"
 
 #include <valarray>
 
-class CDifferential
+class CDifferential : public Difeq
 {
 public:
     CDifferential(int num_rows, int num_cols,
@@ -15,7 +16,7 @@ public:
                   double scaled_plate_velocity,
                   double alpha, double l);
 
-    std::valarray<double> differentiate(double time, const std::valarray<double>& values) const;
+    std::valarray<double> differentiate(double time, const std::valarray<double>& values) const override;
 private:
     CPositionUpdater m_position_updater;
     CSpringForce m_spring_force;
