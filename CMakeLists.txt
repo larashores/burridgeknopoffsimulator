@@ -6,11 +6,11 @@ project(BurridgeKnopoffLib VERSION 0.1)
 set(SOURCE_FILES src/python.cpp
                  src/cutilities.cpp
                  src/frictionforce.cpp
-                 src/differentials/c/cspringforce.cpp
-                 src/differentials/c/cplateforce.cpp
-                 src/differentials/c/cpositionupdater.cpp
-                 src/differentials/c/cfrictionalforce.cpp
-                 src/differentials/c/cdifferential.cpp
+                 src/differentials/c/springforce.cpp
+                 src/differentials/c/plateforce.cpp
+                 src/differentials/c/positionupdater.cpp
+                 src/differentials/c/frictionalforce.cpp
+                 src/differentials/c/bkdifeq.cpp
                  src/odesolver/c/odesolver.cpp
                  src/odesolver/c/euler.cpp
                  src/odesolver/c/rungekutta.cpp
@@ -19,11 +19,11 @@ set(SOURCE_FILES src/python.cpp
 
 set(HEADER_FILES include/cutilities.h
                  include/frictionforce.h
-                 include/differentials/c/cspringforce.h
-                 include/differentials/c/cplateforce.h
-                 include/differentials/c/cpositionupdater.h
-                 include/differentials/c/cfrictionalforce.h
-                 include/differentials/c/cdifferential.h
+                 include/differentials/c/springforce.h
+                 include/differentials/c/plateforce.h
+                 include/differentials/c/positionupdater.h
+                 include/differentials/c/frictionalforce.h
+                 include/differentials/c/bkdifeq.h
                  include/differentials/c/difeq.h
                  include/odesolver/c/odesolver.h
                  include/odesolver/c/euler.h

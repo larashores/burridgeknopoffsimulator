@@ -1,9 +1,9 @@
-#include "differentials/c/cfrictionalforce.h"
+#include "differentials/c/frictionalforce.h"
 #include "frictionforce.h"
 #include "cutilities.h"
 
 
-CFrictionalForce::CFrictionalForce(int rows, int cols, double plate_velocity, double alpha) :
+FrictionalForce::FrictionalForce(int rows, int cols, double plate_velocity, double alpha) :
         m_rows{rows},
         m_cols{cols},
         m_plate_velocity{plate_velocity},
@@ -11,7 +11,7 @@ CFrictionalForce::CFrictionalForce(int rows, int cols, double plate_velocity, do
 {
 }
 
-void CFrictionalForce::differentiate(const std::valarray<double>& current,
+void FrictionalForce::differentiate(const std::valarray<double>& current,
                                      std::valarray<double>& results) const
 {
     for(int i=0; i < m_rows; i++)

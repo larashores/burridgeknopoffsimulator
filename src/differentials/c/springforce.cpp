@@ -1,8 +1,8 @@
-#include "differentials/c/cspringforce.h"
+#include "differentials/c/springforce.h"
 #include "cutilities.h"
 
 
-CSpringForce::CSpringForce(int rows, int cols, double spring_length, double l) :
+SpringForce::SpringForce(int rows, int cols, double spring_length, double l) :
         m_rows{rows},
         m_cols{cols},
         m_spring_length{spring_length},
@@ -17,13 +17,13 @@ CSpringForce::CSpringForce(int rows, int cols, double spring_length, double l) :
     }
 }
 
-void CSpringForce::differentiate(const std::valarray<double>& current,
+void SpringForce::differentiate(const std::valarray<double>& current,
                                  std::valarray<double>& results) const
 {
     return m_diff_func(current, results);
 }
 
-void CSpringForce::diff_full(const std::valarray<double>& current,
+void SpringForce::diff_full(const std::valarray<double>& current,
                              std::valarray<double>& results) const
 {
     for(int i=0; i < m_rows; i++)
@@ -47,7 +47,7 @@ void CSpringForce::diff_full(const std::valarray<double>& current,
     }
 }
 
-void CSpringForce::diff_one_dim(const std::valarray<double>& current,
+void SpringForce::diff_one_dim(const std::valarray<double>& current,
                                 std::valarray<double>& results) const
 {
     set_velocity(results, 0,

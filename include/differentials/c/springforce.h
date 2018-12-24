@@ -3,10 +3,10 @@
 #include <valarray>
 #include <functional>
 
-class CSpringForce
+class SpringForce
 {
 public:
-    CSpringForce(int rows, int cols, double spring_length, double l);
+    SpringForce(int rows, int cols, double spring_length, double l);
 
     void differentiate(const std::valarray<double>& current,
                        std::valarray<double>& results) const;

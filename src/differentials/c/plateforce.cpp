@@ -1,16 +1,16 @@
-#include "differentials/c/cplateforce.h"
+#include "differentials/c/plateforce.h"
 
 #include "cutilities.h"
 
 
-CPlateForce::CPlateForce(int rows, int cols, double spring_length) :
+PlateForce::PlateForce(int rows, int cols, double spring_length) :
         m_rows{rows},
         m_cols{cols},
         m_spring_length{spring_length}
 {
 }
 
-void CPlateForce::differentiate(const std::valarray<double>& current,
+void PlateForce::differentiate(const std::valarray<double>& current,
                                 std::valarray<double>& results) const
 {
     for(int i=0; i < m_rows; i++)

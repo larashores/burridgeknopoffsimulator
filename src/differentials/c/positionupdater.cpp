@@ -1,15 +1,15 @@
-#include "differentials/c/cpositionupdater.h"
+#include "differentials/c/positionupdater.h"
 
 #include "cutilities.h"
 
 
-CPositionUpdater::CPositionUpdater(int rows, int cols) :
+PositionUpdater::PositionUpdater(int rows, int cols) :
         m_rows{rows},
         m_cols{cols}
 {
 }
 
-void CPositionUpdater::differentiate(const std::valarray<double>& current,
+void PositionUpdater::differentiate(const std::valarray<double>& current,
                                      std::valarray<double>& results) const
 {
     for(int i=0; i < m_rows; i++)

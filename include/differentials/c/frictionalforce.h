@@ -2,10 +2,10 @@
 
 #include <valarray>
 
-class CFrictionalForce
+class FrictionalForce
 {
 public:
-    CFrictionalForce(int rows, int cols, double plate_velocity, double alpha);
+    FrictionalForce(int rows, int cols, double plate_velocity, double alpha);
 
     void differentiate(const std::valarray<double>& current,
                        std::valarray<double>& results) const;

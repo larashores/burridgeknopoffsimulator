@@ -7,7 +7,7 @@
 #include "odesolver/c/odesolver.h"
 #include "odesolver/c/euler.h"
 #include "frictionforce.h"
-#include "differentials/c/cdifferential.h"
+#include "differentials/c/bkdifeq.h"
 #include "differentials/c/difeq.h"
 
 namespace PY = boost::python;
@@ -20,7 +20,7 @@ BOOST_PYTHON_MODULE(burridgeknopoff)
     NP::initialize();
 
     PY::class_<Difeq, boost::noncopyable>("Difeq", PY::no_init);
-    PY::class_<CDifferential, PY::bases<Difeq>>("ScaledDifferential",
+    PY::class_<BkDifeq, PY::bases<Difeq>>("ScaledDifferential",
                                                 PY::init<int, int, double, double, double, double>());
 
     PY::class_<ODE::OdeSolver, boost::noncopyable>("OdeSolver", PY::no_init)

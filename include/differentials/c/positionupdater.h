@@ -3,10 +3,10 @@
 #include <valarray>
 
 
-class CPositionUpdater
+class PositionUpdater
 {
 public:
-    CPositionUpdater(int rows, int cols);
+    PositionUpdater(int rows, int cols);
 
     void differentiate(const std::valarray<double>& current_array,
                        std::valarray<double>& results_array) const;

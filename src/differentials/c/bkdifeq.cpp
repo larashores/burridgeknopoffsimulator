@@ -1,6 +1,6 @@
-#include "differentials/c/cdifferential.h"
+#include "differentials/c/bkdifeq.h"
 
-CDifferential::CDifferential(int num_rows, int num_cols,
+BkDifeq::BkDifeq(int num_rows, int num_cols,
                              double scaled_spring_length,
                              double scaled_plate_velocity,
                              double alpha, double l) :
@@ -14,7 +14,7 @@ CDifferential::CDifferential(int num_rows, int num_cols,
 
 }
 
-std::valarray<double> CDifferential::differentiate(double /*time*/, const std::valarray<double>& current) const
+std::valarray<double> BkDifeq::differentiate(double /*time*/, const std::valarray<double>& current) const
 {
     std::valarray<double> results (static_cast<std::size_t>(m_rows * m_cols * 2));
     m_spring_force.differentiate(current, results);

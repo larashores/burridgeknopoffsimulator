@@ -3,10 +3,10 @@
 #include <valarray>
 
 
-class CPlateForce
+class PlateForce
 {
 public:
-    CPlateForce(int rows, int cols, double spring_length);
+    PlateForce(int rows, int cols, double spring_length);
 
     void differentiate(const std::valarray<double>& current,
                        std::valarray<double>& results) const;
