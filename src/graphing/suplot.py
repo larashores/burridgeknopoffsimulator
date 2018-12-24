@@ -12,7 +12,8 @@ class SubPlot:
         y_label: The label for the y-axis of this subplot
         title: The title for this subplot
     """
-    def __init__(self, *args, x_label='', y_label='', title='', log=None, tick_size=None, axis_label_size=None):
+    def __init__(self, *args, x_label='', y_label='', title='', log=None, tick_size=None, axis_label_size=None,
+                 legend_size=None):
         """
         Creates a new SubPlot object
 
@@ -33,3 +34,4 @@ class SubPlot:
         self.y_log = True if log == 'y' or log == 'both' else False
         self.tick_size = tick_size
         self.axis_label_size = axis_label_size
+        self.legend_size = legend_size

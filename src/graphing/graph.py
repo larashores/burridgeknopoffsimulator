@@ -14,7 +14,7 @@ class Graph:
     """
     def __init__(self, x_values, y_values, *, x_errors=None, y_errors=None,
                  curve_fits=None, curve_store=None, legend_label=None, color=None,
-                 plot_type='o', plot_size=13):
+                 plot_type='o', plot_size=13, line_width=1):
         """
         Creates a new GraphSettings object
 
@@ -36,3 +36,4 @@ class Graph:
         self.curve_fits = curve_fits
         self.curve_store = curve_store
         self.plot_size = plot_size
+        self.line_width=line_width

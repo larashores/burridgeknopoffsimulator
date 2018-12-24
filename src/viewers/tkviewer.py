@@ -37,9 +37,11 @@ class TkViewerGui(ttk.Frame):
         block_array = BlockArray(positions, cols)
         for i in range(rows):
             for j in range(cols):
+                velocity = block_array.velocities[i, j]
+                color = 'black' if velocity > 0.01 else 'white'
                 x_pos = block_array.positions[i, j]
                 x, y = start_x + x_pos * self.scale, start_y + distance * i
-                self.canvas.create_rectangle(x, y, x + self.block_size, y + self.block_size)
+                self.canvas.create_rectangle(x, y, x + self.block_size, y + self.block_size, fill=color)
 
         x1 = 0
         num = 0
@@ -71,7 +73,7 @@ class TkViewerGui(ttk.Frame):
         self.canvas.delete(tk.ALL)
         self.draw_blocks(self._data.values_list[i].get())
         self.time += self._data.run_info.time_interval
-        array = BlockArray(self._data.values_list[i].get(), self._data.cols)
+        array = BlockArray(self._data.values_list[i].get(), self._data.run_info.cols)
         print('Step: ', i)
         print('Positions: ', [pos for pos in array.positions])
         print('Velocities: ', [pos for pos in array.velocities])

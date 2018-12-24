@@ -57,9 +57,10 @@ def _draw_historgram(axis, histogram):
 def _draw_graph(axis, graph, x_log=False):
     if not (graph.x_error is None and graph.y_error is None):
         line = axis.errorbar(graph.x_values, graph.y_values, graph.y_error, graph.x_error, graph.plot_type,
-                             color=graph.color)[0]
+                             color=graph.color, linewidth=graph.line_width)[0]
     else:
-        line = axis.plot(graph.x_values, graph.y_values, graph.plot_type, ms=graph.plot_size, color=graph.color)[0]
+        line = axis.plot(graph.x_values, graph.y_values, graph.plot_type, ms=graph.plot_size, color=graph.color,
+                         linewidth=graph.line_width)[0]
     if graph.curve_fits is not None:
         for fit in graph.curve_fits:
             optimal, stddev = fit_func(fit.func,
@@ -85,7 +86,6 @@ def _draw_graph(axis, graph, x_log=False):
             regression.set_label(graph.legend_label)
         else:
             line.set_label(graph.legend_label)
-    axis.legend().remove()
 
 
 def draw(subplots, title=''):
@@ -146,7 +146,7 @@ def draw(subplots, title=''):
 
             with warnings.catch_warnings():
                 warnings.simplefilter('ignore')
-                ax.legend(loc='best')
+                ax.legend(loc='best', fontsize=subplot.legend_size)
 
     fig.suptitle(title, fontweight='bold', fontsize=title_size)
     fig.subplots_adjust(hspace=.6, wspace=.3)
