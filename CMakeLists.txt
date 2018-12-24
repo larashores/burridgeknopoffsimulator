@@ -20,7 +20,12 @@ set(SOURCE_FILES src/python.cpp
                  src/odesolver/odesolver.cpp
                  src/odesolver/euler.cpp
                  src/odesolver/rungekutta.cpp
-                 src/odesolver/rungekutta4.cpp)
+                 src/odesolver/rungekutta4.cpp
+                 src/odesolver/c/odesolver.cpp
+                 src/odesolver/c/euler.cpp
+                 src/odesolver/c/rungekutta.cpp
+                 src/odesolver/c/rungekutta4.cpp
+                 src/python/odesolver/py_odesolver.cpp)
 
 set(HEADER_FILES include/utilities.h
                  include/cutilities.h
@@ -35,10 +40,16 @@ set(HEADER_FILES include/utilities.h
                  include/differentials/c/cpositionupdater.h
                  include/differentials/c/cfrictionalforce.h
                  include/differentials/c/cdifferential.h
+                 include/differentials/c/difeq.h
                  include/odesolver/odesolver.h
                  include/odesolver/euler.h
                  include/odesolver/rungekutta.h
-                 include/odesolver/rungekutta4.h)
+                 include/odesolver/rungekutta4.h
+                 include/odesolver/c/odesolver.h
+                 include/odesolver/c/euler.h
+                 include/odesolver/c/rungekutta.h
+                 include/odesolver/c/rungekutta4.h
+                 include/python/odesolver/py_odesolver.h)
 
 #------------------------------------
 
