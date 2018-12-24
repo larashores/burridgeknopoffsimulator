@@ -3,7 +3,10 @@
 namespace PY = boost::python;
 namespace NP = boost::python::numpy;
 
-void set_current_values(odesolver::OdeSolver& solver, const PY::object& values)
+
+namespace python::odesolver {
+
+void set_current_values(::odesolver::OdeSolver& solver, const PY::object& values)
 {
     solver.resize(static_cast<size_t>(PY::len(values)));
     auto& current{solver.current_values()};
@@ -12,7 +15,7 @@ void set_current_values(odesolver::OdeSolver& solver, const PY::object& values)
     }
 }
 
-NP::ndarray current_values(const odesolver::OdeSolver& solver)
+NP::ndarray current_values(const ::odesolver::OdeSolver& solver)
 {
     auto& current{solver.current_values()};
     NP::ndarray values{NP::empty(PY::make_tuple(current.size()),
@@ -22,3 +25,5 @@ NP::ndarray current_values(const odesolver::OdeSolver& solver)
     }
     return values;
 }
+
+}  // python

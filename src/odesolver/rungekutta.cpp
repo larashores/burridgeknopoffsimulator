@@ -4,12 +4,14 @@
 #include <sstream>
 #include <valarray>
 
+namespace DIFF = differentials;
+
 
 namespace odesolver {
 
 RungeKutta::RungeKutta(const std::vector<double>& step_weights,
                        const std::vector<double>& weight_coefficients,
-                       std::shared_ptr<Difeq> difeqs) :
+                       std::shared_ptr<DIFF::Difeq> difeqs) :
     OdeSolver{difeqs},
     m_step_weights{step_weights},
     m_weight_coefficients{weight_coefficients},

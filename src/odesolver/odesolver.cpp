@@ -1,9 +1,11 @@
 #include "odesolver/odesolver.h"
 
+namespace DIFF = differentials;
+
 
 namespace odesolver {
 
-OdeSolver::OdeSolver(std::shared_ptr<Difeq> difeq) :
+OdeSolver::OdeSolver(std::shared_ptr<DIFF::Difeq> difeq) :
         m_difeqs{difeq},
         m_time{0.0},
         m_step_size{0.002}

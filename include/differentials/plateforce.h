@@ -3,6 +3,8 @@
 #include <valarray>
 
 
+namespace differentials {
+
 class PlateForce
 {
 public:
@@ -16,3 +18,5 @@ private:
     const int m_cols;
     const double m_spring_length;
 };
+
+}  // differentials

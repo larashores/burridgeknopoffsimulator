@@ -2,6 +2,9 @@
 
 #include <valarray>
 
+
+namespace differentials {
+
 class FrictionalForce
 {
 public:
@@ -16,3 +19,5 @@ private:
     const double m_plate_velocity;
     const double m_alpha;
 };
+
+}  // differentials

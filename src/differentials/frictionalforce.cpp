@@ -3,6 +3,8 @@
 #include "utilities.h"
 
 
+namespace differentials {
+
 FrictionalForce::FrictionalForce(int rows, int cols, double plate_velocity, double alpha) :
         m_rows{rows},
         m_cols{cols},
@@ -18,8 +20,10 @@ void FrictionalForce::differentiate(const std::valarray<double>& current,
     {
         for(int j=0; j < m_cols; j++)
         {
-            double force {scaled_friction_force(m_plate_velocity + get_velocity(current, m_cols, i, j), m_alpha)};
+            double force {friction_force(m_plate_velocity + get_velocity(current, m_cols, i, j), m_alpha)};
             add_velocity(results, m_cols, i, j, force);
         }
     }
 }
+
+}  // differentials

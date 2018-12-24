@@ -1,5 +1,8 @@
 #include "differentials/bkdifeq.h"
 
+
+namespace differentials {
+
 BkDifeq::BkDifeq(int num_rows, int num_cols,
                              double scaled_spring_length,
                              double scaled_plate_velocity,
@@ -23,3 +26,6 @@ std::valarray<double> BkDifeq::differentiate(double /*time*/, const std::valarra
     m_position_updater.differentiate(current, results);
     return results;
 }
+
+}  // differentials
+

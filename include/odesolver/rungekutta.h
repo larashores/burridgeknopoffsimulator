@@ -10,7 +10,7 @@ class RungeKutta : public OdeSolver
 protected:
     RungeKutta(const std::vector<double>& step_weights,
                const std::vector<double>& weight_coefficients,
-               std::shared_ptr<Difeq> difeq);
+               std::shared_ptr<differentials::Difeq> difeq);
 private:
     void step_impl() override;
 

@@ -3,6 +3,9 @@
 #include <valarray>
 #include <functional>
 
+
+namespace differentials {
+
 class SpringForce
 {
 public:
@@ -23,3 +26,5 @@ private:
     const double m_l_squared;
     std::function<void(const std::valarray<double>&, std::valarray<double>&)> m_diff_func;
 };
+
+}  // differentials

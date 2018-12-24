@@ -3,6 +3,8 @@
 #include "utilities.h"
 
 
+namespace differentials {
+
 PositionUpdater::PositionUpdater(int rows, int cols) :
         m_rows{rows},
         m_cols{cols}
@@ -20,3 +22,5 @@ void PositionUpdater::differentiate(const std::valarray<double>& current,
         }
     }
 }
+
+}  // differentials

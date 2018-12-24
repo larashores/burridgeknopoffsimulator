@@ -12,7 +12,7 @@ namespace odesolver {
 class OdeSolver
 {
 public:
-    OdeSolver(std::shared_ptr<Difeq> difeq);
+    OdeSolver(std::shared_ptr<differentials::Difeq> difeq);
     virtual ~OdeSolver() = default;
 
     void resize(std::size_t size);
@@ -26,7 +26,7 @@ public:
 
 
 protected:
-    std::shared_ptr<Difeq> m_difeqs;
+    std::shared_ptr<differentials::Difeq> m_difeqs;
     std::valarray<double> m_current_values;
     double m_time;
     double m_step_size;

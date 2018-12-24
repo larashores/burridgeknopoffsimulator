@@ -3,6 +3,8 @@
 #include "utilities.h"
 
 
+namespace differentials {
+
 PlateForce::PlateForce(int rows, int cols, double spring_length) :
         m_rows{rows},
         m_cols{cols},
@@ -22,3 +24,5 @@ void PlateForce::differentiate(const std::valarray<double>& current,
         }
     }
 }
+
+}  // differentials

@@ -3,7 +3,7 @@ project(BurridgeKnopoffLib VERSION 0.1)
 
 #-----------Project Files------------
 
-set(SOURCE_FILES src/python/python.cpp
+set(SOURCE_FILES src/python.cpp
                  src/utilities.cpp
                  src/frictionforce.cpp
                  src/differentials/springforce.cpp

@@ -3,6 +3,8 @@
 #include <valarray>
 
 
+namespace differentials {
+
 class PositionUpdater
 {
 public:
@@ -15,3 +17,5 @@ private:
     const int m_rows;
     const int m_cols;
 };
+
+}  // differentials

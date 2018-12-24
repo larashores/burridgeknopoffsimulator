@@ -2,6 +2,8 @@
 #include "utilities.h"
 
 
+namespace differentials {
+
 SpringForce::SpringForce(int rows, int cols, double spring_length, double l) :
         m_rows{rows},
         m_cols{cols},
@@ -62,3 +64,5 @@ void SpringForce::diff_one_dim(const std::valarray<double>& current,
         add_velocity(results, j, force);
     }
 }
+
+}  // differentials
