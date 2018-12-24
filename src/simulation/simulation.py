@@ -2,6 +2,7 @@ import random
 from datetime import datetime
 from scipy.integrate import ode
 from odesolver.rungekutta import RungeKutta4
+import burridgeknopoff as bk
 
 from simulation.blockarray import BlockArray
 
@@ -13,7 +14,7 @@ def solve(data, differential, initial_steps, steps):
         for j in range(data.run_info.cols):
             blocks.positions[i, j] = data.run_info.spring_length * (j + random.random() / 3)
     print('Initial data created')
-    r = RungeKutta4(differential)
+    r = bk.RungeKutta4(differential)
     r.set_step_size(.0001)
     r.set_current_values(blocks.array)
     start = datetime.now().timestamp()
