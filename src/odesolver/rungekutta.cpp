@@ -1,4 +1,4 @@
-#include "odesolver/c/rungekutta.h"
+#include "odesolver/rungekutta.h"
 
 #include <numeric>
 #include <sstream>

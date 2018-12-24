@@ -1,5 +1,5 @@
-#include "differentials/c/springforce.h"
-#include "cutilities.h"
+#include "differentials/springforce.h"
+#include "utilities.h"
 
 
 SpringForce::SpringForce(int rows, int cols, double spring_length, double l) :

@@ -1,6 +1,6 @@
-#include "differentials/c/positionupdater.h"
+#include "differentials/positionupdater.h"
 
-#include "cutilities.h"
+#include "utilities.h"
 
 
 PositionUpdater::PositionUpdater(int rows, int cols) :

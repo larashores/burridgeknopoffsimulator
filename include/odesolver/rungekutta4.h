@@ -1,6 +1,6 @@
 #pragma once
 
-#include "odesolver/c/rungekutta.h"
+#include "rungekutta.h"
 
 
 namespace odesolver {

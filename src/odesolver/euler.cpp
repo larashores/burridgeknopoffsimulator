@@ -1,4 +1,4 @@
-#include "odesolver/c/euler.h"
+#include "odesolver/euler.h"
 
 
 namespace odesolver {

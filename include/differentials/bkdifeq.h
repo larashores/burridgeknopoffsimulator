@@ -1,10 +1,10 @@
 #pragma once
 
-#include "differentials/c/frictionalforce.h"
-#include "differentials/c/plateforce.h"
-#include "differentials/c/positionupdater.h"
-#include "differentials/c/springforce.h"
-#include "differentials/c/difeq.h"
+#include "frictionalforce.h"
+#include "plateforce.h"
+#include "positionupdater.h"
+#include "springforce.h"
+#include "difeq.h"
 
 #include <valarray>
 

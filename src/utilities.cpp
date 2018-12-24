@@ -1,4 +1,4 @@
-#include "cutilities.h"
+#include "utilities.h"
 
 
 double get_position(const std::valarray<double>& array, int num_cols, int row, int col)

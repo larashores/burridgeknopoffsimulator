@@ -2,13 +2,13 @@
 #include <boost/python/numpy.hpp>
 
 #include "python/odesolver/py_odesolver.h"
-#include "odesolver/c/rungekutta4.h"
-#include "odesolver/c/rungekutta.h"
-#include "odesolver/c/odesolver.h"
-#include "odesolver/c/euler.h"
+#include "odesolver/rungekutta4.h"
+#include "odesolver/rungekutta.h"
+#include "odesolver/odesolver.h"
+#include "odesolver/euler.h"
 #include "frictionforce.h"
-#include "differentials/c/bkdifeq.h"
-#include "differentials/c/difeq.h"
+#include "differentials/bkdifeq.h"
+#include "differentials/difeq.h"
 
 namespace PY = boost::python;
 namespace NP = boost::python::numpy;

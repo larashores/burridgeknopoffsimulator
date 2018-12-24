@@ -1,6 +1,6 @@
 #pragma once
 
-#include <odesolver/c/odesolver.h>
+#include <odesolver/odesolver.h>
 
 
 namespace odesolver {

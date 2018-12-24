@@ -1,4 +1,4 @@
-#include "differentials/c/bkdifeq.h"
+#include "differentials/bkdifeq.h"
 
 BkDifeq::BkDifeq(int num_rows, int num_cols,
                              double scaled_spring_length,

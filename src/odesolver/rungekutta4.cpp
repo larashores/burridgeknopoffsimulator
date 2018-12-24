@@ -1,4 +1,4 @@
-#include "odesolver/c/rungekutta4.h"
+#include "odesolver/rungekutta4.h"
 
 
 namespace odesolver {

@@ -3,32 +3,32 @@ project(BurridgeKnopoffLib VERSION 0.1)
 
 #-----------Project Files------------
 
-set(SOURCE_FILES src/python.cpp
-                 src/cutilities.cpp
+set(SOURCE_FILES src/python/python.cpp
+                 src/utilities.cpp
                  src/frictionforce.cpp
-                 src/differentials/c/springforce.cpp
-                 src/differentials/c/plateforce.cpp
-                 src/differentials/c/positionupdater.cpp
-                 src/differentials/c/frictionalforce.cpp
-                 src/differentials/c/bkdifeq.cpp
-                 src/odesolver/c/odesolver.cpp
-                 src/odesolver/c/euler.cpp
-                 src/odesolver/c/rungekutta.cpp
-                 src/odesolver/c/rungekutta4.cpp
+                 src/differentials/springforce.cpp
+                 src/differentials/plateforce.cpp
+                 src/differentials/positionupdater.cpp
+                 src/differentials/frictionalforce.cpp
+                 src/differentials/bkdifeq.cpp
+                 src/odesolver/odesolver.cpp
+                 src/odesolver/euler.cpp
+                 src/odesolver/rungekutta.cpp
+                 src/odesolver/rungekutta4.cpp
                  src/python/odesolver/py_odesolver.cpp)
 
-set(HEADER_FILES include/cutilities.h
+set(HEADER_FILES include/utilities.h
                  include/frictionforce.h
-                 include/differentials/c/springforce.h
-                 include/differentials/c/plateforce.h
-                 include/differentials/c/positionupdater.h
-                 include/differentials/c/frictionalforce.h
-                 include/differentials/c/bkdifeq.h
-                 include/differentials/c/difeq.h
-                 include/odesolver/c/odesolver.h
-                 include/odesolver/c/euler.h
-                 include/odesolver/c/rungekutta.h
-                 include/odesolver/c/rungekutta4.h
+                 include/differentials/springforce.h
+                 include/differentials/plateforce.h
+                 include/differentials/positionupdater.h
+                 include/differentials/frictionalforce.h
+                 include/differentials/bkdifeq.h
+                 include/differentials/difeq.h
+                 include/odesolver/odesolver.h
+                 include/odesolver/euler.h
+                 include/odesolver/rungekutta.h
+                 include/odesolver/rungekutta4.h
                  include/python/odesolver/py_odesolver.h)
 
 #------------------------------------

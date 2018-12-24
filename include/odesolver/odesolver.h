@@ -4,7 +4,7 @@
 #include <memory>
 #include <valarray>
 
-#include "differentials/c/difeq.h"
+#include "differentials/difeq.h"
 
 
 namespace odesolver {

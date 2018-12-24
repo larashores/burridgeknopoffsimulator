@@ -1,6 +1,6 @@
-#include "differentials/c/plateforce.h"
+#include "differentials/plateforce.h"
 
-#include "cutilities.h"
+#include "utilities.h"
 
 
 PlateForce::PlateForce(int rows, int cols, double spring_length) :

@@ -1,6 +1,6 @@
-#include "differentials/c/frictionalforce.h"
+#include "differentials/frictionalforce.h"
 #include "frictionforce.h"
-#include "cutilities.h"
+#include "utilities.h"
 
 
 FrictionalForce::FrictionalForce(int rows, int cols, double plate_velocity, double alpha) :
