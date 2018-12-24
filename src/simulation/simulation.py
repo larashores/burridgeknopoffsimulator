@@ -1,7 +1,5 @@
 import random
 from datetime import datetime
-from scipy.integrate import ode
-from odesolver.rungekutta import RungeKutta4
 import burridgeknopoff as bk
 
 from simulation.blockarray import BlockArray
