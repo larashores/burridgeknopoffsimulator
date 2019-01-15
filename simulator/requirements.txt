@@ -1,0 +1,4 @@
+PySerialization
+numpy
+scipy
+matplotlib
