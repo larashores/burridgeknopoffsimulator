@@ -82,6 +82,6 @@ target_include_directories(burridgeknopoff SYSTEM PRIVATE ${Boost_INCLUDE_DIRS} 
 target_link_libraries(burridgeknopoff ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
 
 install(TARGETS burridgeknopoff
-        DESTINATION "E:/Users/Vincent/Documents/RIT/Capstone/Capstone 1/simulator"
+        DESTINATION "${PROJECT_SOURCE_DIR}/../simulator/src"
         CONFIGURATIONS Debug Release)
 #-----------------------------------
