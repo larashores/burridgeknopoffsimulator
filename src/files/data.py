@@ -1,7 +1,8 @@
-from saveable.composite import Composite
-from saveable.saveablearray import array
-from saveable.saveablefloat import SaveableDouble
-from saveable.saveableint import U16
+
+from pyserialization.composite import Composite
+from pyserialization.seriallist import serial_list
+from pyserialization.serialfloat import SerialDouble
+from pyserialization.serialint import SerialU16
 from files.timeslice import Timeslice
 from files.runinfo import RunInfo
 
@@ -10,25 +11,23 @@ class Data(Composite):
     VERSION = 3
 
     run_info = RunInfo
-    times = array(SaveableDouble)
-    values_list = array(Timeslice)
+    times = serial_list(SerialDouble)
+    values_list = serial_list(Timeslice)
 
     def __init__(self):
         Composite.__init__(self)
-        self._version = U16(Data.VERSION)
+        self._version = SerialU16(Data.VERSION)
 
     def add_slice(self, time, values):
         self.times.append(time)
         self.values_list.append(Timeslice(values))
 
-    def to_byte_array(self):
-        byte_array = self._version.to_byte_array()
-        byte_array += Composite.to_byte_array(self)
-        return byte_array
+    def to_bytes(self):
+        return self._version.to_bytes() + Composite.to_bytes(self)
 
-    def load_in_place(self, byte_array, index=0):
-        index = self._version.load_in_place(byte_array, index)
+    def load_in_place(self, data, index=0):
+        index = self._version.load_in_place(data, index)
         if self._version.get() != Data.VERSION:
             raise TypeError("Incorrect file version: '{}'".format(self._version.get()))
-        Composite.load_in_place(self, byte_array, index)
+        Composite.load_in_place(self, data, index)
         return index

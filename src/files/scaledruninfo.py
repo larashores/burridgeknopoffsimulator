@@ -1,14 +1,14 @@
-from saveable.composite import Composite
-from saveable.saveablefloat import SaveableDouble
-from saveable.saveableint import U16
+from pyserialization.composite import Composite
+from pyserialization.serialfloat import SerialDouble
+from pyserialization.serialint import SerialU16
 
 
 class ScaledRunInfo(Composite):
-    rows = U16
-    cols = U16
-    spring_length = SaveableDouble
-    plate_velocity = SaveableDouble
-    alpha = SaveableDouble
-    l = SaveableDouble
-    time_interval = SaveableDouble
-    total_time = SaveableDouble
+    rows = SerialU16
+    cols = SerialU16
+    spring_length = SerialDouble
+    plate_velocity = SerialDouble
+    alpha = SerialDouble
+    l = SerialDouble
+    time_interval = SerialDouble
+    total_time = SerialDouble

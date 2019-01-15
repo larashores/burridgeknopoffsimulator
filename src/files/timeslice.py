@@ -1,6 +1,5 @@
-from saveable.saveablendarray import ndarray
-from saveable.saveableint import U32
+from pyserialization.serialndarray import SerialNdArray
 
 
-class Timeslice(ndarray()):
+class Timeslice(SerialNdArray):
     pass

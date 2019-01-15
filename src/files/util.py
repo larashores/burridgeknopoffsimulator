@@ -6,16 +6,19 @@ import glob
 import os
 import sys
 
+
 def read_data(file_name):
     with open(file_name, 'rb') as file:
-        data, index =  DataFile.from_byte_array(bytearray(file.read()))
+        data, index = DataFile.from_bytes(bytearray(file.read()))
         return data.get()
+
 
 def write_data(file_name, data):
     data_file = DataFile()
     data_file.set(type(data), data)
     with open(file_name, 'wb') as file:
-        file.write(data_file.to_byte_array())
+        file.write(data_file.to_bytes())
+
 
 def get_file_name(ext='dat'):
     if len(sys.argv) == 1:
@@ -26,24 +29,25 @@ def get_file_name(ext='dat'):
     else:
         raise TypeError('Usage: [filename]')
 
+
 def data_desc(data):
     if type(data) == Data:
         info = data.run_info
         return ('rows: {}\n' +
-               'cols: {}\n' +
-               'm:    {}\n' +
-               'v:    {}\n' +
-               'l:    {}\n' +
-               'k_b:  {}\n' +
-               'k_p:  {}\n' +
-               'u_s:  {}\n' +
-               'u_k:  {}\n' +
-               'dt:   {}').format(info.rows, info.cols, info.mass,
-                                  info.plate_velocity,
-                                  info.spring_length,
-                                  info.spring_constant, info.plate_spring_constant,
-                                  info.static_friction, info.kinetic_friction,
-                                  info.time_interval)
+                'cols: {}\n' +
+                'm:    {}\n' +
+                'v:    {}\n' +
+                'l:    {}\n' +
+                'k_b:  {}\n' +
+                'k_p:  {}\n' +
+                'u_s:  {}\n' +
+                'u_k:  {}\n' +
+                'dt:   {}').format(info.rows, info.cols, info.mass,
+                                   info.plate_velocity,
+                                   info.spring_length,
+                                   info.spring_constant, info.plate_spring_constant,
+                                   info.static_friction, info.kinetic_friction,
+                                   info.time_interval)
     elif type(data) == ScaledData:
         info = data.run_info
         return ('rows: {}\n' +

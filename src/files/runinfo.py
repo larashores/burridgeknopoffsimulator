@@ -1,17 +1,17 @@
-from saveable.composite import Composite
-from saveable.saveablefloat import SaveableDouble
-from saveable.saveableint import U16
+from pyserialization.composite import Composite
+from pyserialization.serialfloat import SerialDouble
+from pyserialization.serialint import SerialU16
 
 
 class RunInfo(Composite):
-    rows = U16
-    cols = U16
-    spring_length = SaveableDouble
-    mass = SaveableDouble
-    spring_constant = SaveableDouble
-    static_friction = SaveableDouble
-    kinetic_friction = SaveableDouble
-    plate_velocity = SaveableDouble
-    plate_spring_constant = SaveableDouble
-    time_interval = SaveableDouble
-    total_time = SaveableDouble
+    rows = SerialU16
+    cols = SerialU16
+    spring_length = SerialDouble
+    mass = SerialDouble
+    spring_constant = SerialDouble
+    static_friction = SerialDouble
+    kinetic_friction = SerialDouble
+    plate_velocity = SerialDouble
+    plate_spring_constant = SerialDouble
+    time_interval = SerialDouble
+    total_time = SerialDouble

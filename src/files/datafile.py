@@ -1,4 +1,4 @@
-from saveable.union import Union
+from pyserialization.union import Union
 from files.data import Data
 from files.scaledata import ScaledData
 from files.partition import Partition
