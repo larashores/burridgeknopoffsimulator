@@ -1,0 +1,6 @@
+recursive-include burridgeknopofflib/src *.cpp
+recursive-include burridgeknopofflib/include *.h
+recursive-include burridgeknopofflib CMakeLists.txt
+include cmakebuild.py
+include license.txt
+include requirements.txt
