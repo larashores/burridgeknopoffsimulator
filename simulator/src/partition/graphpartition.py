@@ -4,31 +4,50 @@ from simulation.blockarray import BlockArray
 import math
 
 
+class SingleSlipEvent:
+    start_index = property(lambda self: self._start_index)
+    end_index = property(lambda self: self._end_index)
+
+    def __init__(self, current_index):
+        self._start_index = current_index
+        self._end_index = current_index
+
+    def slip_event(self, index):
+        self._start_index = min(self._start_index, index)
+        self._end_index = max(self._end_index, index)
+
+
 class SlipEvent:
     def __init__(self, data, coord):
         self._data = data
-        self._blocks = set()
-        self._start_time = None
-        self._end_time = None
+        self._slip_events = {}
+        self._start_index = coord[0]
+        self._end_index = coord[0]
         self.add_block(*coord)
 
-    def add_block(self, time, row, col):
-        self._blocks.add((row, col))
-        self._start_time = min(self._start_time, time) if self._start_time is not None else time
-        self._end_time = max(self._end_time, time) if self._end_time is not None else time
+    def add_block(self, index, row, col):
+        coords = (row, col)
+        if coords not in self._slip_events:
+            self._slip_events[coords] = SingleSlipEvent(index)
+            return
+        self._slip_events[coords].slip_event(index)
+        self._start_index = min(self._start_index, index)
+        self._end_index = max(self._end_index, index)
 
     @property
     def distance(self):
+        columns = self._data.run_info.cols
+        values = self._data.values_list
         dist = 0
-        for row, col in self._blocks:
-            start_block_array = BlockArray(self._data.values_list[self._start_time].get(), self._data.run_info.cols)
-            end_block_array = BlockArray(self._data.values_list[self._end_time].get(), self._data.run_info.cols)
+        for (row, col), event in self._slip_events.items():
+            start_block_array = BlockArray(values[event.start_index].get(), columns)
+            end_block_array = BlockArray(values[event.end_index].get(), columns)
             dist += end_block_array.positions[row, col] - start_block_array.positions[row, col]
         return dist
 
     def __str__(self):
-        return f'Start:{self._start_time}, End: {self._end_time}, distance: {self.distance} '  \
-               f'{sorted(list(self._blocks))}'
+        return f'Start:{self._start_index}, End: {self._end_index}, distance: {self.distance} '  \
+               f'{sorted(list(self._slip_events.keys()))}'
 
 
 class GraphParitioner:
@@ -49,7 +68,6 @@ class GraphParitioner:
             slip_event = SlipEvent(self._data, coord)
             self._depth_first_search(slip_event, slipped_blocks, coord)
             components.append(slip_event)
-        components.sort(key=lambda slip: slip._start_time)
         return components
 
     def _slipped_blocks(self):
