@@ -5,13 +5,11 @@ import math
 
 
 class GraphParitioner:
-    def __init__(self, timeslice, rows, cols):
-        self._rows = rows
-        self._cols = cols
-        self._block_array = BlockArray(timeslice, cols)
+    def __init__(self, data):
+        self._data = data
         self._connected_components = None
 
-    def connected_components(self):
+    def partition(self):
         if self._connected_components is None:
             self._connected_components = self._calculate_connected()
         return self._connected_components
@@ -29,10 +27,14 @@ class GraphParitioner:
 
     def _slipped_blocks(self):
         slipped = set()
-        for row in range(self._rows):
-            for col in range(self._cols):
-                if self._block_array.velocities[row, col] > 0:
-                    slipped.add((row, col))
+        rows = self._data.run_info.rows
+        cols = self._data.run_info.cols
+        for ind, timeslice in enumerate(self._data.values_list):
+            block_array = BlockArray(timeslice.get(), cols)
+            for row in range(rows):
+                for col in range(cols):
+                    if block_array.velocities[row, col] > 0:
+                        slipped.add((ind, row, col))
         return slipped
 
     def _depth_first_search(self, connected, slipped_blocks, coord):
@@ -43,11 +45,13 @@ class GraphParitioner:
                 self._depth_first_search(connected, slipped_blocks, neighbor)
 
     @staticmethod
-    def _neighbors(row, col):
-        yield row, col + 1
-        yield row, col - 1
-        yield row + 1, col
-        yield row - 1, col
+    def _neighbors(time, row, col):
+        yield time, row, col + 1
+        yield time, row, col - 1
+        yield time, row + 1, col
+        yield time, row - 1, col
+        yield time + 1, row, col
+        yield time - 1, row, col
 
 
 def create_events(data):
@@ -60,9 +64,11 @@ def create_events(data):
 
 def partition(data):
     print('Searching for events')
-    slip_events = create_events(data)
-    for connected in slip_events:
-        print(connected)
+    partitioner = GraphParitioner(data)
+    partitions = partitioner.partition()
+
+    for partition in partitions:
+        print(partition)
 
     # file = Partition()
     # file.run_info = data.run_info
