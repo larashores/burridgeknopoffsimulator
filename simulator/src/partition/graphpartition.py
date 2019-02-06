@@ -1,5 +1,5 @@
 import numpy as np
-from files.partition import Partition
+from files.graphpartition import GraphPartitionData, SlipData, SingleSlipData
 from simulation.blockarray import BlockArray
 import math
 
@@ -33,6 +33,9 @@ class SlipEvent:
         self._slip_events[coords].slip_event(index)
         self._start_index = min(self._start_index, index)
         self._end_index = max(self._end_index, index)
+
+    def single_slip_events(self):
+        return self._slip_events.items()
 
     @property
     def distance(self):
@@ -101,18 +104,24 @@ class GraphParitioner:
 
 
 def partition(data):
-    print('Searching for events')
+    print('Partitioning data')
     partitioner = GraphParitioner(data)
     partitions = partitioner.partition()
 
+    print('Data partitioned')
     for partition in partitions:
         print(partition)
 
-    # file = Partition()
-    # file.run_info = data.run_info
-    # file.event_magnitudes = np.array(sorted(magnitudes))
-    # file.magnitudes_of_at_least = np.linspace(-15, 5, 100)
-    # file.amount_of_at_least = np.zeros(len(file.magnitudes_of_at_least))
-    # for ind, magnitude in enumerate(file.magnitudes_of_at_least):
-    #     file.amount_of_at_least[ind] = sum((lambda x: x > magnitude)(x) for x in magnitudes)
-    # return file
+    print('Saving Data')
+    data = GraphPartitionData()
+    for event in partitions:
+        slip = SlipData()
+        for (row, col), single_event in event.single_slip_events():
+            single_slip = SingleSlipData()
+            single_slip.start_index = single_event.start_index
+            single_slip.end_index = single_event.end_index
+            single_slip.row = row
+            single_slip.col = col
+            slip.append(single_slip)
+        data.append(slip)
+    return data

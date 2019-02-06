@@ -69,6 +69,7 @@ class TkViewerGui(ttk.Frame):
         self.time += self._data.run_info.time_interval
 
     def draw_step(self, i):
+        self.update_values()
         self.time_label.config(text=self.LABEL_TEXT.format(self.time))
         self.canvas.delete(tk.ALL)
         self.draw_blocks(self._data.values_list[i].get())
