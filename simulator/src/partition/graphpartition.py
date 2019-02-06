@@ -4,6 +4,20 @@ from simulation.blockarray import BlockArray
 import math
 
 
+class SlipEvent:
+    def __init__(self, coord):
+        self._start_time, row, col = coord
+        self._end_time = None
+        self._blocks = [coord]
+
+    def add_block(self, time, row, col):
+        self._blocks.append((time, row, col))
+        self._end_time = time
+
+    def __str__(self):
+        return f'Start:{self._start_time}, End: {self._end_time}, {sorted(self._blocks)}'
+
+
 class GraphParitioner:
     def __init__(self, data):
         self._data = data
@@ -19,14 +33,14 @@ class GraphParitioner:
         slipped_blocks = self._slipped_blocks()
         while len(slipped_blocks) > 0:
             coord = slipped_blocks.pop()
-            connected_component = set()
-            connected_component.add(coord)
-            self._depth_first_search(connected_component, slipped_blocks, coord)
-            components.append(connected_component)
+            slip_event = SlipEvent(coord)
+            self._depth_first_search(slip_event, slipped_blocks, coord)
+            components.append(slip_event)
+        components.sort(key=lambda slip: slip._start_time)
         return components
 
     def _slipped_blocks(self):
-        slipped = set()
+        slipped = []
         rows = self._data.run_info.rows
         cols = self._data.run_info.cols
         for ind, timeslice in enumerate(self._data.values_list):
@@ -34,15 +48,16 @@ class GraphParitioner:
             for row in range(rows):
                 for col in range(cols):
                     if block_array.velocities[row, col] > 0:
-                        slipped.add((ind, row, col))
+                        slipped.append((ind, row, col))
+        slipped.reverse()
         return slipped
 
-    def _depth_first_search(self, connected, slipped_blocks, coord):
+    def _depth_first_search(self, slip_event, slipped_blocks, coord):
         for neighbor in self._neighbors(*coord):
             if neighbor in slipped_blocks:
-                connected.add(neighbor)
+                slip_event.add_block(*neighbor)
                 slipped_blocks.remove(neighbor)
-                self._depth_first_search(connected, slipped_blocks, neighbor)
+                self._depth_first_search(slip_event, slipped_blocks, neighbor)
 
     @staticmethod
     def _neighbors(time, row, col):
@@ -52,14 +67,6 @@ class GraphParitioner:
         yield time, row - 1, col
         yield time + 1, row, col
         yield time - 1, row, col
-
-
-def create_events(data):
-    for ind, time_slice in enumerate(data.values_list):
-        partitioner = GraphParitioner(time_slice.get(), data.run_info.rows, data.run_info.cols)
-        connected = partitioner.connected_components()
-        if len(connected) != 0:
-            return connected
 
 
 def partition(data):
