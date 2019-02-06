@@ -4,52 +4,56 @@ from simulation.blockarray import BlockArray
 import math
 
 
-def neighbors(row, col):
-    yield row, col + 1
-    yield row, col - 1
-    yield row + 1, col
-    yield row - 1, col
+class GraphParitioner:
+    def __init__(self, timeslice, rows, cols):
+        self._rows = rows
+        self._cols = cols
+        self._block_array = BlockArray(timeslice, cols)
+        self._connected_components = None
 
+    def connected_components(self):
+        if self._connected_components is None:
+            self._connected_components = self._calculate_connected()
+        return self._connected_components
 
-def get_slipped_blocks(block_array):
-    slipped = set()
-    for row in range(block_array.rows):
-        for col in range(block_array.columns):
-            if block_array.velocities[row, col] > 0:
-                slipped.add((row, col))
-    return slipped
+    def _calculate_connected(self):
+        components = []
+        slipped_blocks = self._slipped_blocks()
+        while len(slipped_blocks) > 0:
+            coord = slipped_blocks.pop()
+            connected_component = set()
+            connected_component.add(coord)
+            self._depth_first_search(connected_component, slipped_blocks, coord)
+            components.append(connected_component)
+        return components
 
+    def _slipped_blocks(self):
+        slipped = set()
+        for row in range(self._rows):
+            for col in range(self._cols):
+                if self._block_array.velocities[row, col] > 0:
+                    slipped.add((row, col))
+        return slipped
 
-def depth_first_search(num_rows, num_cols, slipped_blocks, coord):
-    print('searching coord', coord)
-    for neighbor in neighbors(*coord):
-        print('got neighbor', neighbor, neighbor in slipped_blocks)
-        if neighbor in slipped_blocks:
-            yield neighbor
-            depth_first_search(num_rows, num_cols, slipped_blocks, coord)
+    def _depth_first_search(self, connected, slipped_blocks, coord):
+        for neighbor in self._neighbors(*coord):
+            if neighbor in slipped_blocks:
+                connected.add(neighbor)
+                slipped_blocks.remove(neighbor)
+                self._depth_first_search(connected, slipped_blocks, neighbor)
 
-
-def connected_components(block_array):
-    components = []
-    slipped_blocks = get_slipped_blocks(block_array)
-    print('slipped', sorted(list(slipped_blocks)))
-    while len(slipped_blocks) > 0:
-        coord = slipped_blocks.pop()
-        slice = set()
-        slice.add(coord)
-        for block in depth_first_search(block_array.rows, block_array.columns, slipped_blocks, coord):
-            slice.add(block)
-            slipped_blocks.remove(block)
-        components.append(slice)
-    return components
+    @staticmethod
+    def _neighbors(row, col):
+        yield row, col + 1
+        yield row, col - 1
+        yield row + 1, col
+        yield row - 1, col
 
 
 def create_events(data):
-    print('values', [vel for vel in data.values_list[0].get()])
     for ind, time_slice in enumerate(data.values_list):
-        print('loop')
-        block_array = BlockArray(time_slice.get(), data.run_info.cols)
-        connected = connected_components(block_array)
+        partitioner = GraphParitioner(time_slice.get(), data.run_info.rows, data.run_info.cols)
+        connected = partitioner.connected_components()
         if len(connected) != 0:
             return connected
 
