@@ -1,5 +1,6 @@
 from pyserialization.composite import Composite
 from pyserialization.serialint import SerialU16, SerialU32
+from pyserialization.serialfloat import SerialDouble
 from pyserialization.seriallist import serial_list
 
 
@@ -8,6 +9,7 @@ class SingleSlipData(Composite):
     col = SerialU16
     start_index = SerialU32
     end_index = SerialU32
+    distance = SerialDouble
 
 
 class SlipData(serial_list(SingleSlipData)):

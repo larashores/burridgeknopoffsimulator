@@ -1,9 +1,7 @@
-import sys
-import os
-sys.path.append(os.getcwd())
-
 from files import util
 from partition.graphpartition import partition
+import os
+
 
 if __name__ == '__main__':
     file = util.get_file_name()
@@ -12,6 +10,6 @@ if __name__ == '__main__':
     print('Loaded')
     partition_data = partition(data)
     name, ext = os.path.splitext(file)
-    new_name = name +'.pdat'
+    new_name = name + '.pdat'
     util.write_data(new_name, partition_data)
-    print('Wrote parition to file: {}'.format(new_name))
+    print('Wrote partition to file: {}'.format(new_name))
