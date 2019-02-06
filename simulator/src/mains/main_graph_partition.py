@@ -1,5 +1,5 @@
 from files import util
-from partition.graphpartition import partition
+from partition.graphpartition import graph_partition
 import os
 
 
@@ -8,7 +8,7 @@ if __name__ == '__main__':
     print('Loading data file: ', file)
     data = util.read_data(file)
     print('Loaded')
-    partition_data = partition(data)
+    partition_data = graph_partition(data)
     name, ext = os.path.splitext(file)
     new_name = name + '.pdat'
     util.write_data(new_name, partition_data)

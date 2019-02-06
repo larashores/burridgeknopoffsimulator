@@ -2,7 +2,7 @@ from files.graphpartition import GraphPartitionData, SlipData, SingleSlipData
 from simulation.blockarray import BlockArray
 
 
-class SingleSlipEvent:
+class _SingleSlipEvent:
     start_index = property(lambda self: self._start_index)
     end_index = property(lambda self: self._end_index)
 
@@ -15,7 +15,7 @@ class SingleSlipEvent:
         self._end_index = max(self._end_index, index)
 
 
-class SlipEvent:
+class _SlipEvent:
     def __init__(self, data, coord):
         self._data = data
         self._slip_events = {}
@@ -26,7 +26,7 @@ class SlipEvent:
     def add_block(self, index, row, col):
         coords = (row, col)
         if coords not in self._slip_events:
-            self._slip_events[coords] = SingleSlipEvent(index)
+            self._slip_events[coords] = _SingleSlipEvent(index)
             return
         self._slip_events[coords].slip_event(index)
         self._start_index = min(self._start_index, index)
@@ -54,7 +54,7 @@ class SlipEvent:
                f'{sorted(list(self._slip_events.keys()))}'
 
 
-class GraphPartitioner:
+class _GraphPartitioner:
     def __init__(self, data):
         self._data = data
         self._connected_components = None
@@ -69,7 +69,7 @@ class GraphPartitioner:
         slipped_blocks = self._slipped_blocks()
         while len(slipped_blocks) > 0:
             coord = slipped_blocks.pop()
-            slip_event = SlipEvent(self._data, coord)
+            slip_event = _SlipEvent(self._data, coord)
             self._depth_first_search(slip_event, slipped_blocks, coord)
             components.append(slip_event)
         return components
@@ -104,9 +104,9 @@ class GraphPartitioner:
         yield time - 1, row, col
 
 
-def partition(data):
+def graph_partition(data):
     print('Partitioning data')
-    partitioner = GraphPartitioner(data)
+    partitioner = _GraphPartitioner(data)
     partitions = partitioner.partition()
 
     print('Data partitioned')
@@ -115,14 +115,14 @@ def partition(data):
 
     print('Saving Data')
     data = GraphPartitionData()
-    for event in partitions:
-        slip = SlipData()
-        for coords, single_event in event.single_slip_events():
-            single_slip = SingleSlipData()
-            single_slip.start_index = single_event.start_index
-            single_slip.end_index = single_event.end_index
-            single_slip.row, single_slip.col = coords
-            single_slip.distance = event.distance(coords)
-            slip.append(single_slip)
-        data.append(slip)
+    for slip_event in partitions:
+        slip_data = SlipData()
+        for coords, single_slip_event in slip_event.single_slip_events():
+            single_slip_data = SingleSlipData()
+            single_slip_data.start_index = single_slip_event.start_index
+            single_slip_data.end_index = single_slip_event.end_index
+            single_slip_data.row, single_slip_data.col = coords
+            single_slip_data.distance = slip_event.distance(coords)
+            slip_data.append(single_slip_data)
+        data.append(slip_data)
     return data
