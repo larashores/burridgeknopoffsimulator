@@ -105,7 +105,7 @@ class _GraphPartitioner:
 
 
 def graph_partition(data):
-    print('Partitioning data')
+    print('Partitioning graph_data')
     partitioner = _GraphPartitioner(data)
     partitions = partitioner.partition()
 
@@ -114,7 +114,8 @@ def graph_partition(data):
         print(partition)
 
     print('Saving Data')
-    data = GraphPartitionData()
+    graph_data = GraphPartitionData()
+    graph_data.run_info = data.run_info
     for slip_event in partitions:
         slip_data = SlipData()
         for coords, single_slip_event in slip_event.single_slip_events():
@@ -124,5 +125,5 @@ def graph_partition(data):
             single_slip_data.row, single_slip_data.col = coords
             single_slip_data.distance = slip_event.distance(coords)
             slip_data.append(single_slip_data)
-        data.append(slip_data)
-    return data
+        graph_data.slip_events.append(slip_data)
+    return graph_data
