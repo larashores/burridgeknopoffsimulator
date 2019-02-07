@@ -66,16 +66,20 @@ class _GraphPartitioner:
 
     def _calculate_connected(self):
         components = []
+        print('Calculating Slipped Blocks')
         slipped_blocks = self._slipped_blocks()
+        print(f'Searching {len(self._data.values_list)} slices')
         while len(slipped_blocks) > 0:
             coord = slipped_blocks.pop()
             slip_event = _SlipEvent(self._data, coord)
-            self._depth_first_search(slip_event, slipped_blocks, coord)
+            self._search_neighbors(slip_event, slipped_blocks, coord)
             components.append(slip_event)
+            print(slip_event)
         return components
 
     def _slipped_blocks(self):
-        slipped = []
+        slipped = set()
+
         rows = self._data.run_info.rows
         cols = self._data.run_info.cols
         for ind, timeslice in enumerate(self._data.values_list):
@@ -83,16 +87,18 @@ class _GraphPartitioner:
             for row in range(rows):
                 for col in range(cols):
                     if block_array.velocities[row, col] > 0:
-                        slipped.append((ind, row, col))
-        slipped.reverse()
+                        slipped.add((ind, row, col))
         return slipped
 
-    def _depth_first_search(self, slip_event, slipped_blocks, coord):
-        for neighbor in self._neighbors(*coord):
-            if neighbor in slipped_blocks:
-                slip_event.add_block(*neighbor)
-                slipped_blocks.remove(neighbor)
-                self._depth_first_search(slip_event, slipped_blocks, neighbor)
+    def _search_neighbors(self, slip_event, slipped_blocks, coord):
+        to_visit = [coord]
+        while to_visit:
+            coord = to_visit.pop()
+            for neighbor in self._neighbors(*coord):
+                if neighbor in slipped_blocks:
+                    slip_event.add_block(*neighbor)
+                    slipped_blocks.remove(neighbor)
+                    to_visit.append(neighbor)
 
     @staticmethod
     def _neighbors(time, row, col):
@@ -105,15 +111,11 @@ class _GraphPartitioner:
 
 
 def graph_partition(data):
-    print('Partitioning graph_data')
+    print('Partitioning graph data')
     partitioner = _GraphPartitioner(data)
     partitions = partitioner.partition()
 
-    print('Data partitioned')
-    for partition in partitions:
-        print(partition)
-
-    print('Saving Data')
+    print('Data partitioned. Saving Data')
     graph_data = GraphPartitionData()
     graph_data.run_info = data.run_info
     for slip_event in partitions:
