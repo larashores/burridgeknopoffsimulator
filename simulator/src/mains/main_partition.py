@@ -3,7 +3,7 @@ from files import util
 from partition.partition import partition
 
 if __name__ == '__main__':
-    file = util.get_file_name()
+    file = util.get_file_name('dat')
     print('Loading data file: ', file)
     data = util.read_data(file)
     print('Loaded')
