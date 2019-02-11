@@ -1,4 +1,4 @@
-from files.graphpartition import GraphPartitionData, SlipData, SingleSlipData
+from files.partition import PartitionData, SlipData, SingleSlipData
 from simulation.blockarray import BlockArray
 
 
@@ -116,7 +116,7 @@ def graph_partition(data):
     partitions = partitioner.partition()
 
     print('Data partitioned. Saving Data')
-    graph_data = GraphPartitionData()
+    graph_data = PartitionData()
     graph_data.run_info = data.run_info
     for slip_event in partitions:
         slip_data = SlipData()

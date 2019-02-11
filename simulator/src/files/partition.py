@@ -1,9 +1,8 @@
 from pyserialization.composite import Composite
-from pyserialization.serialndarray import SerialNdArray
 from pyserialization.serialint import SerialU16, SerialU32
 from pyserialization.serialfloat import SerialDouble
 from pyserialization.seriallist import serial_list
-from files.scaledata import ScaledRunInfo
+from files.scaledruninfo import ScaledRunInfo
 
 
 class SingleSlipData(Composite):
@@ -21,10 +20,3 @@ class SlipData(serial_list(SingleSlipData)):
 class PartitionData(Composite):
     slip_events = serial_list(SlipData)
     run_info = ScaledRunInfo
-
-
-class Partition(Composite):
-    run_info = ScaledRunInfo
-    event_magnitudes = SerialNdArray
-    magnitudes_of_at_least = SerialNdArray
-    amount_of_at_least = SerialNdArray
