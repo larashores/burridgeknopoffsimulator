@@ -1,7 +1,5 @@
-import numpy as np
-from files.partition import Partition
+from files.graphpartition import GraphPartitionData, SlipData, SingleSlipData
 from simulation.blockarray import BlockArray
-import math
 
 
 class SingleSlipEvent:
@@ -40,6 +38,9 @@ class SlipEvent:
         self._data = data
         self._start_index = start_index
         self._end_index = start_index
+
+    def single_slip_events(self):
+        return self._blocks_to_events.items()
 
     @property
     def distance(self):
@@ -96,20 +97,22 @@ def create_events(data):
 
     return slip_events
 
-def partition(data):
-    print('Searching for events')
-    slip_events = create_events(data)
-    magnitudes = []
-    for event in slip_events:
-        magnitude = np.log(event.distance)
-        if not math.isnan(magnitude):
-            magnitudes.append(magnitude)
 
-    file = Partition()
-    file.run_info = data.run_info
-    file.event_magnitudes = np.array(sorted(magnitudes))
-    file.magnitudes_of_at_least = np.linspace(-15, 5, 100)
-    file.amount_of_at_least = np.zeros(len(file.magnitudes_of_at_least))
-    for ind, magnitude in enumerate(file.magnitudes_of_at_least):
-        file.amount_of_at_least[ind] = sum((lambda x: x > magnitude)(x) for x in magnitudes)
-    return file
+def partition(data):
+    print('Partitioning graph data')
+    slip_events = create_events(data)
+
+    print('Data partitioned. Saving Data')
+    partition_data = GraphPartitionData()
+    partition_data.run_info = data.run_info
+    for slip_event in slip_events:
+        slip_data = SlipData()
+        for coords, single_slip_event in slip_event.single_slip_events():
+            single_slip_data = SingleSlipData()
+            single_slip_data.start_index = slip_event.start_index
+            single_slip_data.end_index = slip_event.end_index
+            single_slip_data.row, single_slip_data.col = coords
+            single_slip_data.distance = slip_event.distance
+            slip_data.append(single_slip_data)
+        partition_data.slip_events.append(slip_data)
+    return partition_data
