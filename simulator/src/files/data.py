@@ -1,4 +1,3 @@
-
 from pyserialization.composite import Composite
 from pyserialization.seriallist import serial_list
 from pyserialization.serialfloat import SerialDouble
@@ -8,7 +7,7 @@ from files.runinfo import RunInfo
 
 
 class Data(Composite):
-    VERSION = 3
+    VERSION = 1
 
     run_info = RunInfo
     times = serial_list(SerialDouble)

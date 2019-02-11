@@ -1,6 +1,6 @@
 from datetime import datetime
 from simulation.simulation import solve
-from files.scaledata import ScaledData
+from files.data import Data
 from files.util import write_data
 
 import burridgeknopoff as bk
@@ -10,7 +10,7 @@ import sys
 
 
 if __name__ == '__main__':
-    data = ScaledData()
+    data = Data()
     info = data.run_info
 
     if len(sys.argv) == 3:
@@ -35,7 +35,7 @@ if __name__ == '__main__':
                                          info.l)
     file_name = 'data/S-{}x{}-{}-V{}.dat'.format(info.rows, info.cols,
                                                  datetime.now().strftime('%Y%m%dT%H%M%SZ'),
-                                                 ScaledData.VERSION)
+                                                 Data.VERSION)
     print('Loading period: {}'.format(2 / info.plate_velocity))
     print('Initial steps: {}'.format(steps))
 

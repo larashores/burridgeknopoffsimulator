@@ -1,6 +1,4 @@
 from files.datafile import DataFile
-from files.data import Data
-from files.scaledata import ScaledData
 
 import glob
 import os
@@ -20,9 +18,11 @@ def write_data(file_name, data):
         file.write(data_file.to_bytes())
 
 
-def get_file_name(ext='dat'):
+def get_file_name(*extensions):
     if len(sys.argv) == 1:
-        files = glob.iglob('data/*.'+ext)
+        files = []
+        for ext in extensions:
+            files.extend(glob.iglob('data/*.'+ext))
         return max(files, key=os.path.getctime)
     elif len(sys.argv) == 2:
         return os.path.join('data', sys.argv[1])
@@ -31,34 +31,11 @@ def get_file_name(ext='dat'):
 
 
 def data_desc(data):
-    if type(data) == Data:
-        info = data.run_info
-        return ('rows: {}\n' +
-                'cols: {}\n' +
-                'm:    {}\n' +
-                'v:    {}\n' +
-                'l:    {}\n' +
-                'k_b:  {}\n' +
-                'k_p:  {}\n' +
-                'u_s:  {}\n' +
-                'u_k:  {}\n' +
-                'dt:   {}').format(info.rows, info.cols, info.mass,
-                                   info.plate_velocity,
-                                   info.spring_length,
-                                   info.spring_constant, info.plate_spring_constant,
-                                   info.static_friction, info.kinetic_friction,
-                                   info.time_interval)
-    elif type(data) == ScaledData:
-        info = data.run_info
-        return ('rows: {}\n' +
-                'cols: {}\n' +
-                'L:    {}\n' +
-                'v:    {}\n' +
-                'a:    {}\n' +
-                'l:    {}\n' +
-                'dt:   {}').format(info.rows, info.cols,
-                                   info.spring_length,
-                                   info.plate_velocity,
-                                   info.alpha,
-                                   info.l,
-                                   info.time_interval)
+    info = data.run_info
+    return (f'rows: {info.rows}\n' +
+            f'cols: {info.cols}\n' +
+            f'L:    {info.spring_length}\n' +
+            f'v:    {info.plate_velocity}\n' +
+            f'a:    {info.alpha}\n' +
+            f'l:    {info.l}\n' +
+            f'dt:   {info.time_interval}')

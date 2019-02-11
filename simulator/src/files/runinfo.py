@@ -7,11 +7,8 @@ class RunInfo(Composite):
     rows = SerialU16
     cols = SerialU16
     spring_length = SerialDouble
-    mass = SerialDouble
-    spring_constant = SerialDouble
-    static_friction = SerialDouble
-    kinetic_friction = SerialDouble
     plate_velocity = SerialDouble
-    plate_spring_constant = SerialDouble
+    alpha = SerialDouble
+    l = SerialDouble
     time_interval = SerialDouble
     total_time = SerialDouble

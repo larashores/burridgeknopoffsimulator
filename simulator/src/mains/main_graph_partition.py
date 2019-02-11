@@ -10,6 +10,6 @@ if __name__ == '__main__':
     print('Loaded')
     partition_data = graph_partition(data)
     name, ext = os.path.splitext(file)
-    new_name = name + '.pdat'
+    new_name = name + '.gpdat'
     util.write_data(new_name, partition_data)
     print('Wrote partition to file: {}'.format(new_name))
