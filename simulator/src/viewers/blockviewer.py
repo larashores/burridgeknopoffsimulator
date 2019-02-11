@@ -1,6 +1,5 @@
 from tkinter import ttk
 import tkinter as tk
-import numpy as np
 import datetime
 import math
 
@@ -8,8 +7,9 @@ from src.simulation.blockarray import BlockArray
 from viewers.integercheck import int_validate
 
 
-class TkViewerGui(ttk.Frame):
+class BlockViewerGui(ttk.Frame):
     LABEL_TEXT = 'Time: {:.1f}'
+
     def __init__(self, parent, data, **kwargs):
         ttk.Frame.__init__(self, parent, **kwargs)
         self.time = 0
@@ -137,7 +137,7 @@ class Sidebar(ttk.Frame):
 
 class TkViewer:
     def __init__(self, *args, message='', **kwargs):
-        self.gui = TkViewerGui(*args, **kwargs)
+        self.gui = BlockViewerGui(*args, **kwargs)
         self.gui.sidebar.button_start.config(command=self.on_start)
         self.gui.sidebar.button_step.config(command=self.on_step)
         self.gui.sidebar.message.config(text=message)
@@ -150,6 +150,7 @@ class TkViewer:
     def on_step(self):
         self.gui.draw_step(self.step)
         self.step += 1
+
 
 def view_2d(data, description):
     root = tk.Tk()
