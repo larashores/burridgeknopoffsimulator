@@ -34,7 +34,7 @@ class SubPlot:
             y_label: The label for the y-axis of this subplot
             title: The title for this subplot
         """
-        self.graphs = graphs
+        self.graphs = list(graphs)
         self.x_label = x_label
         self.y_label = y_label
         self.title = title
@@ -46,16 +46,15 @@ class SubPlot:
         self.legend_size = legend_size
         self.x_range = x_range
         self.y_range = y_range
+        self._axis = None
 
-    def draw(self, ax):
-        Line.reset_color()
+    def set_axis(self, ax):
+        self._axis = ax
         ax.set_ylabel(self.y_label, fontsize=self.axis_label_size)
         ax.set_xlabel(self.x_label, fontsize=self.axis_label_size)
         ax.set_title(self.title, fontsize=self.title_size, fontweight='bold')
         ax.ticklabel_format(axis='y', style='sci')
         ax.ticklabel_format(useOffset=False)
-        for graph in self.graphs:
-            graph.draw(ax, self.x_log, self.y_log)
         if self.tick_size:
             for tick in ax.xaxis.get_major_ticks():
                 tick.label.set_fontsize(self.tick_size)
@@ -75,3 +74,12 @@ class SubPlot:
         with warnings.catch_warnings():
             warnings.simplefilter('ignore')
             ax.legend(loc='best', fontsize=self.legend_size)
+
+    def draw(self):
+        for graph in self.graphs:
+            graph.draw(self._axis, self.x_log, self.y_log)
+
+    def add_graph(self, graph):
+        self.graphs.append(graph)
+        if self._axis:
+            return graph.draw(self._axis, self.x_log, self.y_log)

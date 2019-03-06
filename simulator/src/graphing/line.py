@@ -24,3 +24,4 @@ class Line:
         line = axis.axvline(x=self.x, color=color)
         if self.label:
             line.set_label(self.label)
+        return line

@@ -17,9 +17,10 @@ class TkFigure(ttk.Frame):
     def __init__(self, root, subplots, title=''):
         ttk.Frame.__init__(self, root)
         self._fig = Figure()
-        canvas = FigureCanvas(self._fig, self)
-        canvas.get_tk_widget().pack(expand=tk.YES, fill=tk.BOTH)
-        toolbar = NavigationToolbar2Tk(canvas, self)
+        self._subplots = []
+        self._canvas = FigureCanvas(self._fig, self)
+        self._canvas.get_tk_widget().pack(expand=tk.YES, fill=tk.BOTH)
+        toolbar = NavigationToolbar2Tk(self._canvas, self)
         toolbar.update()
 
         num_rows = len(subplots)
@@ -30,9 +31,18 @@ class TkFigure(ttk.Frame):
                 if subplot is not None:
                     index = (i * num_columns) + j + 1
                     ax = self._fig.add_subplot(num_rows, num_columns, index)
-                    subplot.draw(ax)
+                    subplot.set_axis(ax)
+                    self._subplots.append(subplot)
         self._fig.suptitle(title, fontweight='bold', fontsize=self.DEFAULT_TITLE_SIZE)
         self._fig.subplots_adjust(hspace=.6, wspace=.3)
+
+    def draw(self):
+        for subplot in self._subplots:
+            subplot.draw()
+
+    def update_plot(self):
+        self._canvas.draw()
+        self._canvas.flush_events()
 
 
 def draw(subplots, title=''):
@@ -50,5 +60,6 @@ def draw(subplots, title=''):
     root.title(title if title else 'Plot')
     root.geometry("1050x700")
     figure = TkFigure(root, subplots, title)
+    figure.draw()
     figure.pack(expand=tk.YES, fill=tk.BOTH)
     root.mainloop()

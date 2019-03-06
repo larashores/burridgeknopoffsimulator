@@ -83,3 +83,5 @@ class Graph:
                 regression.set_label(self.legend_label)
             else:
                 line.set_label(self.legend_label)
+
+        return line
