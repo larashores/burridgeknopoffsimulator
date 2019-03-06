@@ -10,3 +10,9 @@ class Histogram:
         else:
             self.bins = None
         self.values = values
+
+    def draw(self, axis, _x_log, _y_log):
+        if self.bins is not None:
+            axis.hist(self.values, bins=self.bins)
+        else:
+            axis.hist(self.values)
