@@ -82,4 +82,6 @@ class SubPlot:
     def add_graph(self, graph):
         self.graphs.append(graph)
         if self._axis:
-            return graph.draw(self._axis, self.x_log, self.y_log)
+            handle = graph.draw(self._axis, self.x_log, self.y_log)
+            self._axis.legend()
+            return handle
