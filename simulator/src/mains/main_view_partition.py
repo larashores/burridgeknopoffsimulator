@@ -13,7 +13,7 @@ def gutenburg_richter_law_logarthimic(magnitude, a, b):
 
 
 if __name__ == '__main__':
-    file = util.get_file_name('pdat', 'gpdat')
+    file = util.get_single_file_name('pdat', 'gpdat')
     print('Loading file', file)
     data = util.read_data(file)
 

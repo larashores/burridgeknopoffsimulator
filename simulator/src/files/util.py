@@ -18,7 +18,7 @@ def write_data(file_name, data):
         file.write(data_file.to_bytes())
 
 
-def get_file_name(*extensions):
+def get_single_file_name(*extensions):
     if len(sys.argv) == 1:
         files = []
         for ext in extensions:
@@ -28,6 +28,14 @@ def get_file_name(*extensions):
         return os.path.join('data', sys.argv[1])
     else:
         raise TypeError('Usage: [filename]')
+
+
+def get_all_file_names(*extensions):
+    if len(sys.argv) == 1:
+        files = []
+        for ext in extensions:
+            files.extend(glob.iglob('data/*.' + ext))
+        return files
 
 
 def data_desc(data):

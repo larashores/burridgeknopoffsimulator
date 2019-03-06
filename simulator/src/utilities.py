@@ -99,9 +99,10 @@ def uncertainty_str(val, dval):
         dval *= 10**-vpow
         return '({} +- {})e{}'.format(*uncertainty_str_decimal(val, dval), vpow)
 
+
 def _fit_func(func, xs, ys, dxs=None, dys=None, guesses=None):
     if dxs is None:
-        optimal, covarience = opt.curve_fit(func, xs, ys, sigma=dys, absolute_sigma=True, maxfev=10000)
+        optimal, covarience = opt.curve_fit(func, xs, ys, sigma=dys, absolute_sigma=True, p0=guesses)
     else:
         data = odr.RealData(xs, ys, dxs, dys)
         new_func = lambda beta, x: func(x, *beta)
@@ -117,11 +118,12 @@ def _fit_func(func, xs, ys, dxs=None, dys=None, guesses=None):
 
 def fit_func(func, xs, ys, dxs=None, dys=None, limits=None, guesses=None):
     if limits is not None:
-        trim = lambda values: values[limits[0]:limits[1]] if values is not None else None
+        trim = lambda values: values[limits] if values is not None else None
         values = [trim(values) for values in (xs, ys, dxs, dys)]
     else:
         values = (xs, ys, dxs, dys)
     return _fit_func(func, *values, guesses=guesses)
+
 
 if __name__ == '__main__':
     print(uncertainty_str(321.8, .0324))
