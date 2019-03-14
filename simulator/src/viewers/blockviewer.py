@@ -4,7 +4,7 @@ import datetime
 import math
 
 from src.simulation.blockarray import BlockArray
-from viewers.integercheck import int_validate
+from viewers.intvalidate import int_validate
 
 
 class BlockViewerGui(ttk.Frame):

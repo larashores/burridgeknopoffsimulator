@@ -4,7 +4,7 @@ import numpy as np
 import datetime
 
 from src.simulation.blockarray import BlockArray
-from viewers.integercheck import int_validate
+from viewers.intvalidate import int_validate
 
 
 class SlipViewerGui(ttk.Frame):
