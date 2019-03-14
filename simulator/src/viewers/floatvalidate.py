@@ -1,17 +1,17 @@
 import tkinter as tk
 
 
-def int_validate(entry_widget):
+def float_validate(entry_widget):
     """
-    Validates an entry_widget so that only integers within a specified range may be entered
+    Validates an entry_widget so that only floating points within a specified range may be entered
 
     :param entry_widget: The tkinter.Entry widget to validate
-    :param limits: The limits of the integer. It is given as a (min, max) tuple
+    :param limits: The limits of the float. It is given as a (min, max) tuple
 
     :return:       None
     """
     num_str = entry_widget.get()
-    current = None if (not _is_int(num_str)) else int(num_str)
+    current = None if (not _is_float(num_str)) else float(num_str)
     check = _NumberCheck(entry_widget, entry_widget.configure()['from'][4], entry_widget.configure()['to'][4],
                          current=current)
     entry_widget.config(validate='all')
@@ -20,16 +20,16 @@ def int_validate(entry_widget):
     _validate(entry_widget, check)
 
 
-def _is_int(num_str):
+def _is_float(num_str):
     """
-    Returns whether or not a given string is an integer
+    Returns whether or not a given string is a float
 
     :param num_str: The string to test
 
-    :return: Whether or not the string is an integer
+    :return: Whether or not the string is a float
     """
     try:
-        int(num_str)
+        float(num_str)
         return True
     except ValueError:
         return False
@@ -44,7 +44,7 @@ def _validate(entry, num_check):
 
     :return:    None
     """
-    if not _is_int(entry.get()):
+    if not _is_float(entry.get()):
         entry.delete(0, tk.END)
         entry.insert(0, str(num_check.last_valid))
 
@@ -58,7 +58,7 @@ class _NumberCheck:
         self.parent = parent
         self.low = min_
         self.high = max_
-        self.vcmd = parent.register(self.in_integer_range), '%d', '%P'
+        self.vcmd = parent.register(self.in_float_range), '%d', '%P'
 
         if _NumberCheck.in_range(0, min_, max_):
             self.last_valid = 0
@@ -67,7 +67,7 @@ class _NumberCheck:
         if current is not None:
             self.last_valid = current
 
-    def in_integer_range(self, type_, after_text):
+    def in_float_range(self, type_, after_text):
         """
         Validates an entry to make sure the correct text is being inputted
         :param type_:        0 for deletion, 1 for insertion, -1 for focus in
@@ -76,13 +76,13 @@ class _NumberCheck:
         """
 
         if type_ == '-1':
-            if _is_int(after_text):
-                self.last_valid = int(after_text)
+            if _is_float(after_text):
+                self.last_valid = float(after_text)
 
         # Delete Action, always okay, if valid number save it
         elif type_ == '0':
             try:
-                num = int(after_text)
+                num = float(after_text)
                 self.last_valid = num
             except ValueError:
                 pass
@@ -91,9 +91,11 @@ class _NumberCheck:
         # Insert Action, okay based on ranges, if valid save num
         elif type_ == '1':
             try:
-                num = int(after_text)
+                num = float(after_text)
             except ValueError:
                 if self.can_be_negative() and after_text == '-':
+                    return True
+                elif after_text == '.':
                     return True
                 return False
             if self.is_valid_range(num):
@@ -144,7 +146,7 @@ if __name__ == '__main__':
 
     root = tk.Tk()
     var = tk.DoubleVar()
-    widget = ttk.Spinbox(root, textvariable=var, justify=tk.CENTER, from_=-5, to_=10)
+    widget = ttk.Spinbox(root, textvariable=var, justify=tk.CENTER, from_=-4.0, to_=5.0, increment=0.1)
     widget.pack(padx=10, pady=10)
-    int_validate(widget)
+    float_validate(widget)
     root.mainloop()
