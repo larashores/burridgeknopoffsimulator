@@ -20,3 +20,5 @@ class SlipData(serial_list(SingleSlipData)):
 class PartitionData(Composite):
     slip_events = serial_list(SlipData)
     run_info = RunInfo
+    fit_start = SerialDouble
+    fit_end = SerialDouble

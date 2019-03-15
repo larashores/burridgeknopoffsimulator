@@ -5,5 +5,4 @@ from files.partition import PartitionData
 
 class DataFile(Union):
     data = Data
-    graph_partition = PartitionData
-
+    partition = PartitionData
