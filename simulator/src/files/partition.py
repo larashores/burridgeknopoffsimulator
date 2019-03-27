@@ -17,8 +17,19 @@ class SlipData(serial_list(SingleSlipData)):
     pass
 
 
+class FitLimit(Composite):
+    fit_start = SerialDouble
+    fit_end = SerialDouble
+
+    def __str__(self):
+        return f'Start: {self.fit_start} | End: {self.fit_end}'
+
+
+class FitList(serial_list(FitLimit)):
+    pass
+
+
 class PartitionData(Composite):
     slip_events = serial_list(SlipData)
     run_info = RunInfo
-    fit_start = SerialDouble
-    fit_end = SerialDouble
+    fit_list = FitList

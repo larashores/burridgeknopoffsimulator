@@ -3,9 +3,11 @@ from tkinter import ttk
 import numpy as np
 import bisect
 
+from files.partition import FitLimit, FitList
 from graphing.draw import TkFigure
 from graphing.graphing import *
 from viewers.floatvalidate import float_validate
+from viewers.listchoice import ListChoice
 from styles import configure_styles
 from signal import Signal
 from files.util import write_data
@@ -21,51 +23,109 @@ def gutenburg_richter_law_logarthimic(magnitude, a, b):
 
 
 class Sidebar(ttk.Frame):
-    def __init__(self, parent, min_, max_, fit_start, fit_end):
+    def __init__(self, parent, min_, max_, fit_list):
         ttk.Frame.__init__(self, parent)
+        self._fit_list = fit_list
         fit_settings_label = ttk.Label(self, text='Fit Settings', style='Subtitle.TLabel')
 
-        self.start_var = tk.DoubleVar()
+        self._start_var = tk.DoubleVar()
         start_label = ttk.Label(self, text='Start Magnitude')
-        start_spinbox = ttk.Spinbox(self, textvariable=self.start_var, justify=tk.CENTER,
+        start_spinbox = ttk.Spinbox(self, textvariable=self._start_var, justify=tk.CENTER,
                                     from_=min_, to_=max_-1, increment=0.1, format='%.02f')
         float_validate(start_spinbox)
-        self.start_var.set(f'{round(fit_start, 1):.02f}')
+        self._start_var.trace('w', self._on_set_start)
 
-        self.end_var = tk.DoubleVar()
+        self._end_var = tk.DoubleVar()
         end_label = ttk.Label(self, text='End Magnitude')
-        end_spinbox = ttk.Spinbox(self, textvariable=self.end_var, justify=tk.CENTER,
+        end_spinbox = ttk.Spinbox(self, textvariable=self._end_var, justify=tk.CENTER,
                                   from_=min_, to_=max_-1, increment=0.1, format='%.02f')
         float_validate(end_spinbox)
-        self.end_var.set(f'{round(fit_end, 1):.02f}')
+        self._end_var.trace('w', self._on_set_end)
+
+        seperator1 = ttk.Separator(self, orient=tk.HORIZONTAL)
+        self._list_choice = ListChoice(self)
+        self._list_choice.signal_select.connect(self._on_select)
 
         self.button_fit_signal = Signal()
         self.button_save_signal = Signal()
         self.button_reset_signal = Signal()
-        self._button_fit = ttk.Button(self, text='Curve Fit', command=self.button_fit_signal)
+        self._button_add = ttk.Button(self, text='Add Fit', command=self._on_add)
+        self._button_fit = ttk.Button(self, text='Do Fit', command=self.button_fit_signal)
+        seperator2 = ttk.Separator(self, orient=tk.HORIZONTAL)
         self._button_save = ttk.Button(self, text='Save', command=self.button_save_signal)
-        self._button_reset = ttk.Button(self, text='Reset', command=self.button_reset_signal)
+        self._button_reset = ttk.Button(self, text='Reset', command=self._on_reset)
 
         fit_settings_label.pack()
         start_label.pack()
         start_spinbox.pack(pady=(0, 10))
         end_label.pack()
-        end_spinbox.pack(pady=(0, 10))
-        self._button_fit.pack(pady=3)
+        end_spinbox.pack(pady=(0, 5))
+        self._button_fit.pack(pady=(0, 3))
+        seperator1.pack(fill=tk.X, padx=5, pady=3)
+        self._list_choice.pack()
+        self._button_add.pack(pady=3)
+        seperator2.pack(fill=tk.X, padx=5, pady=3)
         self._button_save.pack(pady=3)
         self._button_reset.pack(pady=(3, 10))
+
+        for fit in fit_list:
+            self._list_choice.append(fit)
+        if len(self._list_choice):
+            self._list_choice.set_selection(0)
+        else:
+            self._on_add()
+
+    def set_fit_list(self, fit_list):
+        self._fit_list = fit_list
+
+    def _on_add(self):
+        limit = FitLimit()
+        self._fit_list.append(limit)
+        self._list_choice.append(limit)
+        self._list_choice.set_selection(-1)
+
+    def _on_reset(self):
+        self.button_reset_signal()
+        self._list_choice.clear()
+        for fit in self._fit_list:
+            self._list_choice.append(fit)
+        if len(self._list_choice):
+            self._list_choice.set_selection(-1)
+
+    def _on_set_start(self, name, ind, op):
+        ind = self._list_choice.get_selection()
+        if ind is not None:
+            try:
+                self._fit_list[ind].fit_start = self._start_var.get()
+                self._list_choice.update_line(ind, self._list_choice[ind])
+            except tk.TclError:
+                pass
+
+    def _on_set_end(self, name, ind, op):
+        ind = self._list_choice.get_selection()
+        if ind is not None:
+            try:
+                self._fit_list[ind].fit_end = self._end_var.get()
+                self._list_choice.update_line(ind, self._list_choice[ind])
+            except tk.TclError:
+                pass
+
+    def _on_select(self, ind):
+        if ind is not None:
+            self._start_var.set(f'{round(self._fit_list[ind].fit_start, 1):.02f}')
+            self._end_var.set(f'{round(self._fit_list[ind].fit_end, 1):.02f}')
 
 
 class PartitionViewer(ttk.Frame):
     def __init__(self, parent, partition, file_name):
         ttk.Frame.__init__(self, parent)
         self._partition = partition
+        self._original_fit_list = FitList.from_bytes(partition.fit_list.to_bytes())[0]
         self._file_name = file_name
         self._make_data()
         self._make_subplots()
         self._last_fits = []
-        self._sidebar = Sidebar(parent, self._event_magnitudes[0], self._event_magnitudes[-1],
-                                partition.fit_start, partition.fit_end)
+        self._sidebar = Sidebar(parent, self._event_magnitudes[0], self._event_magnitudes[-1], partition.fit_list)
         self._figure = TkFigure(self, self._subplots, title=f'{partition.run_info.rows}x{partition.run_info.cols}')
         self._figure.draw()
         self._sidebar.pack(side=tk.RIGHT, fill=tk.Y, padx=5)
@@ -81,7 +141,7 @@ class PartitionViewer(ttk.Frame):
         magnitudes = []
         for slip_event in self._partition.slip_events:
             distance = sum(single_slip_event.distance for single_slip_event in slip_event)
-            if distance > 0:
+            if distance > 0 and len(slip_event) < (self._partition.run_info.rows * self._partition.run_info.cols):
                 magnitudes.append(np.log(distance))
 
         self._event_magnitudes = np.array(sorted(magnitudes))
@@ -104,41 +164,41 @@ class PartitionViewer(ttk.Frame):
         self._subplots = [[linear_subplot, log_subplot]]
 
     def on_save(self):
-        self._partition.fit_start = self._sidebar.start_var.get()
-        self._partition.fit_end = self._sidebar.end_var.get()
         write_data(self._file_name, self._partition)
 
     def on_reset(self):
-        self._sidebar.start_var.set(self._partition.fit_start)
-        self._sidebar.end_var.set(self._partition.fit_end)
+        self._partition.fit_list = self._original_fit_list
+        self._sidebar.set_fit_list(self._partition.fit_list)
+        self._original_fit_list = FitList.from_bytes(self._partition.fit_list.to_bytes())[0]
         self.on_fit()
 
     def on_fit(self):
         options = {'line_width': 2, 'plot_type': '-'}
         for fit in self._last_fits:
             fit.remove()
+        self._last_fits.clear()
+        for fit in self._partition.fit_list:
+            start_ind = bisect.bisect_left(self._magnitude_range, fit.fit_start)
+            end_ind = bisect.bisect_right(self._magnitude_range, fit.fit_end)
+            fit_range = slice(start_ind, end_ind)
+            try:
+                linear_values, _ = utilities.fit_func(gutenburg_richter_law, self._magnitude_range,
+                                                      self._events_of_at_least_magnitude, limits=fit_range)
+                log_values, _ = utilities.fit_func(gutenburg_richter_law_logarthimic, self._magnitude_range,
+                                                   self._log_events_of_at_least_magnitude, limits=fit_range)
+                gutenburg_x = self._magnitude_range[fit_range]
+                gutenburg_y_linear = gutenburg_richter_law(gutenburg_x, *linear_values)
+                gutenburg_y_log = gutenburg_richter_law_logarthimic(gutenburg_x, *log_values)
+                label = 'a={:.1f} b={:.3f}'
 
-        start = bisect.bisect_right(self._magnitude_range, self._sidebar.start_var.get())
-        end = bisect.bisect_right(self._magnitude_range, self._sidebar.end_var.get())
-        fit_range = slice(start, end)
-        try:
-            linear_values, _ = utilities.fit_func(gutenburg_richter_law, self._magnitude_range,
-                                                  self._events_of_at_least_magnitude, limits=fit_range)
-            log_values, _ = utilities.fit_func(gutenburg_richter_law_logarthimic, self._magnitude_range,
-                                               self._log_events_of_at_least_magnitude, limits=fit_range)
-            gutenburg_x = self._magnitude_range[fit_range]
-            gutenburg_y_linear = gutenburg_richter_law(gutenburg_x, *linear_values)
-            gutenburg_y_log = gutenburg_richter_law_logarthimic(gutenburg_x, *log_values)
-            label = 'a={:.1f} b={:.3f}'
-
-            linear_graph = Graph(gutenburg_x, gutenburg_y_linear, legend_label=label.format(*linear_values), **options)
-            log_graph = Graph(gutenburg_x, gutenburg_y_log, legend_label=label.format(*log_values), **options)
-            handle1 = self._subplots[0][0].add_graph(linear_graph)
-            handle2 = self._subplots[0][1].add_graph(log_graph)
-            self._last_fits = handle1, handle2
-            self._figure.update_plot()
-        except TypeError:
-            return
+                linear_graph = Graph(gutenburg_x, gutenburg_y_linear, legend_label=label.format(*linear_values), **options)
+                log_graph = Graph(gutenburg_x, gutenburg_y_log, legend_label=label.format(*log_values), **options)
+                handle1 = self._subplots[0][0].add_graph(linear_graph)
+                handle2 = self._subplots[0][1].add_graph(log_graph)
+                self._last_fits.extend([handle1, handle2])
+                self._figure.update_plot()
+            except TypeError:
+                continue
 
 
 def view_partition(data, file_name):
