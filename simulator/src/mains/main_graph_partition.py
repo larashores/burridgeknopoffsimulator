@@ -4,7 +4,7 @@ import os
 
 
 if __name__ == '__main__':
-    file = util.get_file_name('dat')
+    file = util.get_single_file_name('dat')
     print('Loading data file: ', file)
     data = util.read_data(file)
     print('Loaded')
