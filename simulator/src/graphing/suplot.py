@@ -1,4 +1,3 @@
-from src.graphing.line import Line
 import enum
 import warnings
 import numpy as np

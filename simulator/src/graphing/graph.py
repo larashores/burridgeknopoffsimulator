@@ -1,4 +1,4 @@
-from src.utilities import uncertainty_str, fit_func
+from utilities import uncertainty_str, fit_func
 import numpy as np
 import collections
 

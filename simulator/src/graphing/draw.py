@@ -1,7 +1,8 @@
 """
 Provides facilities for graphing in matplotlib. See draw_graph for the main drawing function
 """
-from src.graphing.suplot import SubPlot
+from graphing.suplot import SubPlot
+from signal import Signal
 
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg as FigureCanvas, NavigationToolbar2Tk
 from matplotlib.figure import Figure
@@ -16,10 +17,14 @@ class TkFigure(ttk.Frame):
 
     def __init__(self, root, subplots, title=''):
         ttk.Frame.__init__(self, root)
+        self.signal_mouse_press = Signal()
+        self.signal_mouse_release = Signal()
         self._fig = Figure()
         self._subplots = []
         self._canvas = FigureCanvas(self._fig, self)
         self._canvas.get_tk_widget().pack(expand=tk.YES, fill=tk.BOTH)
+        self._canvas.mpl_connect('button_press_event', self.signal_mouse_press)
+        self._canvas.mpl_connect('button_release_event', self.signal_mouse_release)
         toolbar = NavigationToolbar2Tk(self._canvas, self)
         toolbar.update()
 
